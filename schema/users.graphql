@@ -1,0 +1,42 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@shareable"]
+  )
+
+scalar DateTime
+scalar Money
+scalar EmailAddress
+
+type User @key(fields: "id") @shareable {
+  id: ID!
+  firstName: String
+  lastName: String
+  username: String
+  imageUrl: String
+  jobTitle: String
+  emailAddress: EmailAddress
+  status: String
+  accounts: [Account]
+}
+extend type Account @key(fields: "id") {
+  id: ID! @external
+  """
+  List of Users permitted to act on the Account
+  """
+  users: UserList
+}
+
+type UserList {
+  users: [User]!
+  totalCount: Int
+  cursor: String
+  hasMore: Boolean
+  offset: Int
+  limit: Int
+}
+
+extend type Query {
+  user(userId: ID!): User
+  users(someCriteria: String): UserList
+}

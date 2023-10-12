@@ -1,0 +1,89 @@
+{
+  "name": "not-dsp-server",
+  "version": "1.0.0",
+  "description": "GraphQL Mock Server",
+  "main": "dist/cli.js",
+  "bin": {
+    "not-dsp-server": "dist/server.js",
+    "mock-server": "dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "cli",
+    "graphql",
+    "mock",
+    "server"
+  ],
+  "exports": "./dist/cli.js",
+  "scripts": {
+    "build": "tsc --project . && mkdir dist/public && cp src/public/* dist/public && cp prisma/schema.prisma dist/prisma && mkdir dist/schema && cp ../../schema/*graphql dist/schema",
+    "start": "nodemon --watch './**/*' --watch '../../schema' -e ts,graphql --exec 'node --loader ts-node/esm' src/server.ts  ",
+    "codegen": "graphql-codegen",
+    "seed": "ts-node --transpile-only prisma/seed.ts",
+    "prisma": "npx prisma generate && npx prisma db push",
+    "test-production": "node dist/server.js",
+    "production": "node dist/server.js"
+  },
+  "author": "Peter Milne",
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/server": "^4.3.0",
+    "@apollo/subgraph": "^2.4.0",
+    "@graphql-tools/load-files": "^6.6.1",
+    "@graphql-tools/mock": "^8.7.18",
+    "@graphql-tools/schema": "^9.0.19",
+    "@prisma/client": "^5.2.0",
+    "@types/graphql": "^14.5.0",
+    "arg": "^5.0.2",
+    "casual": "^1.6.2",
+    "cors": "^2.8.5",
+    "dataloader": "^2.2.2",
+    "dotenv": "^16.3.1",
+    "esm": "^3.2.25",
+    "glob": "^10.2.2",
+    "graphql": "^16.8.0",
+    "graphql-sse": "^2.2.3",
+    "graphql-subscriptions": "^2.0.0",
+    "graphql-tag": "^2.12.6",
+    "graphql-ws": "^5.14.0",
+    "inquirer": "^9.1.5",
+    "lodash": "^4.17.21",
+    "serve-favicon": "^2.5.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^5.0.0",
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-graphql-request": "^4.5.8",
+    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "@graphql-codegen/typescript-resolvers": "^3.1.0",
+    "@parcel/watcher": "^2.2.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/lodash": "^4.14.198",
+    "@types/node": "^18.11.18",
+    "@types/serve-favicon": "^2.5.4",
+    "copyfiles": "^2.4.1",
+    "csv": "^6.3.3",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.5"
+  },
+  "engines": {
+    "node": ">=16 <17.0.0"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts,graphql",
+    "exec": "node --loader ts-node/esm"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  }
+}

@@ -1,0 +1,98 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@shareable"]
+  )
+
+# write model
+
+extend type Mutation {
+  newRetailer(retailer: NewRetailer!): Retailer
+  deactivateRetailer(id: ID!): Retailer
+  setRetailerPreferencesDefaultValues(
+    preferences: NewDefaultPreferences!
+  ): RetailerPreferences
+  activateRetailer(id: ID!): Retailer
+}
+
+input NewRetailer {
+  name: String!
+}
+
+input NewDefaultPreferences {
+  retailerId: ID!
+  defaultValues: [NewDefaultValue]
+}
+
+input NewDefaultValue {
+  key: String!
+  value: String!
+}
+
+# event model
+
+extend type Subscription {
+  retailerInitialized: Retailer
+  retailerUpdated: Retailer
+  retailerWentLive: Retailer
+}
+
+# read model
+
+extend type Query {
+  retailer(id: ID!): Retailer
+  retailers(
+    retailerIds: [ID!]
+    offset: Int = 0
+    limit: Int = 100
+  ): RetailerList!
+}
+
+type Retailer @key(fields: "id") {
+  id: ID!
+  name: String!
+  status: RetailerStatus!
+  rank: Int
+  countryOfOrigin: String
+  retailRevenue: Int
+  parentRevenue: Int
+  parentCompanyNetIncome: Int
+  operationalFormat: String
+  countriesOfOperation: Int
+  retailRevenueCagr: Int
+  preferences: RetailerPreferences
+  expermentalConfig: [RetailerExpermentalConfig]
+}
+
+type RetailerPreferences {
+  id: ID!
+  retailer: Retailer
+  defaultValues: [RetailerPreferenceDefaultValue]
+}
+
+type RetailerPreferenceDefaultValue {
+  id: ID!
+  retailerPreferences: RetailerPreferences
+  key: String!
+  value: String!
+}
+
+type RetailerExpermentalConfig {
+  id: ID!
+  retailer: Retailer
+  key: String!
+  value: String!
+}
+
+enum RetailerStatus {
+  ACTIVE
+  INACTIVE
+  LIVE
+}
+
+type RetailerList implements ListOffsetLimit {
+  retailers: [Retailer]!
+  totalCount: Int
+  offset: Int
+  limit: Int
+}
