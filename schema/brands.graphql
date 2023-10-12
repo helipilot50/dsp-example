@@ -5,8 +5,7 @@ extend schema
   )
 
 """
-Brands are marketing and identity forms of business entities. Inside the Catalog scope brands are conceptual perspective based representations hopefully leading back to these business entities.
-Efforts for CMax September 2022 for Flipkart began the conversation of formalizing the idea of a “Retailer Brand” into something that was usable not only inside RMP; but also inside CMS systems.
+Brands are marketing and identity forms of business entities.
 """
 type Brand @key(fields: "id") @shareable {
   id: ID!
