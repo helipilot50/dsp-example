@@ -13,6 +13,7 @@ import { RetryLink } from '@apollo/client/link/retry';
 import { HttpLink } from '@apollo/client/link/http';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
+import { useAuth } from '@clerk/clerk-react';
 
 
 // obtain the host name
@@ -34,9 +35,6 @@ interface customWindow extends Window {
   'apollo-client': ApolloClient<NormalizedCacheObject>;
 }
 declare const window: customWindow;
-
-// get access token
-const token = localStorage.getItem('token');
 
 // create a web socket link
 const wsLink = new GraphQLWsLink(
@@ -60,10 +58,12 @@ const httpLink: HttpLink = new HttpLink({
 
 // create an auth link
 const authLink = new ApolloLink((operation: Operation, forward: NextLink) => {
+
+  const token = localStorage.getItem('clerkToken');
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      authorization: token ? `Bearer ${token}` : null,
+      token: token ? `Bearer ${token}` : null,
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       credentials: true
     }

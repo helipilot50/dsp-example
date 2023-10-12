@@ -27,7 +27,8 @@ import { AppRoutes } from './Routes';
 import Clerk from './auth/Clerk';
 
 
-const drawerWidth = 240;
+
+const drawerWidth = 220;
 
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -108,6 +109,7 @@ export function DSPBreadcrumbs(props: any) {
 export function Nav() {
   const theme = useTheme();
   const navigate = useNavigate();
+
   const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {

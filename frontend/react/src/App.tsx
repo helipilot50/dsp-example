@@ -2,29 +2,24 @@ import './App.css';
 import {
   HashRouter as Router,
 } from 'react-router-dom';
+import { useAuth } from '@clerk/clerk-react';
 
 import { Nav } from './components/Nav';
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
-import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
-
-import { ApolloProvider } from '@apollo/client/react';
-import { client } from './lib/apollo';
-import { clerkConfig } from './components/auth/clerkConfig';
-import { ClerkProvider } from '@clerk/clerk-react';
-
+import { useEffect } from 'react';
 
 function App() {
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+
+  useEffect(() => {
+    getToken().then((token) => {
+      localStorage.setItem('clerkToken', token as string);
+    });
+  }, []);
 
   return (
-    <ApolloProvider client={client}>
-      <ClerkProvider {...clerkConfig}>
-        <Router>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Nav />
-          </LocalizationProvider>
-        </Router>
-      </ClerkProvider>
-    </ApolloProvider >
+    <Router>
+      <Nav />
+    </Router>
   );
 }
 
