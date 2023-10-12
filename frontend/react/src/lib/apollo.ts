@@ -63,7 +63,7 @@ const authLink = new ApolloLink((operation: Operation, forward: NextLink) => {
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      token: token ? `Bearer ${token}` : null,
+      authorization: token ? `Bearer ${token}` : null,
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       credentials: true
     }

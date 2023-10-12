@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
+import { ClerkExpressRequireAuth, ClerkExpressWithAuth } from "@clerk/clerk-sdk-node";
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
@@ -159,12 +160,15 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
+      // ClerkExpressRequireAuth(),
       expressMiddleware(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<DspContext> => {
           // console.log('[server.context] req', JSON.stringify(req, undefined, 2));
           // console.log('[server.context] req.headers', JSON.stringify(req.headers, undefined, 2));
           // console.log('[server.context] req.body', JSON.stringify(req.body, undefined, 2));
+
           if (req.headers.authorization) {
+            // console.log('[server.context] req.headers.authorization', JSON.stringify(req.headers.authorization, undefined, 2));
             return {
               prisma,
               pubsub,
