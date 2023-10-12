@@ -1,14 +1,16 @@
 import { GraphQLResolveInfo } from "graphql";
 import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMapAccountRetailersArgs } from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
-import { DspContext } from "../context";
+import { DspContext, pubsub } from "../context";
 
+const ACCOUNT_CREATED = 'ACCOUNT_CREATED';
 
 export const accountResolvers/*: Resolvers*/ = {
 
   Query: {
     accounts(_: any, ___: QueryAccountsArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
+        // console.log('[accounts] context user', context.user?.username);
         return context.prisma.account.findMany({
           select: {
             id: true,
@@ -87,7 +89,7 @@ export const accountResolvers/*: Resolvers*/ = {
           data: c
         });
         console.log('[newAccount] dbResult', dbResult);
-        context.pubsub.publish('ACCOUNT_CREATED', dbResult);
+        context.pubsub.publish(ACCOUNT_CREATED, dbResult);
         return dbResult;
       } catch (err) {
         console.error('[newAccount] error', err);
@@ -123,18 +125,21 @@ export const accountResolvers/*: Resolvers*/ = {
     }
   },
 
-  // Subscription: {
-  //   accountCreated: {
-  //     subscribe: withFilter(
-  //       () => pubsub.asyncIterator(['ACCOUNT_CREATED']),
-  //       (payload, variables) => {
-  //         console.log('accountCreated variables', variables);
-  //         console.log('accountCreated payload', payload);
-  //         return payload;
-  //       }
-  //     )
-  //   }
+  Subscription: {
+    accountCreated: {
+      subscribe: withFilter(
+        (_: any, varibles: any, context: DspContext, info: any) => {
+          console.log('[accountsResolvers.accountCreated] subscribe ', varibles);
+          return pubsub.asyncIterator(ACCOUNT_CREATED);
+        },
+        (payload, variables, context: DspContext, info: any) => {
+          console.log('accountCreated variables', variables);
+          console.log('accountCreated payload', payload);
+          return payload;
+        }
+      )
+    }
 
-  // }
+  }
 
 };

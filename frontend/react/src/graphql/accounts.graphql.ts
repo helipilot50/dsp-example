@@ -79,3 +79,13 @@ mutation MapAccountRetailers($accountId: ID!, $retailerIds: [ID]!) {
   }
 }
 `;
+
+export const ACCOUNT_CREATED = gql`
+subscription AccountCreated {
+  accountCreated {
+    id
+    name
+  }
+}
+`;
+

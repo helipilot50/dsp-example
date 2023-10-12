@@ -51,6 +51,7 @@
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.14.0",
     "inquirer": "^9.1.5",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "serve-favicon": "^2.5.0",
     "ws": "^8.14.2"
@@ -65,6 +66,7 @@
     "@parcel/watcher": "^2.2.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.15",
+    "@types/jsonwebtoken": "^9.0.3",
     "@types/lodash": "^4.14.198",
     "@types/node": "^18.11.18",
     "@types/serve-favicon": "^2.5.4",

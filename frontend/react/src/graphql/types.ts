@@ -2183,6 +2183,11 @@ export type MapAccountRetailersMutationVariables = Exact<{
 
 export type MapAccountRetailersMutation = { __typename?: 'Mutation', mapAccountRetailers?: Array<{ __typename?: 'Retailer', id: string, name: string, status: RetailerStatus } | null> | null };
 
+export type AccountCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AccountCreatedSubscription = { __typename?: 'Subscription', accountCreated?: { __typename?: 'Account', id: string, name: string } | null };
+
 export type BrandsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;

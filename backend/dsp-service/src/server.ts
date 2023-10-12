@@ -2,7 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
-import { ClerkExpressRequireAuth, ClerkExpressWithAuth } from "@clerk/clerk-sdk-node";
+import { ClerkExpressRequireAuth, ClerkExpressWithAuth, User } from "@clerk/clerk-sdk-node";
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
@@ -32,6 +32,8 @@ import { AddressInfo } from 'net';
 
 import { pubsub, prisma } from './context';
 import { corsOptions } from './cors';
+
+import { decodeToken, user } from './clerk';
 
 const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
@@ -160,7 +162,7 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      // ClerkExpressRequireAuth(),
+      ClerkExpressRequireAuth(),
       expressMiddleware(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<DspContext> => {
           // console.log('[server.context] req', JSON.stringify(req, undefined, 2));
@@ -169,10 +171,15 @@ async function listen() {
 
           if (req.headers.authorization) {
             // console.log('[server.context] req.headers.authorization', JSON.stringify(req.headers.authorization, undefined, 2));
+            const token = req.headers.authorization.split(' ')[1];
+            const userProfile: User = await user(token);
+            // console.log('[server.context] userProfile', JSON.stringify(userProfile, undefined, 2));
+
             return {
+              user: userProfile,
               prisma,
               pubsub,
-              token: req.headers.authorization,
+              token: token,
             };
           }
           return {

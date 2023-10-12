@@ -1,9 +1,9 @@
 
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ACCOUNTS_LIST } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST, ACCOUNT_CREATED } from '../graphql/accounts.graphql';
 import { useNavigate } from 'react-router';
-import { AccountsQuery, AccountsQueryVariables } from '../graphql/types';
+import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from '../graphql/types';
 import { Typography, Paper, Box, Button } from '@mui/material';
 import { LIMIT_DEFAULT } from './ListDefaults';
 
@@ -48,6 +48,7 @@ export function AccountList() {
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
     ACCOUNTS_LIST
   );
+  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
   console.log('accounts result', data, error, loading);
 
 
