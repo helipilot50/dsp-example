@@ -6,6 +6,7 @@ import { brandResolvers } from './brandsResolvers';
 import { commonResolvers } from './commonResolvers';
 import { skuResolvers } from './skuResolvers';
 import { retailerResolvers } from './retailerResolvers';
+import { usersResolvers } from './usersResolvers';
 
 export const resolvers: any = lodash.merge(
   accountResolvers,
@@ -14,7 +15,6 @@ export const resolvers: any = lodash.merge(
   brandResolvers,
   commonResolvers,
   skuResolvers,
-  retailerResolvers
+  retailerResolvers,
+  usersResolvers
 );
-
-// console.debug(`[resolvers]`, resolvers);

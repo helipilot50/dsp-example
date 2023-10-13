@@ -10,10 +10,10 @@ export const skuResolvers/*: Resolvers*/ = {
 
     async skus(_: any, args: QuerySkusArgs, context: DspContext, info: any) {
       try {
-        console.debug('skus args', args);
+        context.logger.debug('skus args', args);
         const searchTarget = args.search ? args.search : '';
         const topLevelFields = topLevelFieldsFromQuery(info);
-        console.debug('skus fields', topLevelFields);
+        context.logger.debug('skus fields', topLevelFields);
         const offset = args.offset || 0;
         const limit = args.limit || 100;
         let totalCount: Number | undefined = undefined;
@@ -45,7 +45,7 @@ export const skuResolvers/*: Resolvers*/ = {
             take: limit
           });
         }
-        console.debug('skus rows', rows);
+        context.logger.debug('skus rows', rows);
         return {
           skus: rows,
           offset,
@@ -53,15 +53,15 @@ export const skuResolvers/*: Resolvers*/ = {
           totalCount
         };
       } catch (err) {
-        console.error('skus error', err);
+        context.logger.error('skus error', err);
         throw err;
       }
     },
 
     async sku(parent: any, args: QuerySkuArgs, context: DspContext) {
       try {
-        console.debug('sku args', args);
-        console.debug('sku parent', parent);
+        context.logger.debug('sku args', args);
+        context.logger.debug('sku parent', parent);
         let skuKey = args.skuKey;
 
         if (parent && parent.skuKey) {
@@ -82,10 +82,10 @@ export const skuResolvers/*: Resolvers*/ = {
           }
         );
 
-        console.debug('foundSKU', foundSKU);
+        context.logger.debug('foundSKU', foundSKU);
         return (foundSKU) ? foundSKU : null;
       } catch (err) {
-        console.error('sku error', err);
+        context.logger.error('sku error', err);
         throw err;
       }
     },

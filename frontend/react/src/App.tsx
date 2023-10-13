@@ -5,17 +5,21 @@ import {
 import { useAuth } from '@clerk/clerk-react';
 
 import { Nav } from './components/Nav';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
+import { clerkToken } from './lib/apollo';
 
 function App() {
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
-
+  const { getToken } = useAuth();
   useEffect(() => {
-    getToken().then((token) => {
-      localStorage.setItem('clerkToken', token as string);
-    });
-  }, []);
+    async function fetchToken() {
+      const token = await getToken();
+      if (token)
+        clerkToken(token);
+      console.log('clerk token', clerkToken());
+    }
+    fetchToken();
 
+  }, []);
   return (
     <Router>
       <Nav />

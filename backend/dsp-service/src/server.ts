@@ -2,16 +2,17 @@ import { ApolloServer } from '@apollo/server';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
-import { ClerkExpressRequireAuth, ClerkExpressWithAuth, User } from "@clerk/clerk-sdk-node";
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
 import express from 'express';
 import favicon from 'serve-favicon';
 import { InMemoryLRUCache } from '@apollo/utils.keyvaluecache';
-
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
+import { logger } from './logger';
+
+
 
 
 import pkg from 'body-parser';
@@ -28,12 +29,11 @@ import gql from 'graphql-tag';
 // Resolvers
 import { resolvers } from './resolvers';
 import { DspContext } from './context';
-import { AddressInfo } from 'net';
 
 import { pubsub, prisma } from './context';
 import { corsOptions } from './cors';
 
-import { decodeToken, user } from './clerk';
+import { User, userByToken } from './clerk';
 
 const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
@@ -52,7 +52,7 @@ async function listen() {
   try {
 
 
-    console.log('[server] creating apollo server');
+    logger.info('[server] creating apollo server');
     let defs = gql`
       extend type Query{
       _dummy: Boolean
@@ -61,13 +61,13 @@ async function listen() {
     try {
       defs = schemaFromDirectory(process.env.SCHEMA_DIR || './schema');
     } catch (err) {
-      console.error('[server] 💀 Error reading schema', JSON.stringify(err, undefined, 2));
+      logger.error('[server] 💀 Error reading schema', JSON.stringify(err, undefined, 2));
       throw err;
     }
 
 
 
-    console.log('[server] building schema');
+    logger.info('[server] building schema');
 
     const graphSchema = buildSubgraphSchema({
       typeDefs: defs,
@@ -92,7 +92,7 @@ async function listen() {
     const serverCleanup = useServer({
       schema: graphSchema,
       onConnect: async (ctx: any) => {
-        console.log('[server] WS Connected!');
+        logger.info('[server] WS Connected!');
         // Check authentication every time a client connects.
         // if (tokenIsNotValid(ctx.connectionParams)) {
         // You can return false to close the connection  or throw an explicit error
@@ -101,7 +101,7 @@ async function listen() {
 
       },
       onDisconnect(ctx: any, code: number, reason: string) {
-        console.log('[server] WS Disconnected!', code, reason);
+        logger.info('[server] WS Disconnected!', code, reason);
       },
     }, wsServer);
 
@@ -113,7 +113,7 @@ async function listen() {
     //     try {
     //       await handler(req, res);
     //     } catch (err) {
-    //       console.error(err);
+    //       logger.error(err);
     //       res.writeHead(500).end();
     //     }
     //   });
@@ -162,29 +162,33 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      ClerkExpressRequireAuth(),
+      // ClerkExpressRequireAuth(),
       expressMiddleware(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<DspContext> => {
-          // console.log('[server.context] req', JSON.stringify(req, undefined, 2));
-          // console.log('[server.context] req.headers', JSON.stringify(req.headers, undefined, 2));
-          // console.log('[server.context] req.body', JSON.stringify(req.body, undefined, 2));
+          // logger.debug('[server.context] req', JSON.stringify(req, undefined, 2));
+          // logger.info('[server.context] req.headers', JSON.stringify(req.headers, undefined, 2));
+          // logger.debug('[server.context] req.body', JSON.stringify(req.body, undefined, 2));
 
           if (req.headers.authorization) {
-            // console.log('[server.context] req.headers.authorization', JSON.stringify(req.headers.authorization, undefined, 2));
+            logger.info('[server.context] has authorization header');
+            logger.debug('[server.context] req.headers.authorization', JSON.stringify(req.headers.authorization, undefined, 2));
             const token = req.headers.authorization.split(' ')[1];
-            const userProfile: User = await user(token);
-            // console.log('[server.context] userProfile', JSON.stringify(userProfile, undefined, 2));
+            const userProfile: User = await userByToken(token);
+            logger.debug('[server.context] userProfile', JSON.stringify(userProfile, undefined, 2));
 
             return {
               user: userProfile,
               prisma,
               pubsub,
               token: token,
+              logger: logger,
             };
           }
+          logger.warning('[server.context] no authorization header');
           return {
             prisma,
             pubsub,
+            logger: logger,
           };
         },
       }),
@@ -192,11 +196,11 @@ async function listen() {
 
 
   } catch (error) {
-    console.error('[server] 💀 Error creating apollo server', JSON.stringify(error, undefined, 2));
+    logger.error('[server] 💀 Error creating apollo server', JSON.stringify(error, undefined, 2));
   }
 
   const theServer = httpServer.listen(PORT, () => {
-    console.log(`[server] 🚀 Query endpoint ready at http://localhost:${PORT}/graphql`);
+    logger.info(`[server] 🚀 Query endpoint ready at http://localhost:${PORT}/graphql`);
   });
   return theServer;
 
@@ -208,7 +212,7 @@ async function main() {
   try {
     await listen();
   } catch (err) {
-    console.error('[server] 💀 Error starting the node server', JSON.stringify(err, undefined, 2));
+    logger.error('[server] 💀 Error starting the node server', JSON.stringify(err, undefined, 2));
   }
 }
 

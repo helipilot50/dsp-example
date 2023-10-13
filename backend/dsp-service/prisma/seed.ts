@@ -5,7 +5,6 @@ import skuSeedData from './sku';
 import countrySeedData, { countryData } from './country';
 import brandSeedData from './brand';
 import retailerSeedData from './retailer';
-import userSeedData, { userData } from './user';
 
 const prisma = new PrismaClient();
 
@@ -21,8 +20,6 @@ async function main() {
   // await countrySeedData();
 
   // await skuSeedData();
-
-  // await userSeedData();
 
   // await brandSeedData();
 

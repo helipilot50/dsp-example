@@ -12,9 +12,9 @@ export const brandResolvers/*: Resolvers*/ = {
 
     async brands(_: any, args: QueryBrandsArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[brandResolvers.brands] args', args);
+        context.logger.debug('[brandResolvers.brands] args', args);
         const topLevelFields = topLevelFieldsFromQuery(info);
-        console.debug('[brandResolvers.brands] fields', topLevelFields);
+        context.logger.debug('[brandResolvers.brands] fields', topLevelFields);
         const offset = args.offset || 0;
         const limit = args.limit || 100;
         let rowCount: Number | undefined = undefined;
@@ -36,7 +36,7 @@ export const brandResolvers/*: Resolvers*/ = {
           rowCount = await context.prisma.brand.count();
         }
 
-        console.debug('all', rows, rowCount);
+        context.logger.debug('all', rows, rowCount);
         return {
           brands: rows,
           offset,
@@ -44,13 +44,13 @@ export const brandResolvers/*: Resolvers*/ = {
           totalCount: rowCount
         };
       } catch (err) {
-        console.error('[brandResolvers.brands] error', err);
+        context.logger.error('[brandResolvers.brands] error', err);
         throw err;
       }
     },
     brand(parent: any, args: QueryBrandArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[brandResolvers.brand] args', args,);
+        context.logger.debug('[brandResolvers.brand] args', args,);
         let brandId = args.brandId;
         if (parent && parent.brandId) {
           brandId = parent.brandId;
@@ -68,10 +68,10 @@ export const brandResolvers/*: Resolvers*/ = {
             id: brandId
           }
         };
-        console.debug('[brandResolvers.brand] columns', select);
+        context.logger.debug('[brandResolvers.brand] columns', select);
         return context.prisma.brand.findUnique(queryArgs);
       } catch (err) {
-        console.error('[brandResolvers.brand] error', err);
+        context.logger.error('[brandResolvers.brand] error', err);
         throw err;
       }
     },

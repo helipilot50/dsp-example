@@ -1,6 +1,6 @@
 
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS } from '../graphql/accounts.graphql';
 import {
   Accordion, AccordionDetails, AccordionSummary,
@@ -26,9 +26,8 @@ import { RetailersChooser } from './RetailersChooser';
 export function AccountDetails() {
   const params = useParams();
   const navigate = useNavigate();
-
-
-  const [isNew] = useState(params['accountId'] === 'new');
+  const location = useLocation;
+  const [isNew] = useState(params['accountId'] === undefined);
   const [accountId, setAccountId] = useState(params.accountId || 'new');
   // account state
   const [account, setAccount] = useState<Account>({
@@ -41,6 +40,8 @@ export function AccountDetails() {
       symbol: '$'
     }
   });
+
+  console.log('[AccountDetails] params', params);
 
 
   // Create Account
@@ -111,7 +112,7 @@ export function AccountDetails() {
   function onSubmit(e: any) {
     e.preventDefault();
     console.log('submitting', account);
-    if (params.accountId === 'new') {
+    if (isNew) {
 
       newAccount({
         name: account.name,
@@ -146,11 +147,10 @@ export function AccountDetails() {
         <CardHeader
           title={`Account: ${account.id}`} />
         <CardActions>
-          {isNew && <Button type="submit" variant='contained'>Create</Button>}
+          {isNew && <Button type="submit" variant='contained' onClick={onSubmit}>Create</Button>}
         </CardActions>
         <CardContent
           component="form"
-          onSubmit={onSubmit}
           noValidate
           autoComplete="off"
         >
@@ -209,7 +209,7 @@ export function AccountDetails() {
                 }}
               />
             </FormControl>
-            <FormControl>
+            {!isNew && <FormControl>
               <FormLabel>Retailers</FormLabel>
               <RetailersChooser id='account-retailers'
                 selectedValues={account.retailers as Retailer[]}
@@ -242,7 +242,7 @@ export function AccountDetails() {
 
                 }}
               />
-            </FormControl>
+            </FormControl>}
           </Stack>
 
           {!isNew && <Accordion

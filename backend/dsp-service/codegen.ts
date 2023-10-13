@@ -10,8 +10,8 @@ const config: CodegenConfig = {
         scalars: {
           DateTime: 'Date',
           Money: 'number',
-          EmailAddress: 'string',
           GTIN: 'string',
+          URL: 'string',
         },
         allowParentTypeOverride: true,
         mapperTypeSuffix: "Model",
@@ -25,7 +25,6 @@ const config: CodegenConfig = {
           Retailer: "@prisma/client/index.d#Retailer",
           Brand: "@prisma/client/index.d#Brand",
           Currency: "@prisma/client/index.d#Currency",
-          User: "@prisma/client/index.d#User"
         }
       }
     }

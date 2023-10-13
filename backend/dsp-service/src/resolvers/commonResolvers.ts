@@ -8,7 +8,7 @@ export const commonResolvers/*: Resolvers*/ = {
   Query: {
     async countries(parent: any, args: QueryCountriesArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[commonResolvers.countries] args', args);
+        context.logger.debug('[commonResolvers.countries] args', args);
 
 
         const where: any = {};
@@ -21,7 +21,7 @@ export const commonResolvers/*: Resolvers*/ = {
             in: args.countryCodes as string[]
           };
         }
-        console.debug('[commonResolvers.countries] where ', where);
+        context.logger.debug('[commonResolvers.countries] where ', where);
         const dbResult = await context.prisma.country.findMany({
           where,
           select: {
@@ -32,7 +32,7 @@ export const commonResolvers/*: Resolvers*/ = {
             name: true,
           }
         });
-        console.debug('[commonResolvers.countries] dbResult', dbResult);
+        context.logger.debug('[commonResolvers.countries] dbResult', dbResult);
         return dbResult;
         // return dbResult.map((row: any): CountryCode => {
         //   let country: Country = {
@@ -41,11 +41,11 @@ export const commonResolvers/*: Resolvers*/ = {
         //     code: row.countryCode as CountryCode,
         //     currency: row.currency as CurrencyCode,
         //   };
-        //   // console.debug('country', country);
+        //   // context.logger.debug('country', country);
         //   return country;
         // });
       } catch (err) {
-        console.error('[commonResolvers.countries] error', err);
+        context.logger.error('[commonResolvers.countries] error', err);
         // TODO retry
         //nInvalid `prisma.country.findMany()` invocation in\n/Users/peter/git/criteo/not-cmax/mock/src/resolvers.ts:427:47\n\n  424 //   return [];\n  425 \n  426 \n→ 427 const dbResult = await context.prisma.country.findMany(\nCan't reach database server at `aws.connect.psdb.cloud`:`3306`\n\nPlease make sure your database server is running at `aws.connect.psdb.cloud`:`3306`.
         throw err;
@@ -53,8 +53,8 @@ export const commonResolvers/*: Resolvers*/ = {
     },
     async country(parent: any, args: QueryCountryArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[commonResolvers.country] args', args);
-        console.debug('[commonResolvers.country] parent', parent);
+        context.logger.debug('[commonResolvers.country] args', args);
+        context.logger.debug('[commonResolvers.country] parent', parent);
         let countryId = args.code;
 
         if (parent && parent.countryId) {
@@ -74,16 +74,16 @@ export const commonResolvers/*: Resolvers*/ = {
           }
         );
 
-        console.debug('foundCountry', foundCountry);
+        context.logger.debug('foundCountry', foundCountry);
         return (foundCountry) ? foundCountry : null;
       } catch (err) {
-        console.error('country error', err);
+        context.logger.error('country error', err);
         throw err;
       }
     },
     async currencies(_: any, args: QueryCurrenciesArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[commonResolvers.currencies] args', args);
+        context.logger.debug('[commonResolvers.currencies] args', args);
         const searchTarget = args.searchName ? args.searchName : '';
 
         const dbResult = await context.prisma.currency.findMany({
@@ -98,17 +98,17 @@ export const commonResolvers/*: Resolvers*/ = {
             name: true,
           }
         });
-        console.debug('[commonResolvers.currencies] dbResult', dbResult);
+        context.logger.debug('[commonResolvers.currencies] dbResult', dbResult);
         return dbResult;
       } catch (err) {
-        console.error('[commonResolvers.currencies] error', err);
+        context.logger.error('[commonResolvers.currencies] error', err);
         throw err;
       }
     },
     async currency(parent: any, args: QueryCurrencyArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        console.debug('[commonResolvers.currency] args', args);
-        console.debug('[commonResolvers.currency] parent', parent);
+        context.logger.debug('[commonResolvers.currency] args', args);
+        context.logger.debug('[commonResolvers.currency] parent', parent);
         let currencyCode = args.code;
 
         if (parent && parent.currencyCode) {
@@ -127,10 +127,10 @@ export const commonResolvers/*: Resolvers*/ = {
           }
         );
 
-        console.debug('[commonResolvers.currency] foundCurrency', foundCurrency);
+        context.logger.debug('[commonResolvers.currency] foundCurrency', foundCurrency);
         return (foundCurrency) ? foundCurrency : null;
       } catch (err) {
-        console.error('[commonResolvers.currency] currency error', err);
+        context.logger.error('[commonResolvers.currency] currency error', err);
         throw err;
       }
     },

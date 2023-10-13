@@ -1,9 +1,10 @@
 import { GraphQLScalarType, Kind } from 'graphql';
+import { Logger } from 'winston';
 export const scalarMoney = new GraphQLScalarType({
   name: 'Money',
   description: 'Money custom scalar type',
   serialize(value: any) {
-    // console.debug('Money Scalar serialize', typeof value);
+    // logger.debug('Money Scalar serialize', typeof value);
     if (typeof value === 'number') {
       return value;
     }

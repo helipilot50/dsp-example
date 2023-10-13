@@ -1,5 +1,8 @@
 import clerk, { User } from '@clerk/clerk-sdk-node';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { decode } from 'punycode';
+export { JwtPayload } from 'jsonwebtoken';
+export { User } from '@clerk/clerk-sdk-node';
 
 
 export async function userList() {
@@ -12,7 +15,7 @@ export async function sessions() {
   return sessions;
 }
 
-export async function user(token: string): Promise<User> {
+export async function userByToken(token: string): Promise<User> {
   const decodedToken = decodeToken(token);
   if (!decodedToken) {
     throw new Error('No decoded token');
@@ -20,7 +23,11 @@ export async function user(token: string): Promise<User> {
   if (!decodedToken.sub) {
     throw new Error('No decodedToken.sub');
   }
-  const user = await clerk.users.getUser(decodedToken.sub as string);
+  return userById(decodedToken.sub as string);
+}
+
+export async function userById(id: string): Promise<User> {
+  const user = await clerk.users.getUser(id as string);
   return user;
 }
 

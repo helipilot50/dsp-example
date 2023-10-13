@@ -25,6 +25,7 @@ import { useNavigate, useLocation, Link as RouterLink, Outlet } from 'react-rout
 import BreadCrumbs from '@mui/material/Breadcrumbs';
 import { AppRoutes } from './Routes';
 import Clerk from './auth/Clerk';
+import { SignedIn } from '@clerk/clerk-react';
 
 
 
@@ -80,7 +81,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-export function DSPBreadcrumbs(props: any) {
+export function DSPBreadcrumbs() {
   const location = useLocation();
   let currentLink = '';
   const crumbs = location.pathname.split('/')
@@ -177,38 +178,40 @@ export function Nav() {
               <ListItemText primary='Dashboard' />
             </ListItemButton>
           </ListItem>
-          <ListItem key='menuAccounts' disablePadding >
-            <ListItemButton onClick={() => { navigate(`/accounts`); }}>
-              <ListItemIcon>
-                <AccountBoxIcon />
-              </ListItemIcon>
-              <ListItemText primary='Accounts' />
-            </ListItemButton>
-          </ListItem>
-          <ListItem key='menuBrands' disablePadding >
-            <ListItemButton onClick={() => { navigate(`/brands`); }}>
-              <ListItemIcon>
-                <BrandingWatermarkIcon />
-              </ListItemIcon>
-              <ListItemText primary='Brands' />
-            </ListItemButton>
-          </ListItem>
-          <ListItem key='menuSkus' disablePadding >
-            <ListItemButton onClick={() => { navigate(`/skus`); }}>
-              <ListItemIcon>
-                <InventoryIcon />
-              </ListItemIcon>
-              <ListItemText primary='SKUs' />
-            </ListItemButton>
-          </ListItem>
-          <ListItem key='menuRetailers' disablePadding >
-            <ListItemButton onClick={() => { navigate(`/retailers`); }}>
-              <ListItemIcon>
-                <InventoryIcon />
-              </ListItemIcon>
-              <ListItemText primary='Retailers' />
-            </ListItemButton>
-          </ListItem>
+          <SignedIn>
+            <ListItem key='menuAccounts' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/accounts`); }}>
+                <ListItemIcon>
+                  <AccountBoxIcon />
+                </ListItemIcon>
+                <ListItemText primary='Accounts' />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key='menuBrands' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/brands`); }}>
+                <ListItemIcon>
+                  <BrandingWatermarkIcon />
+                </ListItemIcon>
+                <ListItemText primary='Brands' />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key='menuSkus' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/skus`); }}>
+                <ListItemIcon>
+                  <InventoryIcon />
+                </ListItemIcon>
+                <ListItemText primary='SKUs' />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key='menuRetailers' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/retailers`); }}>
+                <ListItemIcon>
+                  <InventoryIcon />
+                </ListItemIcon>
+                <ListItemText primary='Retailers' />
+              </ListItemButton>
+            </ListItem>
+          </SignedIn >
         </List>
 
       </Drawer>

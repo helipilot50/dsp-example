@@ -6,37 +6,119 @@ extend schema
 
 scalar DateTime
 scalar Money
-scalar EmailAddress
+scalar URL
 
-type User @key(fields: "id") @shareable {
-  id: ID!
+type StringAttribute {
+  key: String!
+  value: String
+}
+
+type NumberAttribute {
+  key: String!
+  value: Int
+}
+
+type BooleanAttribute {
+  key: String!
+  value: Boolean
+}
+type DateTimeAttribute {
+  key: String!
+  value: DateTime
+}
+
+union Attribute =
+    StringAttribute
+  | NumberAttribute
+  | BooleanAttribute
+  | DateTimeAttribute
+
+type EmailAddress {
+  id: ID
+  emailAddress: String
+  verification: Verification
+  linkedTo: [IdentificationLink]
+}
+type IdentificationLink {
+  id: ID
+  type: String
+}
+type PhoneNumber {
+  id: ID
+  phoneNumber: String
+  reservedForSecondFactor: Boolean
+  defaultSecondFactor: Boolean
+  verification: Verification
+  linkedTo: [IdentificationLink]
+}
+type Web3Wallet {
+  id: ID
+  web3Wallet: String
+  verification: Verification
+}
+type Verification {
+  status: String
+  strategy: String
+  externalVerificationRedirectURL: URL
+  attempts: Int
+  expireAt: Int
+  nonce: String
+}
+type ExternalAccount @key(fields: "id") {
+  id: String
+  provider: String
+  identificationId: String
+  externalId: String
+  approvedScopes: String
+  emailAddress: String
   firstName: String
   lastName: String
-  username: String
   imageUrl: String
-  jobTitle: String
-  emailAddress: EmailAddress
-  status: String
-  accounts: [Account]
+  username: String
+  publicMetadata: [Attribute]
+  label: String
+  verification: Verification
+}
+
+type User @key(fields: "id") @shareable {
+  id: ID
+  passwordEnabled: Boolean
+  totpEnabled: Boolean
+  backupCodeEnabled: Boolean
+  twoFactorEnabled: Boolean
+  banned: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  imageUrl: String
+  hasImage: Boolean
+  gender: String
+  birthday: String
+  primaryEmailAddressId: String
+  primaryPhoneNumberId: String
+  primaryWeb3WalletId: String
+  lastSignInAt: DateTime
+  externalId: ID
+  username: String
+  firstName: String
+  lastName: String
+  publicMetadata: [Attribute]
+  privateMetadata: [Attribute]
+  unsafeMetadata: [Attribute]
+  emailAddresses: [EmailAddress]
+  phoneNumbers: [PhoneNumber]
+  web3Wallets: [Web3Wallet]
+  externalAccounts: [ExternalAccount]
 }
 extend type Account @key(fields: "id") {
   id: ID! @external
   """
   List of Users permitted to act on the Account
   """
-  users: UserList
-}
-
-type UserList {
-  users: [User]!
-  totalCount: Int
-  cursor: String
-  hasMore: Boolean
-  offset: Int
-  limit: Int
+  users: [User]
 }
 
 extend type Query {
   user(userId: ID!): User
-  users(someCriteria: String): UserList
+  me: User
+  users(searchCriteria: String): [User]
 }

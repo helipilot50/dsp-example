@@ -13,8 +13,10 @@ import { RetryLink } from '@apollo/client/link/retry';
 import { HttpLink } from '@apollo/client/link/http';
 import { GraphQLError } from 'graphql/error/GraphQLError';
 import { FragmentDefinitionNode, OperationDefinitionNode } from 'graphql';
-import { useAuth } from '@clerk/clerk-react';
 
+import { makeVar } from '@apollo/client';
+
+export const clerkToken = makeVar<string | null>(null);
 
 // obtain the host name
 const hostName = window.location.hostname;
@@ -59,7 +61,7 @@ const httpLink: HttpLink = new HttpLink({
 // create an auth link
 const authLink = new ApolloLink((operation: Operation, forward: NextLink) => {
 
-  const token = localStorage.getItem('clerkToken');
+  const token = clerkToken();
   // add the authorization to the headers
   operation.setContext({
     headers: {
