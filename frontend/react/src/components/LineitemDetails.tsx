@@ -1,12 +1,17 @@
 import {
-  Box, TextField, LinearProgress, Typography,
-  Paper, Button, ButtonGroup, Stack, Alert, AlertTitle, Collapse, Card, CardContent, CardHeader, CardActionArea, CardActions
+  TextField, LinearProgress,
+  Paper, Button, ButtonGroup, Stack, Alert, AlertTitle,
+  Collapse, Card, CardContent, CardHeader,
+  CardActions
 } from '@mui/material';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange, SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
 import { useNavigate, useParams } from 'react-router-dom';
-import { LINEITEMS_ACTIVATE, LINEITEMS_PAUSE, LINEITEM_DETAILS, LINEITEM_LIST, LINEITEM_ACTIVATED, LINEITEM_NEW, LINEITEM_PAUSED } from '../graphql/campaigns.graphql';
-import { useMutation, useQuery, useSubscription, ApolloError, SubscriptionResult } from '@apollo/client';
+import {
+  LINEITEMS_ACTIVATE, LINEITEMS_PAUSE, LINEITEM_DETAILS,
+  LINEITEM_LIST, LINEITEM_ACTIVATED, LINEITEM_NEW, LINEITEM_PAUSED
+} from '../graphql/campaigns.graphql';
+import { useMutation, useQuery, useSubscription, ApolloError } from '@apollo/client';
 import {
   ActivateLineitemsMutation, BudgetType, Lineitem, LineitemActivatedSubscription,
   LineitemActivatedSubscriptionVariables, LineitemPausedSubscription, LineitemPausedSubscriptionVariables,

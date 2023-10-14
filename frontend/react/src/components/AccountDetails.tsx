@@ -1,10 +1,10 @@
 
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
-import { useLocation, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS } from '../graphql/accounts.graphql';
 import {
   Accordion, AccordionDetails, AccordionSummary,
-  Box, TextField, Typography, LinearProgress, Stack, Paper,
+  TextField, Typography, LinearProgress, Stack, Paper,
   Button, FormLabel, MenuItem, Select, FormControl, Card, CardContent, CardHeader, CardActions,
 } from '@mui/material';
 
@@ -26,7 +26,6 @@ import { RetailersChooser } from './RetailersChooser';
 export function AccountDetails() {
   const params = useParams();
   const navigate = useNavigate();
-  const location = useLocation;
   const [isNew] = useState(params['accountId'] === undefined);
   const [accountId, setAccountId] = useState(params.accountId || 'new');
   // account state
@@ -66,6 +65,8 @@ export function AccountDetails() {
   }, [params.accountId]);
 
   console.log('[AccountDetails] data, isNew, accountId', data, isNew, accountId);
+  console.log('[AccountDetails] createData', createData);
+  console.log('[AccountDetails] mappedRetailers, mappedLoading, mappedError', mappedRetailers, mappedLoading, mappedError);
 
   useEffect(() => {
     if (data && data.account) {

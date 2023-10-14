@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import React, { HTMLAttributes, useRef } from 'react';
+import React, { HTMLAttributes } from 'react';
 import { ALL_COUNTRIES } from '../graphql/common.graphql';
 import { AllCountriesQuery, AllCountriesQueryVariables, Country } from '../graphql/types';
 import Autocomplete from '@mui/material/Autocomplete';

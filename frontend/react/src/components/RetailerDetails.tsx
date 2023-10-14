@@ -5,10 +5,10 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box, Card, CardContent, CardHeader, LinearProgress,
+  Card, CardContent, CardHeader, LinearProgress,
   Paper, Stack, TextField, Typography
 } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
+// import FormControl from '@mui/material/FormControl';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { RetailerQuery, RetailerQueryVariables } from '../graphql/types';
 import { RETAILER_DETAILS } from '../graphql/retailer.graphql';

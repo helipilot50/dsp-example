@@ -49,7 +49,11 @@ export function AccountList() {
     ACCOUNTS_LIST
   );
   const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
-  console.log('accounts result', data, error, loading);
+  console.log('[AccountList] accounts result', data, error, loading);
+
+  if (created) {
+    console.log('[AccountList] account created', created);
+  }
 
 
   return (

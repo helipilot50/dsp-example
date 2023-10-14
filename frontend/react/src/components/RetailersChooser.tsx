@@ -1,11 +1,11 @@
 import Autocomplete from '@mui/material/Autocomplete';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import React, { HTMLAttributes, useEffect, useState } from 'react';
+import React, { HTMLAttributes } from 'react';
 import { Retailer, RetailersQuery, RetailersQueryVariables } from '../graphql/types';
 import { useQuery } from '@apollo/client';
 import { RETAILER_LIST } from '../graphql/retailer.graphql';
-import { OFFSET_DEFAULT, LIMIT_DEFAULT } from './ListDefaults';
+import { OFFSET_DEFAULT } from './ListDefaults';
 
 export function RetailersChooser(props: {
   id: string;

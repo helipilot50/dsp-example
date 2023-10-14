@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  Box, Paper, TextField, Typography, Link,
-  LinearProgress, Stack, Card, CardHeader, CardContent, CardActions, Button
+  Paper, TextField, Link,
+  LinearProgress, Stack, Card, CardHeader, CardContent,
 } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { BrandQuery, BrandQueryVariables } from '../graphql/types';
 import { BRAND_DETAILS } from '../graphql/brands.graphql';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 export function BrandDetails() {
   const params = useParams();
 

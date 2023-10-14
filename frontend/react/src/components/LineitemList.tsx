@@ -64,8 +64,8 @@ export function LineitemList(props: LineitemListProps) {
   const params = useParams();
   const navigate = useNavigate();
 
-  const accountId = params.accountId;
-  const campaignId = params.campaignId;
+  // const accountId = params.accountId;
+  // const campaignId = params.campaignId;
 
   const [selection, setSelection] = useState<GridRowSelectionModel>([]);
   const [paginationModel, setPaginationModel] = useState({

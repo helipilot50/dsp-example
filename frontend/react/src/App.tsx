@@ -5,7 +5,7 @@ import {
 import { useAuth } from '@clerk/clerk-react';
 
 import { Nav } from './components/Nav';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { clerkToken } from './lib/apollo';
 
 function App() {

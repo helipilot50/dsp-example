@@ -1,7 +1,10 @@
 
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { Box, Card, CardContent, CardHeader, FormControl, LinearProgress, Paper, TextField, Typography } from '@mui/material';
+import {
+  Box, Card, CardContent, CardHeader, FormControl,
+  LinearProgress, Paper, TextField
+} from '@mui/material';
 import { SkuQuery, SkuQueryVariables } from '../graphql/types';
 import { SKU_DETAILS } from '../graphql/skus.graphql';
 import { Scalars } from '../graphql/types';

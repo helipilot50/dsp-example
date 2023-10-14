@@ -1,8 +1,7 @@
 import {
   Accordion, AccordionDetails, AccordionSummary, Box, Button,
-  LinearProgress, MenuItem, Paper, Select,
+  LinearProgress, MenuItem, Paper,
   Stack, TextField, Typography,
-  FormControl,
 } from '@mui/material';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange, SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
@@ -18,10 +17,6 @@ import {
   Campaign, CampaignType, CampaignStatus, BudgetType
 } from '../graphql/types';
 import dayjs, { Dayjs } from 'dayjs';
-
-
-const locale = 'en-AU';
-
 
 export function CampaignDetails() {
   const params = useParams();
