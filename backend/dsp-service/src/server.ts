@@ -179,7 +179,7 @@ async function listen() {
           } else if (req.headers.authorization) {
             logger.info('[server.context] has authorization header');
             logger.debug(`[server.context] req.headers.authorization ${JSON.stringify(req.headers.authorization, undefined, 2)}`);
-            const token = req.headers.authorization.split(' ')[1];
+            token = req.headers.authorization.split(' ')[1];
           }
           if (token) {
             const userProfile: User = await userByToken(token);
