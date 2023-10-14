@@ -273,6 +273,17 @@ export function LineItemActivated(props: { lineitemId: string; }) {
     }
   }, [activated]);
 
+  useEffect(() => {
+    const timeId = setTimeout(() => {
+      // After 3 seconds set the show value to false
+      setOpen(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeId);
+    };
+  }, [activated]);
+
   console.log('[LineItemActivated] activated', activated);
 
 
@@ -303,6 +314,16 @@ export function LineItemPaused(props: { lineitemId: string; }) {
       setOpen(true);
       setMessage(paused?.lineitemPaused.name + ' paused at ' + new Date().toLocaleString());
     }
+  }, [paused]);
+  useEffect(() => {
+    const timeId = setTimeout(() => {
+      // After 3 seconds set the show value to false
+      setOpen(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeId);
+    };
   }, [paused]);
 
   console.log('[LineItemPaused] paused', paused);

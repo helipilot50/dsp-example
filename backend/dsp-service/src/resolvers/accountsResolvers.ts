@@ -132,12 +132,12 @@ export const accountResolvers/*: Resolvers*/ = {
     accountCreated: {
       subscribe: withFilter(
         (_: any, varibles: any, context: DspContext, info: any) => {
-          logger.debug(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
+          logger.info(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
           return pubsub.asyncIterator(ACCOUNT_CREATED);
         },
         (payload, variables, context: DspContext, info: any) => {
           logger.debug(`accountCreated variables ${variables}`);
-          logger.debug(`accountCreated payload ${payload}`);
+          logger.info(`accountCreated payload ${payload}`);
           return payload;
         }
       )

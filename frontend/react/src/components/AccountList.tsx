@@ -4,8 +4,9 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ACCOUNTS_LIST, ACCOUNT_CREATED } from '../graphql/accounts.graphql';
 import { useNavigate } from 'react-router';
 import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from '../graphql/types';
-import { Typography, Paper, Box, Button } from '@mui/material';
+import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse } from '@mui/material';
 import { LIMIT_DEFAULT } from './ListDefaults';
+import { useState, useMemo, useEffect } from 'react';
 
 
 const columns: GridColDef[] = [
@@ -48,12 +49,6 @@ export function AccountList() {
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
     ACCOUNTS_LIST
   );
-  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
-  console.log('[AccountList] accounts result', data, error, loading);
-
-  if (created) {
-    console.log('[AccountList] account created', created);
-  }
 
 
   return (
@@ -62,6 +57,7 @@ export function AccountList() {
       <Box m={2}>
         {error && <p>Error: {error.message}</p>}
         <Typography variant="h6" gutterBottom>Click on an account to see details</Typography>
+        <AccountCreated />
         <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>
         <DataGrid
           sx={{ minHeight: 400 }}
@@ -84,4 +80,38 @@ export function AccountList() {
   );
 }
 
+export function AccountCreated() {
+  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
+  console.log('[AccountCreated] created', created);
+
+  const [message, setMessage] = useState<string>('');
+  const [open, setOpen] = useState(false);
+  useMemo(() => {
+    if (created) {
+      setOpen(true);
+      setMessage(created?.accountCreated?.name + ' activated at ' + new Date().toLocaleString());
+    }
+  }, [created]);
+
+  useEffect(() => {
+    const timeId = setTimeout(() => {
+      // After 3 seconds set the show value to false
+      setOpen(false);
+    }, 3000);
+
+    return () => {
+      clearTimeout(timeId);
+    };
+  }, [created]);
+
+  return (
+    <Collapse in={open}>
+      <Alert onClose={() => {
+        setOpen(false);
+      }}>
+        <AlertTitle>Lineitem {message} </AlertTitle>
+      </Alert>
+    </Collapse >
+  );
+}
 
