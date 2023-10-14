@@ -15,7 +15,7 @@ function App() {
       const token = await getToken();
       if (token)
         clerkToken(token);
-      console.log('clerk token', clerkToken());
+      // console.log('clerk token', clerkToken());
     }
     fetchToken();
 
