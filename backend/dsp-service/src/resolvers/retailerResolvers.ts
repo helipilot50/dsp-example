@@ -9,7 +9,7 @@ export const retailerResolvers/*: Resolvers*/ = {
 
     async retailers(parent: any, args: QueryRetailersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[retailerResolvers.retailers] args', args);
+        context.logger.debug(`[retailerResolvers.retailers] args ${JSON.stringify(args, undefined, 2)}`);
         const topLevelFields = topLevelFieldsFromQuery(info);
         const offset = args.offset || 0;
         const limit = args.limit || 100;
@@ -31,7 +31,7 @@ export const retailerResolvers/*: Resolvers*/ = {
           skip: offset,
           take: limit
         });
-        context.logger.debug('[retailerResolvers.retailers] dbResult', dbResult);
+        context.logger.debug(`[retailerResolvers.retailers] dbResult ${JSON.stringify(dbResult, undefined, 2)} `);
         return {
           retailers: dbResult as Retailer[],
           offset,
@@ -39,13 +39,13 @@ export const retailerResolvers/*: Resolvers*/ = {
           totalCount
         };
       } catch (err) {
-        context.logger.error('[retailerResolvers.retailers] error', err);
+        context.logger.error(`[retailerResolvers.retailers] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
     retailer(parent: any, args: QueryRetailerArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[retailerResolvers.retailer] args', args);
+        context.logger.debug(`[retailerResolvers.retailer] args ${JSON.stringify(args, undefined, 2)}`);
         let retailerId = args.id;
         if (parent && parent.retailerId) {
           retailerId = parent.retailerId;
@@ -67,7 +67,7 @@ export const retailerResolvers/*: Resolvers*/ = {
           }
         );
       } catch (err) {
-        context.logger.error('[retailerResolvers.retailer] error', err);
+        context.logger.error(`[retailerResolvers.retailer] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
 

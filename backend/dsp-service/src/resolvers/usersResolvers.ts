@@ -19,36 +19,36 @@ export const usersResolvers/*: Resolvers*/ = {
 
     async user(_: any, args: QueryUserArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[usersResolvers.user] args', args);
+        context.logger.debug(`[usersResolvers.user] args ${JSON.stringify(args, undefined, 2)}`);
         const foundUser: User = await userById(args.userId);
-        context.logger.debug('[usersResolvers.user] foundUser', foundUser);
+        context.logger.debug(`[usersResolvers.user] foundUser ${foundUser}`);
         return clerkUserToUser(foundUser);
       } catch (err) {
-        context.logger.error('[usersResolvers.user] error', err);
+        context.logger.error(`[usersResolvers.user] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
 
     async users(_: any, args: QueryUsersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[usersResolvers.users] args', args);
+        context.logger.debug(`[usersResolvers.users] args ${JSON.stringify(args, undefined, 2)}`);
         const users: User[] = await userList();
-        context.logger.debug('[usersResolvers.users] user list', users);
+        context.logger.debug(`[usersResolvers.users] user list ${users}`);
         return users.map((user: User) => clerkUserToUser(user));
       } catch (err) {
-        context.logger.error('[usersResolvers.users] error', err);
+        context.logger.error(`[usersResolvers.users] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
 
     async me(_: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[usersResolvers.me] args', args);
+        context.logger.debug(`[usersResolvers.me] args ${JSON.stringify(args, undefined, 2)}`);
         const itsMe: User = await userByToken(context.token as string);
-        context.logger.debug('[usersResolvers.me] itsMe', itsMe);
+        context.logger.debug(`[usersResolvers.me] itsMe ${itsMe}`);
         return clerkUserToUser(itsMe);
       } catch (err) {
-        context.logger.error('[usersResolvers.me] error', err);
+        context.logger.error(`[usersResolvers.me] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     }

@@ -1,6 +1,13 @@
 import { createLogger, format, transports } from 'winston';
 export const logger = createLogger({
-  level: 'info',
+  // levels: {
+  //   error: 0,
+  //   warning: 1,
+  //   info: 2,
+  //   debug: 3,
+  //   trace: 4
+  // },
+  level: 'debug',
   format: format.combine(
     // format.splat(),
     // format.simple()

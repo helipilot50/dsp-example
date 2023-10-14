@@ -1,9 +1,8 @@
 import { ApolloServer } from '@apollo/server';
-import * as dotenv from 'dotenv';
-dotenv.config();
+
 import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import { ApolloServerPluginLandingPageLocalDefault, ApolloServerPluginLandingPageProductionDefault } from '@apollo/server/plugin/landingPage/default';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
 import express from 'express';
 import favicon from 'serve-favicon';
@@ -12,14 +11,10 @@ import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { logger } from './logger';
 
-
-
-
 import pkg from 'body-parser';
 const { json } = pkg;
 import cors from 'cors';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-
 import { schemaFromDirectory } from './fetchSchema';
 import gql from 'graphql-tag';
 
@@ -40,6 +35,9 @@ const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
 
 async function listen() {
+  logger.level = process.env.LOG_LEVEL || 'debug';
+  console.log('[server] log level:', logger.level);
+
 
   // Create an Express app and HTTP server; we will attach both the WebSocket
   // server and the ApolloServer to this HTTP server.
@@ -50,8 +48,6 @@ async function listen() {
 
 
   try {
-
-
     logger.info('[server] creating apollo server');
     let defs = gql`
       extend type Query{
@@ -59,15 +55,17 @@ async function listen() {
       }
       `;
     try {
-      defs = schemaFromDirectory(process.env.SCHEMA_DIR || './schema');
+      const schemaDir = process.env.SCHEMA_DIR || './schema';
+      logger.info(`[server] schema directory: ${schemaDir}`);
+      defs = schemaFromDirectory(schemaDir);
     } catch (err) {
-      logger.error('[server] 💀 Error reading schema', JSON.stringify(err, undefined, 2));
+      logger.error(`[server] 💀 Error reading schema ${JSON.stringify(err, undefined, 2)}`);
       throw err;
     }
 
 
 
-    logger.info('[server] building schema');
+    logger.info(`[server] building schema`);
 
     const graphSchema = buildSubgraphSchema({
       typeDefs: defs,
@@ -101,7 +99,7 @@ async function listen() {
 
       },
       onDisconnect(ctx: any, code: number, reason: string) {
-        logger.info('[server] WS Disconnected!', code, reason);
+        logger.info(`[server] WS Disconnected! \${code, reason}`);
       },
     }, wsServer);
 
@@ -122,6 +120,7 @@ async function listen() {
     //   apollo server for queries and mutations
     //---------------------------------------------------------------------------------
 
+    logger.info(`INTROSPECTION ${process.env.INTROSPECTION}`);
     const server = new ApolloServer<DspContext>(
       {
         schema: graphSchema,
@@ -148,9 +147,12 @@ async function listen() {
             }
           }),
         ],
-        introspection: (process.env.INTROSPECTION) ? Boolean(process.env.INTROSPECTION) : false,
+        introspection: (process.env.INTROSPECTION) ? Boolean(process.env.INTROSPECTION) : true,
+        logger: logger
       }
     );
+
+
 
     await server.start();
 
@@ -162,19 +164,18 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      // ClerkExpressRequireAuth(),
       expressMiddleware(server, {
         context: async ({ req }: ExpressContextFunctionArgument): Promise<DspContext> => {
-          // logger.debug('[server.context] req', JSON.stringify(req, undefined, 2));
-          // logger.info('[server.context] req.headers', JSON.stringify(req.headers, undefined, 2));
-          // logger.debug('[server.context] req.body', JSON.stringify(req.body, undefined, 2));
+          // logger.debug(`[server.context] req \${JSON.stringify(req, undefined, 2)}`);
+          // logger.debug(`[server.context] req.headers \${JSON.stringify(req.headers, undefined, 2)}`);
+          // logger.debug(`[server.context] req.body \${JSON.stringify(req.body, undefined, 2)}`);
 
           if (req.headers.authorization) {
             logger.info('[server.context] has authorization header');
-            logger.debug('[server.context] req.headers.authorization', JSON.stringify(req.headers.authorization, undefined, 2));
+            logger.debug(`[server.context] req.headers.authorization ${JSON.stringify(req.headers.authorization, undefined, 2)}`);
             const token = req.headers.authorization.split(' ')[1];
             const userProfile: User = await userByToken(token);
-            logger.debug('[server.context] userProfile', JSON.stringify(userProfile, undefined, 2));
+            logger.debug(`[server.context] userProfile ${JSON.stringify(userProfile, undefined, 2)}`);
 
             return {
               user: userProfile,
@@ -184,7 +185,7 @@ async function listen() {
               logger: logger,
             };
           }
-          logger.warning('[server.context] no authorization header');
+          logger.warn('[server.context] no authorization header');
           return {
             prisma,
             pubsub,
@@ -196,7 +197,7 @@ async function listen() {
 
 
   } catch (error) {
-    logger.error('[server] 💀 Error creating apollo server', JSON.stringify(error, undefined, 2));
+    logger.error(`[server] 💀 Error creating apollo server ${JSON.stringify(error, undefined, 2)}`);
   }
 
   const theServer = httpServer.listen(PORT, () => {
@@ -212,7 +213,7 @@ async function main() {
   try {
     await listen();
   } catch (err) {
-    logger.error('[server] 💀 Error starting the node server', JSON.stringify(err, undefined, 2));
+    logger.error(`[server] 💀 Error starting the node server ${JSON.stringify(err, undefined, 2)}`);
   }
 }
 

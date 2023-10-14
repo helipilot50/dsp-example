@@ -1,17 +1,16 @@
-import clerk, { User } from '@clerk/clerk-sdk-node';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { decode } from 'punycode';
+import clerkClient, { User } from '@clerk/clerk-sdk-node';
+import jwt from 'jsonwebtoken';
 export { JwtPayload } from 'jsonwebtoken';
 export { User } from '@clerk/clerk-sdk-node';
 
 
 export async function userList() {
-  const users = clerk.users.getUserList();
+  const users = clerkClient.users.getUserList();
   return users;
 }
 
 export async function sessions() {
-  const sessions = clerk.sessions.getSessionList();
+  const sessions = clerkClient.sessions.getSessionList();
   return sessions;
 }
 
@@ -27,11 +26,13 @@ export async function userByToken(token: string): Promise<User> {
 }
 
 export async function userById(id: string): Promise<User> {
-  const user = await clerk.users.getUser(id as string);
+  const user = await clerkClient.users.getUser(id as string);
   return user;
 }
 
 export function decodeToken(token: string) {
   const decoded = jwt.decode(token);
+  // const decoded = jwt.verify(token, process.env.CLERK_JWT_PUBLIC_KEY as string);
+
   return decoded;
 }

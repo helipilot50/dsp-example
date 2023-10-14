@@ -10,10 +10,10 @@ export const skuResolvers/*: Resolvers*/ = {
 
     async skus(_: any, args: QuerySkusArgs, context: DspContext, info: any) {
       try {
-        context.logger.debug('skus args', args);
+        context.logger.debug(`skus args ${JSON.stringify(args, undefined, 2)}`);
         const searchTarget = args.search ? args.search : '';
         const topLevelFields = topLevelFieldsFromQuery(info);
-        context.logger.debug('skus fields', topLevelFields);
+        context.logger.debug(`skus fields ${topLevelFields}`);
         const offset = args.offset || 0;
         const limit = args.limit || 100;
         let totalCount: Number | undefined = undefined;
@@ -45,7 +45,7 @@ export const skuResolvers/*: Resolvers*/ = {
             take: limit
           });
         }
-        context.logger.debug('skus rows', rows);
+        context.logger.debug(`skus rows ${rows}`);
         return {
           skus: rows,
           offset,
@@ -53,15 +53,15 @@ export const skuResolvers/*: Resolvers*/ = {
           totalCount
         };
       } catch (err) {
-        context.logger.error('skus error', err);
+        context.logger.error(`skus error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
 
     async sku(parent: any, args: QuerySkuArgs, context: DspContext) {
       try {
-        context.logger.debug('sku args', args);
-        context.logger.debug('sku parent', parent);
+        context.logger.debug(`sku args ${JSON.stringify(args, undefined, 2)}`);
+        context.logger.debug(`sku parent ${JSON.stringify(parent, undefined, 2)}`);
         let skuKey = args.skuKey;
 
         if (parent && parent.skuKey) {
@@ -82,10 +82,10 @@ export const skuResolvers/*: Resolvers*/ = {
           }
         );
 
-        context.logger.debug('foundSKU', foundSKU);
+        context.logger.debug(`foundSKU ${foundSKU}`);
         return (foundSKU) ? foundSKU : null;
       } catch (err) {
-        context.logger.error('sku error', err);
+        context.logger.error(`sku error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },

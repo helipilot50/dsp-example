@@ -10,7 +10,7 @@ export const accountResolvers/*: Resolvers*/ = {
   Query: {
     accounts(_: any, ___: QueryAccountsArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        // context.logger.debug('[accounts] context user', context.user?.username);
+        // context.logger.debug(`[accounts] context user ${context.user?.username}`);
         return context.prisma.account.findMany({
           select: {
             id: true,
@@ -28,7 +28,7 @@ export const accountResolvers/*: Resolvers*/ = {
           }
         });
       } catch (err) {
-        context.logger.error('accounts error', err);
+        context.logger.error(`accounts error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
@@ -39,7 +39,7 @@ export const accountResolvers/*: Resolvers*/ = {
       if (parent && parent.accountId) {
         accountId = parent.accountId;
       }
-      context.logger.debug('accountId', accountId);
+      context.logger.debug(`accountId ${accountId}`);
       return context.prisma.account.findUnique(
         {
           where: {
@@ -67,7 +67,7 @@ export const accountResolvers/*: Resolvers*/ = {
   Mutation: {
     async newAccount(_: any, args: MutationNewAccountArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[newAccount] args', args);
+        context.logger.debug(`[newAccount] args ${JSON.stringify(args, undefined, 2)}`);
 
         // const code = args.account.currency;
         // const currency = await prisma.currency.findFirst({
@@ -88,17 +88,17 @@ export const accountResolvers/*: Resolvers*/ = {
         const dbResult = await context.prisma.account.create({
           data: c
         });
-        context.logger.debug('[newAccount] dbResult', dbResult);
+        context.logger.debug(`[newAccount] dbResult ${JSON.stringify(dbResult, undefined, 2)} `);
         context.pubsub.publish(ACCOUNT_CREATED, dbResult);
         return dbResult;
       } catch (err) {
-        context.logger.error('[newAccount] error', err);
+        context.logger.error(`[newAccount] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
     async mapAccountRetailers(_: any, args: MutationMapAccountRetailersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug('[addAccountRetailers] args', args);
+        context.logger.debug(`[addAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
         const retailers = await context.prisma.retailer.findMany({
           where: {
             id: {
@@ -119,7 +119,7 @@ export const accountResolvers/*: Resolvers*/ = {
         });
         return retailers;
       } catch (err) {
-        context.logger.error('[addAccountRetailers] error', err);
+        context.logger.error(`[addAccountRetailers] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     }
@@ -129,12 +129,12 @@ export const accountResolvers/*: Resolvers*/ = {
     accountCreated: {
       subscribe: withFilter(
         (_: any, varibles: any, context: DspContext, info: any) => {
-          context.logger.debug('[accountsResolvers.accountCreated] subscribe ', varibles);
+          context.logger.debug(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
           return pubsub.asyncIterator(ACCOUNT_CREATED);
         },
         (payload, variables, context: DspContext, info: any) => {
-          context.logger.debug('accountCreated variables', variables);
-          context.logger.debug('accountCreated payload', payload);
+          context.logger.debug(`accountCreated variables ${variables}`);
+          context.logger.debug(`accountCreated payload ${payload}`);
           return payload;
         }
       )

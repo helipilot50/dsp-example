@@ -56,7 +56,7 @@ export const relationshipResolvers/*: Resolvers*/ = {
       return retailers;
     },
     countries(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
-      context.logger.debug('[Account] countryIds', parent.countryIds);
+      context.logger.debug(`[Account] countryIds ${parent.countryIds}`);
       const countriesQueryArgs: QueryCountriesArgs = {
         countryCodes: parent.countryIds
       };
