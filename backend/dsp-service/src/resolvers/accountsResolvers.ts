@@ -3,6 +3,9 @@ import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMa
 import { withFilter } from "graphql-subscriptions";
 import { DspContext, pubsub } from "../context";
 
+// TODO: add logger to context for sunscription
+import { logger } from "../logger";
+
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED';
 
 export const accountResolvers/*: Resolvers*/ = {
@@ -129,12 +132,12 @@ export const accountResolvers/*: Resolvers*/ = {
     accountCreated: {
       subscribe: withFilter(
         (_: any, varibles: any, context: DspContext, info: any) => {
-          context.logger.debug(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
+          logger.debug(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
           return pubsub.asyncIterator(ACCOUNT_CREATED);
         },
         (payload, variables, context: DspContext, info: any) => {
-          context.logger.debug(`accountCreated variables ${variables}`);
-          context.logger.debug(`accountCreated payload ${payload}`);
+          logger.debug(`accountCreated variables ${variables}`);
+          logger.debug(`accountCreated payload ${payload}`);
           return payload;
         }
       )

@@ -5,8 +5,9 @@ import { QueryLineitemsArgs, LineitemList, QueryLineitemArgs, QueryCampaignsArgs
 import { topLevelFieldsFromQuery } from "./resolverTools";
 import { withFilter } from "graphql-subscriptions";
 
-
+// TODO fix context for subscriptions
 import { pubsub } from "../context";
+import { logger } from "../logger";
 
 
 const LINEITEM_ACTIVATED_EVENT = 'LINEITEM_ACTIVATED';
@@ -318,12 +319,12 @@ export const campaignsResolvers/*: Resolvers*/ = {
       subscribe: withFilter(
         // asyncIteratorFn
         (_: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          context.logger.debug(`[campaignsResolvers.lineitemActivated] subscribe ${variables}`);
+          logger.debug(`[campaignsResolvers.lineitemActivated] subscribe ${variables}`);
           return pubsub.asyncIterator(LINEITEM_ACTIVATED_EVENT);
         },
         // filterFn 
         (payload: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          context.logger.debug(`[campaignsResolvers.lineitemActivated] filter ${payload}, ${variables}`);
+          logger.debug(`[campaignsResolvers.lineitemActivated] filter ${payload}, ${variables}`);
           return (payload.lineitemActivated.id === variables.lineitemId);
         }
       ),
@@ -333,12 +334,12 @@ export const campaignsResolvers/*: Resolvers*/ = {
       subscribe: withFilter(
         // asyncIteratorFn
         (_: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          context.logger.debug(`[campaignsResolvers.lineitemPaused] subscribe ${variables}`);
+          logger.debug(`[campaignsResolvers.lineitemPaused] subscribe ${variables}`);
           return pubsub.asyncIterator(LINEITEM_PAUSED_EVENT);
         },
         // filterFn 
         (payload: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          context.logger.debug(`[campaignsResolvers.lineitemPaused] filter ${payload}, ${variables}`);
+          logger.debug(`[campaignsResolvers.lineitemPaused] filter ${payload}, ${variables}`);
           return (payload.lineitemPaused.id === variables.lineitemId);
         }
       ),

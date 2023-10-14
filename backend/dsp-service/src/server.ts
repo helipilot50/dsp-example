@@ -92,6 +92,7 @@ async function listen() {
       onConnect: async (ctx: any) => {
         logger.info('[server] WS Connected!');
         // Check authentication every time a client connects.
+        logger.info(`[server] WS Connection Params: ${JSON.stringify(ctx.connectionParams, undefined, 2)}`);
         // if (tokenIsNotValid(ctx.connectionParams)) {
         // You can return false to close the connection  or throw an explicit error
         // throw new Error('Auth token missing!');
@@ -99,7 +100,7 @@ async function listen() {
 
       },
       onDisconnect(ctx: any, code: number, reason: string) {
-        logger.info(`[server] WS Disconnected! \${code, reason}`);
+        logger.info(`[server] WS Disconnected! ${code}, ${reason}`);
       },
     }, wsServer);
 
@@ -165,18 +166,24 @@ async function listen() {
       cors(corsOptions),
       json(),
       expressMiddleware(server, {
-        context: async ({ req }: ExpressContextFunctionArgument): Promise<DspContext> => {
+        context: async ({ req, connection }: any): Promise<DspContext> => {
           // logger.debug(`[server.context] req \${JSON.stringify(req, undefined, 2)}`);
           // logger.debug(`[server.context] req.headers \${JSON.stringify(req.headers, undefined, 2)}`);
           // logger.debug(`[server.context] req.body \${JSON.stringify(req.body, undefined, 2)}`);
 
-          if (req.headers.authorization) {
+          let token = '';
+          if (connection) {
+            logger.info('[server.context] connection');
+            logger.debug(`[server.context] connection.context ${JSON.stringify(connection.context, undefined, 2)}`);
+            token = connection.context.authorization.split(' ')[1];
+          } else if (req.headers.authorization) {
             logger.info('[server.context] has authorization header');
             logger.debug(`[server.context] req.headers.authorization ${JSON.stringify(req.headers.authorization, undefined, 2)}`);
             const token = req.headers.authorization.split(' ')[1];
+          }
+          if (token) {
             const userProfile: User = await userByToken(token);
             logger.debug(`[server.context] userProfile ${JSON.stringify(userProfile, undefined, 2)}`);
-
             return {
               user: userProfile,
               prisma,
@@ -184,13 +191,15 @@ async function listen() {
               token: token,
               logger: logger,
             };
+
+          } else {
+            logger.debug('[server.context] no authorization header');
+            return {
+              prisma,
+              pubsub,
+              logger: logger,
+            };
           }
-          logger.warn('[server.context] no authorization header');
-          return {
-            prisma,
-            pubsub,
-            logger: logger,
-          };
         },
       }),
     );

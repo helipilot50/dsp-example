@@ -1,4 +1,5 @@
 import { createLogger, format, transports } from 'winston';
+export { Logger } from 'winston';
 export const logger = createLogger({
   // levels: {
   //   error: 0,
