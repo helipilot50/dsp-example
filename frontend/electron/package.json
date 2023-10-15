@@ -1,11 +1,12 @@
 {
-  "name": "electron-react-typescript",
-  "author": "Diego Fernandes <diego.schell.f@gmail.com>",
-  "version": "2.0.0",
+  "name": "not-dsp-desktop",
+  "author": "Peter Milne",
+  "version": "1.0.0",
   "description": "An Electron boilerplate including TypeScript, React, Jest and ESLint.",
   "main": "./.webpack/main/index.js",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "MAIN_WINDOW_WEBPACK_ENTRY=https://not-dsp-react.onrender.com electron-forge start",
+    "dev": "MAIN_WINDOW_WEBPACK_ENTRY=http://localhost:3000 electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "release": "electron-forge publish",
@@ -69,8 +70,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "name": "Electron starter",
-        "executableName": "electron-starter",
+        "name": "Not DSP",
+        "executableName": "not-dsp",
         "icon": "assets/icon",
         "extraResource": [
           "assets"
@@ -78,21 +79,26 @@
       },
       "plugins": [
         [
-          "@electron-forge/plugin-webpack",
           {
-            "mainConfig": "./webpack/main.webpack.js",
-            "renderer": {
-              "config": "./webpack/renderer.webpack.js",
-              "entryPoints": [
-                {
-                  "html": "./public/index.html",
-                  "js": "./src/index.tsx",
-                  "name": "main_window",
-                  "preload": {
-                    "js": "./electron/bridge.ts"
+            "name": "@electron-forge/plugin-webpack",
+            "config": {
+              "mainConfig": "./webpack/main.webpack.js",
+              "renderer": {
+                "config": "./webpack/renderer.webpack.js",
+                "entryPoints": [
+                  {
+                    "name": "main_window",
+                    "html": "./public/index.html",
+                    "js": "./src/index.tsx",
+                    "preload": {
+                      "js": "./electron/bridge.ts"
+                    }
                   }
-                }
-              ]
+                ]
+              }
+            },
+            "devServer": {
+              "stats": "verbose"
             }
           }
         ]
