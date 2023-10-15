@@ -334,12 +334,12 @@ export const campaignsResolvers/*: Resolvers*/ = {
       subscribe: withFilter(
         // asyncIteratorFn
         (_: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          logger.debug(`[campaignsResolvers.lineitemPaused] subscribe ${variables}`);
-          return pubsub.asyncIterator(LINEITEM_PAUSED_EVENT);
+          context.logger.debug(`[campaignsResolvers.lineitemPaused] subscribe ${variables}`);
+          return context.pubsub.asyncIterator(LINEITEM_PAUSED_EVENT);
         },
         // filterFn 
         (payload: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
-          logger.debug(`[campaignsResolvers.lineitemPaused] filter ${payload}, ${variables}`);
+          context.logger.debug(`[campaignsResolvers.lineitemPaused] filter ${payload}, ${variables}`);
           return (payload.lineitemPaused.id === variables.lineitemId);
         }
       ),

@@ -23,12 +23,9 @@ import gql from 'graphql-tag';
 
 // Resolvers
 import { resolvers } from './resolvers';
-import { DspContext } from './context';
+import { DspContext, makeRequestContext, pubsub, prisma, makeWebSocketContext } from './context';
 
-import { pubsub, prisma } from './context';
 import { corsOptions } from './cors';
-
-import { User, userByToken } from './clerk';
 
 const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
@@ -89,6 +86,9 @@ async function listen() {
     // WebSocketServer start listening.
     const serverCleanup = useServer({
       schema: graphSchema,
+      context: async (args: ExpressContextFunctionArgument) => {
+        return makeWebSocketContext(args);
+      },
       onConnect: async (ctx: any) => {
         logger.info('[server] WS Connected!');
         // Check authentication every time a client connects.
@@ -108,7 +108,7 @@ async function listen() {
     //   Use SSE for subscriptions. experimental
     //---------------------------------------------------------------------------------
     //   const handler = createHandler({ schema: graphSchema });
-    //   app.use('/graphql/subscriptions', async (req, res) => {
+    //   app.use('/subscriptions', async (req, res) => {
     //     try {
     //       await handler(req, res);
     //     } catch (err) {
@@ -122,6 +122,7 @@ async function listen() {
     //---------------------------------------------------------------------------------
 
     logger.info(`INTROSPECTION ${process.env.INTROSPECTION}`);
+
     const server = new ApolloServer<DspContext>(
       {
         schema: graphSchema,
@@ -166,40 +167,8 @@ async function listen() {
       cors(corsOptions),
       json(),
       expressMiddleware(server, {
-        context: async ({ req, connection }: any): Promise<DspContext> => {
-          // logger.debug(`[server.context] req \${JSON.stringify(req, undefined, 2)}`);
-          // logger.debug(`[server.context] req.headers \${JSON.stringify(req.headers, undefined, 2)}`);
-          // logger.debug(`[server.context] req.body \${JSON.stringify(req.body, undefined, 2)}`);
-
-          let token = '';
-          if (connection) {
-            logger.info('[server.context] connection');
-            logger.debug(`[server.context] connection.context ${JSON.stringify(connection.context, undefined, 2)}`);
-            token = connection.context.authorization.split(' ')[1];
-          } else if (req.headers.authorization) {
-            logger.info('[server.context] has authorization header');
-            logger.debug(`[server.context] req.headers.authorization ${JSON.stringify(req.headers.authorization, undefined, 2)}`);
-            token = req.headers.authorization.split(' ')[1];
-          }
-          if (token) {
-            const userProfile: User = await userByToken(token);
-            logger.debug(`[server.context] userProfile ${JSON.stringify(userProfile, undefined, 2)}`);
-            return {
-              user: userProfile,
-              prisma,
-              pubsub,
-              token: token,
-              logger: logger,
-            };
-
-          } else {
-            logger.debug('[server.context] no authorization header');
-            return {
-              prisma,
-              pubsub,
-              logger: logger,
-            };
-          }
+        context: async (args: ExpressContextFunctionArgument) => {
+          return makeRequestContext(args);
         },
       }),
     );
