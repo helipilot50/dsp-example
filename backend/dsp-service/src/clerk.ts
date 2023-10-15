@@ -16,7 +16,7 @@ export async function sessions() {
 }
 
 export async function userByToken(token: string): Promise<User> {
-  const decodedToken = decodeToken(token);
+  const decodedToken: any = decodeToken(token);
   if (!decodedToken) {
     throw new Error('No decoded token');
   }
