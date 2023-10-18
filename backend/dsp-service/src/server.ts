@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 
-import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
@@ -167,11 +167,11 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      // ClerkExpressWithAuth(),
+      ClerkExpressWithAuth(),
       expressMiddleware(server,
         {
           context: async (args: any) => {
-            console.log(`[server] expressMiddleware context ${JSON.stringify(args, undefined, 2)}`);
+            // console.log(`[server] expressMiddleware context ${JSON.stringify(args, undefined, 2)}`);
             return await makeRequestContext(args);
           },
         }
