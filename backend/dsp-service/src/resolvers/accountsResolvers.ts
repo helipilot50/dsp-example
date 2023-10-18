@@ -1,10 +1,7 @@
 import { GraphQLResolveInfo } from "graphql";
 import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMapAccountRetailersArgs } from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
-import { DspContext, pubsub } from "../context";
-
-// TODO: add logger to context for sunscription
-import { logger } from "../logger";
+import { DspContext } from "../context";
 
 const ACCOUNT_CREATED = 'ACCOUNT_CREATED';
 
@@ -132,12 +129,12 @@ export const accountResolvers/*: Resolvers*/ = {
     accountCreated: {
       subscribe: withFilter(
         (_: any, varibles: any, context: DspContext, info: any) => {
-          context.logger.info(`[accountsResolvers.accountCreated] subscribe  ${varibles}`);
+          context.logger.debug(`[accountsResolvers.accountCreated] subscribe  ${JSON.stringify(varibles, null, 2)}`);
           return context.pubsub.asyncIterator(ACCOUNT_CREATED);
         },
         (payload, variables, context: DspContext, info: any) => {
-          context.logger.debug(`accountCreated variables ${variables}`);
-          context.logger.info(`accountCreated payload ${payload}`);
+          context.logger.debug(`accountCreated variables ${JSON.stringify(variables, null, 2)}`);
+          context.logger.debug(`accountCreated payload ${JSON.stringify(payload, null, 2)}`);
           return payload;
         }
       )

@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 
-import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
@@ -26,6 +26,7 @@ import { resolvers } from './resolvers';
 import { DspContext, makeRequestContext, pubsub, prisma, makeWebSocketContext } from './context';
 
 import { corsOptions } from './cors';
+import { ClerkExpressWithAuth, LooseAuthProp, WithAuthProp } from '@clerk/clerk-sdk-node';
 
 const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
@@ -86,7 +87,7 @@ async function listen() {
     // WebSocketServer start listening.
     const serverCleanup = useServer({
       schema: graphSchema,
-      context: async (args: ExpressContextFunctionArgument) => {
+      context: async (args: any) => {
         return makeWebSocketContext(args);
       },
       onConnect: async (ctx: any) => {
@@ -166,11 +167,15 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      expressMiddleware(server, {
-        context: async (args: ExpressContextFunctionArgument) => {
-          return makeRequestContext(args);
-        },
-      }),
+      ClerkExpressWithAuth(),
+      expressMiddleware(server,
+        {
+          context: async (args: any) => {
+            // console.log(`[server] expressMiddleware context ${JSON.stringify(args, undefined, 2)}`);
+            return await makeRequestContext(args);
+          },
+        }
+      ),
     );
 
 
