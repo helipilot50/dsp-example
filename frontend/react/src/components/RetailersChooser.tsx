@@ -5,7 +5,7 @@ import React, { HTMLAttributes } from 'react';
 import { Retailer, RetailersQuery, RetailersQueryVariables } from '../graphql/types';
 import { useQuery } from '@apollo/client';
 import { RETAILER_LIST } from '../graphql/retailer.graphql';
-import { OFFSET_DEFAULT } from './ListDefaults';
+import { OFFSET_DEFAULT } from '../lib/ListDefaults';
 
 export function RetailersChooser(props: {
   id: string;

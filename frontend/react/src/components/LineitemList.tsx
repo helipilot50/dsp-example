@@ -9,7 +9,7 @@ import {
 } from '../graphql/types';
 import { dateFormatter } from '../lib/utility';
 import { useEffect, useState } from 'react';
-import { LIMIT_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 
 
 const columns: GridColDef[] = [

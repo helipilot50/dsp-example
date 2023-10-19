@@ -2,7 +2,7 @@ import {
   TextField, LinearProgress,
   Paper, Button, ButtonGroup, Stack, Alert, AlertTitle,
   Collapse, Card, CardContent, CardHeader,
-  CardActions
+  CardActions, Snackbar
 } from '@mui/material';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange, SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
@@ -21,6 +21,7 @@ import {
 } from '../graphql/types';
 import { useMemo, useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
+import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
 
 export function LineitemDetails() {
   const params = useParams();
@@ -264,37 +265,29 @@ export function LineItemActivated(props: { lineitemId: string; }) {
         lineitemId: props.lineitemId
       }
     });
-  const [message, setMessage] = useState<string>('');
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (activated) {
-      setOpen(true);
-      setMessage(activated?.lineitemActivated.name + ' activated at ' + new Date().toLocaleString());
+      setState({ open: true, message: activated?.lineitemActivated.name + ' activated at ' + new Date().toLocaleString() });
     }
   }, [activated]);
 
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [activated]);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
   console.log('[LineItemActivated] activated', activated);
 
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose} severity='success'>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 
@@ -307,59 +300,28 @@ export function LineItemPaused(props: { lineitemId: string; }) {
         lineitemId: props.lineitemId
       }
     });
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>('');
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (paused) {
-      setOpen(true);
-      setMessage(paused?.lineitemPaused.name + ' paused at ' + new Date().toLocaleString());
+      setState({ open: true, message: paused?.lineitemPaused.name + ' paused at ' + new Date().toLocaleString() });
     }
   }, [paused]);
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [paused]);
 
   console.log('[LineItemPaused] paused', paused);
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 
-export function LineItemNotify(props: { isOpen: boolean; message: string; }) {
-  // experimental and buggy
-
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>('');
-  useEffect(() => {
-    setOpen(props.isOpen);
-  }, [props.isOpen]);
-  useEffect(() => {
-    setMessage(`${props.message} at ${new Date().toLocaleString()}`);
-  }, [props.message]);
-
-  console.log('[LineItemNotify] message', props.message);
-
-  return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>{message}</AlertTitle>
-      </Alert>
-    </Collapse >
-  );
-}

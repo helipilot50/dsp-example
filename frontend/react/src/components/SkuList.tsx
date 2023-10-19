@@ -8,7 +8,7 @@ import { SkusQuery, SkusQueryVariables, SkuList as Skus } from '../graphql/types
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
 import { SKU_LIST } from '../graphql/skus.graphql';
-import { OFFSET_DEFAULT, LIMIT_DEFAULT } from './ListDefaults';
+import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
 
 const columns: GridColDef[] = [

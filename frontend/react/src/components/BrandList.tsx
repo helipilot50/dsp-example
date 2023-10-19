@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { BRANDS_LIST } from '../graphql/brands.graphql';
 import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from '../graphql/types';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },

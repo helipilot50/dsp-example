@@ -4,9 +4,10 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ACCOUNTS_LIST, ACCOUNT_CREATED } from '../graphql/accounts.graphql';
 import { useNavigate } from 'react-router';
 import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from '../graphql/types';
-import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse } from '@mui/material';
-import { LIMIT_DEFAULT } from './ListDefaults';
+import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar } from '@mui/material';
+import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';
+import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
 
 
 const columns: GridColDef[] = [
@@ -82,36 +83,29 @@ export function AccountList() {
 
 export function AccountCreated() {
   const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
-  console.log('[AccountCreated] created', created);
 
-  const [message, setMessage] = useState<string>('');
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (created) {
-      setOpen(true);
-      setMessage(created?.accountCreated?.name + ' activated at ' + new Date().toLocaleString());
+      setState({ open: true, message: created?.accountCreated?.name + ' created at ' + new Date().toLocaleString() });
+      console.log('[AccountCreated] created', created);
     }
   }, [created]);
 
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [created]);
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Account {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 

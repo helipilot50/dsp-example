@@ -9,7 +9,7 @@ import { Box, Paper, Typography } from '@mui/material';
 import { QueryResult, useQuery } from '@apollo/client';
 import { RETAILER_LIST } from '../graphql/retailer.graphql';
 import { useEffect, useState } from 'react';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },

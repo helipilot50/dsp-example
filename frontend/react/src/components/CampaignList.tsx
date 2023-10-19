@@ -5,7 +5,7 @@ import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { dateFormatter } from '../lib/utility';
 import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from '../graphql/types';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { useEffect, useState } from 'react';
 
 
