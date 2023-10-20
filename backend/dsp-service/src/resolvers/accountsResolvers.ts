@@ -98,7 +98,7 @@ export const accountResolvers/*: Resolvers*/ = {
     },
     async mapAccountRetailers(_: any, args: MutationMapAccountRetailersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug(`[addAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
+        context.logger.info(`[addAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
         const retailers = await context.prisma.retailer.findMany({
           where: {
             id: {
@@ -112,9 +112,8 @@ export const accountResolvers/*: Resolvers*/ = {
             id: args.accountId
           },
           data: {
-            retailerIds: {
-              push: args.retailerIds as string[]
-            }
+            retailerIds: args.retailerIds as string[]
+
           }
         });
         return retailers;
