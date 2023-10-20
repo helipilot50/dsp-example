@@ -96,7 +96,6 @@ export function AccountDetails() {
         navigate(-1);
       },
       onError: (error: ApolloError) => {
-        alert(`[AccountDetails.newAccount] error: ${error} `);
         console.error('[AccountDetails.newAccount] error', error);
       }
     });
@@ -159,6 +158,7 @@ export function AccountDetails() {
           {(loading || createLoading) && <LinearProgress variant="query" />}
           {error && <ErrorNofification error={error} />}
           {createError && <ErrorNofification error={createError} />}
+          {mappedError && <ErrorNofification error={mappedError} />}
           <Stack >
             <FormControl>
               <FormLabel>Name</FormLabel>

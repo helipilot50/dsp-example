@@ -45,7 +45,7 @@ const wsLink = new GraphQLWsLink(
     connectionParams: {
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       credentials: true,
-      authorization: clerkToken() ? `Bearer ${clerkToken()}` : null,
+      // authorization: clerkToken() ? `Bearer ${clerkToken()}` : null,
     },
     on: {
       connected: () => console.log('GraphQLWsLink connected'),
@@ -63,6 +63,7 @@ const httpLink: HttpLink = new HttpLink({
 const authLink = new ApolloLink((operation: Operation, forward: NextLink) => {
 
   const token = clerkToken();
+  console.log('[authLink] token', (token) ? token.substring(0, 10) : 'no token ');
   // add the authorization to the headers
   operation.setContext({
     headers: {
