@@ -22,6 +22,7 @@ import {
 import { useMemo, useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 export function LineitemDetails() {
   const params = useParams();
@@ -211,7 +212,7 @@ export function LineitemDetails() {
           {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
           {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
           {loading && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
+          {error && <ErrorNofification error={error} />}
 
           <Stack>
             <TextField

@@ -10,6 +10,7 @@ import { QueryResult, useQuery } from '@apollo/client';
 import { RETAILER_LIST } from '../graphql/retailer.graphql';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -97,7 +98,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
     <Paper square={false}
       elevation={6}>
       <Box sx={{ m: 2 }}>
-        {error && <p>Error: {error.message}</p>}
+        {error && <ErrorNofification error={error} />}
         <Typography variant="h6" gutterBottom>Retailers</Typography>
         <DataGrid
           sx={{ minHeight: 400 }}

@@ -171,7 +171,6 @@ async function listen() {
       expressMiddleware(server,
         {
           context: async (args: any) => {
-            // console.log(`[server] expressMiddleware context ${JSON.stringify(args, undefined, 2)}`);
             return await makeRequestContext(args);
           },
         }

@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import CountriesChooser from './CountriesChooser';
 import { RetailersChooser } from './RetailersChooser';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 
@@ -156,8 +157,8 @@ export function AccountDetails() {
           autoComplete="off"
         >
           {(loading || createLoading) && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
-          {createError && <p>Create Error: {createError.message}</p>}
+          {error && <ErrorNofification error={error} />}
+          {createError && <ErrorNofification error={createError} />}
           <Stack >
             <FormControl>
               <FormLabel>Name</FormLabel>

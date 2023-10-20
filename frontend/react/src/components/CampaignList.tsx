@@ -7,6 +7,7 @@ import { dateFormatter } from '../lib/utility';
 import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from '../graphql/types';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { useEffect, useState } from 'react';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 const columns: GridColDef[] = [
@@ -108,7 +109,7 @@ export function CampaignList(props: CampaignListProps) {
   return (
     <Paper square={false}
       elevation={6}>
-      {error && <p>Error: {error.message}</p>}
+      {error && <ErrorNofification error={error} />}
       <Box m={2}>
         <Typography variant="h6" gutterBottom>Click on a Campaign to see details</Typography>
         <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>

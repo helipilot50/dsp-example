@@ -7,6 +7,7 @@ import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
 import { BrandQuery, BrandQueryVariables } from '../graphql/types';
 import { BRAND_DETAILS } from '../graphql/brands.graphql';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 export function BrandDetails() {
   const params = useParams();
@@ -37,7 +38,7 @@ export function BrandDetails() {
           noValidate
           autoComplete="off">
           {loading && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
+          {error && <ErrorNofification error={error} />}
           <Stack spacing={1}>
             <TextField
               label="ID"

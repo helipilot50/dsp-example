@@ -10,22 +10,22 @@ import { ClerkProvider } from '@clerk/clerk-react';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { client } from './lib/apollo';
+import { ErrorBoundary } from './components/error/ErrorBoundary';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-
-    <ClerkProvider {...clerkConfig}>
-      {/* <ApolloProviderWrapper> */}
-      <ApolloProvider client={client}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <App />
-        </LocalizationProvider>
-      </ApolloProvider>
-      {/* </ApolloProviderWrapper > */}
-    </ClerkProvider>
+    <ErrorBoundary>
+      <ClerkProvider {...clerkConfig}>
+        <ApolloProvider client={client}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <App />
+          </LocalizationProvider>
+        </ApolloProvider>
+      </ClerkProvider>
+    </ErrorBoundary>
   </React.StrictMode>
 
 );

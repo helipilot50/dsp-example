@@ -8,6 +8,9 @@ import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar }
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 const columns: GridColDef[] = [
@@ -38,10 +41,10 @@ const columns: GridColDef[] = [
 
 export function AccountsMain() {
   return (
-    <div>
+    <>
       <Typography variant="h4" gutterBottom>Accounts</Typography>
       <AccountList />
-    </div>
+    </>
   );
 }
 
@@ -51,12 +54,12 @@ export function AccountList() {
     ACCOUNTS_LIST
   );
 
-
   return (
+
     <Paper square={false}
       elevation={6}>
+      {error && <ErrorNofification error={error} />}
       <Box m={2}>
-        {error && <p>Error: {error.message}</p>}
         <Typography variant="h6" gutterBottom>Click on an account to see details</Typography>
         <AccountCreated />
         <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>
@@ -82,7 +85,12 @@ export function AccountList() {
 }
 
 export function AccountCreated() {
-  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
+  const { showBoundary } = useErrorBoundary();
+  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED, {
+    onError(error) {
+      showBoundary(error);
+    },
+  });
 
   const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
@@ -95,7 +103,6 @@ export function AccountCreated() {
   function onClose() {
     setState({ open: false, message: '' });
   }
-
 
   return (
     <Snackbar open={state.open}

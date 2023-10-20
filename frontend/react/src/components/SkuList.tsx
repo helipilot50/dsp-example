@@ -10,6 +10,7 @@ import { Typography } from '@mui/material';
 import { SKU_LIST } from '../graphql/skus.graphql';
 import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 const columns: GridColDef[] = [
   {
@@ -120,7 +121,7 @@ export function SkuList() {
     <Paper square={false}
       elevation={6}>
 
-      {error && <p>Error: {error.message}</p>}
+      {error && <ErrorNofification error={error} />}
       <Box m={2}>
         <Typography variant="h6" gutterBottom>Click on a SKU to see details</Typography>
         <DataGrid

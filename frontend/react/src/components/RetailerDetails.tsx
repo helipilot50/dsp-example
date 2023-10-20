@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { RetailerQuery, RetailerQueryVariables } from '../graphql/types';
 import { RETAILER_DETAILS } from '../graphql/retailer.graphql';
 import { CampaignList } from './CampaignList';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 export function RetailerDetails() {
   const params = useParams();
@@ -41,7 +42,7 @@ export function RetailerDetails() {
           autoComplete="off"
         >
           {loading && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
+          {error && <ErrorNofification error={error} />}
           <Stack >
             <TextField
               label="ID"

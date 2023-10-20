@@ -1,11 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Box, Paper, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Paper, Snackbar, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { BRANDS_LIST } from '../graphql/brands.graphql';
 import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from '../graphql/types';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
+import { ErrorBoundary, ErrorNofification } from './error/ErrorBoundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -35,17 +36,16 @@ const columns: GridColDef[] = [
 
 export function BrandsMain() {
   return (
-    <div>
+    <ErrorBoundary>
       <Typography variant="h4" gutterBottom>Brands</Typography>
       <BrandList />
-    </div>
+    </ErrorBoundary>
   );
 }
 
 export function BrandList() {
   const navigate = useNavigate();
   const [brandList, setBrandList] = useState<Brands>({ brands: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
-
   const { data, error, loading, fetchMore } = useQuery<BrandsQuery, BrandsQueryVariables>(
     BRANDS_LIST,
     {
@@ -92,12 +92,13 @@ export function BrandList() {
     return;
   }
 
+
   console.log('[BrandList] result', data, error, loading);
   console.log('[BrandList] pagination', brandList);
   return (
     <Paper square={false}
       elevation={6}>
-      {error && <p>Error: {error.message}</p>}
+      {error && <ErrorNofification error={error} />}
       <Box m={2}>
         <Typography variant="h6" gutterBottom>Click on a Brand to see details</Typography>
         <DataGrid

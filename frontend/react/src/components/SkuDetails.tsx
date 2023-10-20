@@ -8,6 +8,7 @@ import {
 import { SkuQuery, SkuQueryVariables } from '../graphql/types';
 import { SKU_DETAILS } from '../graphql/skus.graphql';
 import { Scalars } from '../graphql/types';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 export interface SkuDetailsProps {
   skuKey?: Scalars['ID'];
@@ -43,7 +44,7 @@ export function SkuDetails(props: SkuDetailsProps) {
             m={2}
           >
             {loading && <LinearProgress variant="query" />}
-            {error && <p>Error: {error.message}</p>}
+            {error && <ErrorNofification error={error} />}
             <FormControl >
               <TextField
                 label="Key"

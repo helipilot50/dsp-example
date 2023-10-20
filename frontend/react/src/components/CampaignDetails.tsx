@@ -17,6 +17,7 @@ import {
   Campaign, CampaignType, CampaignStatus, BudgetType
 } from '../graphql/types';
 import dayjs, { Dayjs } from 'dayjs';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 export function CampaignDetails() {
   const params = useParams();
@@ -135,8 +136,8 @@ export function CampaignDetails() {
         m={2}
       >
         {loading && <LinearProgress variant="query" />}
-        {error && <p>Error: {error.message}</p>}
-        {createError && <p>Create Error: {createError.message}</p>}
+        {error && <ErrorNofification error={error} />}
+        {createError && <ErrorNofification error={createError} />}
         <Typography variant="h4" gutterBottom>
           Campaign: {(data) ? data.campaign.id : ''}
         </Typography>

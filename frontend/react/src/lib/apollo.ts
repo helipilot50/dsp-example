@@ -44,7 +44,8 @@ const wsLink = new GraphQLWsLink(
     url: wsUrl,
     connectionParams: {
       "Access-Control-Allow-Origin": "*", // Required for CORS support to work
-      credentials: true
+      credentials: true,
+      authorization: clerkToken() ? `Bearer ${clerkToken()}` : null,
     },
     on: {
       connected: () => console.log('GraphQLWsLink connected'),
@@ -77,6 +78,7 @@ const authLink = new ApolloLink((operation: Operation, forward: NextLink) => {
 // create error link
 const errorLink: ApolloLink = onError(({ graphQLErrors, networkError }: ErrorResponse) => {
   if (graphQLErrors) {
+
     graphQLErrors.map(({ message, locations, path }: GraphQLError) => console.error(
       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
     ));

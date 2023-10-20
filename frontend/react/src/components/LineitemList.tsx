@@ -10,6 +10,7 @@ import {
 import { dateFormatter } from '../lib/utility';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 const columns: GridColDef[] = [
@@ -159,7 +160,7 @@ export function LineitemList(props: LineitemListProps) {
   return (
     <Paper square={false}
       elevation={6}>
-      {error && <p>Error: {error.message}</p>}
+      {error && <ErrorNofification error={error} />}
       <Box m={2}>
         <Typography variant="h6" gutterBottom>Click on a Lineitem to see details</Typography>
         <ButtonGroup variant="contained" aria-label="activation-group">
