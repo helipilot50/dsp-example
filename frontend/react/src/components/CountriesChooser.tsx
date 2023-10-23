@@ -4,6 +4,7 @@ import { ALL_COUNTRIES } from '../graphql/common.graphql';
 import { AllCountriesQuery, AllCountriesQueryVariables, Country } from '../graphql/types';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Box, TextField } from '@mui/material';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 
@@ -53,47 +54,50 @@ function CountriesChooser({
   console.log('[CountriesChooser] inputValues', inputValues);
 
   return (
-    <Autocomplete
-      id={id}
-      disabled={disabled}
-      open={open}
-      onOpen={onToggle}
-      onClose={onToggle}
-      multiple
-      size='medium'
-      options={elements}
-      value={inputValues}
-      onChange={(event: any, newValue: any) => {
-        console.log('[CountriesChooser] onChange', newValue);
-        countryChange && countryChange(newValue as Country[]);
-      }}
-      autoHighlight
-      getOptionLabel={(option: Country) => option.name}
-      isOptionEqualToValue={(option: Country, value: Country) => option.code === value.code}
-      renderOption={(props: HTMLAttributes<HTMLLIElement>, option: Country) => (
-        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-          <img
-            loading="lazy"
-            width="20"
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            alt=""
+    <>
+      {error && <ErrorNofification error={error} />}
+      <Autocomplete
+        id={id}
+        disabled={disabled}
+        open={open}
+        onOpen={onToggle}
+        onClose={onToggle}
+        multiple
+        size='medium'
+        options={elements}
+        value={inputValues}
+        onChange={(event: any, newValue: any) => {
+          console.log('[CountriesChooser] onChange', newValue);
+          countryChange && countryChange(newValue as Country[]);
+        }}
+        autoHighlight
+        getOptionLabel={(option: Country) => option.name}
+        isOptionEqualToValue={(option: Country, value: Country) => option.code === value.code}
+        renderOption={(props: HTMLAttributes<HTMLLIElement>, option: Country) => (
+          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+            <img
+              loading="lazy"
+              width="20"
+              src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+              srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+              alt=""
+            />
+            {option.name}
+          </Box>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            // label="Country"
+            inputProps={{
+              ...params.inputProps,
+              autoComplete: 'new-password', // disable autocomplete and autofill
+            }}
           />
-          {option.name}
-        </Box>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          // label="Country"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
-          }}
-        />
-      )}
+        )}
 
-    />
+      />
+    </>
   );
 
 }

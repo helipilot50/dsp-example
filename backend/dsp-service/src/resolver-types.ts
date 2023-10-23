@@ -1871,6 +1871,7 @@ export type QueryAccountArgs = {
 
 
 export type QueryAccountsArgs = {
+  retailerId?: InputMaybe<Scalars['ID']>;
   searchName?: InputMaybe<Scalars['String']>;
 };
 

@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from "graphql";
-import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMapAccountRetailersArgs } from "../resolver-types";
+import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMapAccountRetailersArgs, InputMaybe } from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
 
@@ -8,10 +8,17 @@ const ACCOUNT_CREATED = 'ACCOUNT_CREATED';
 export const accountResolvers/*: Resolvers*/ = {
 
   Query: {
-    accounts(_: any, ___: QueryAccountsArgs, context: DspContext, info: GraphQLResolveInfo) {
+    accounts(_: any, args: QueryAccountsArgs, context: DspContext, info: GraphQLResolveInfo) {
+
       try {
-        // context.logger.debug(`[accounts] context user ${context.user?.username}`);
+        const where = {} as any;
+        if (args.retailerId) {
+          where.retailerIds = {
+            has: args.retailerId
+          };
+        }
         return context.prisma.account.findMany({
+          where,
           select: {
             id: true,
             accountExternalId: true,
@@ -99,6 +106,11 @@ export const accountResolvers/*: Resolvers*/ = {
     async mapAccountRetailers(_: any, args: MutationMapAccountRetailersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
         context.logger.info(`[addAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
+        const connectIds = args.retailerIds.map((id: InputMaybe<string>) => {
+          return {
+            id: id || ''
+          };
+        });
         const retailers = await context.prisma.retailer.findMany({
           where: {
             id: {
@@ -112,7 +124,9 @@ export const accountResolvers/*: Resolvers*/ = {
             id: args.accountId
           },
           data: {
-            retailerIds: args.retailerIds as string[]
+            retailers: {
+              connect: connectIds
+            }
 
           }
         });

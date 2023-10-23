@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { SkusQuery, SkusQueryVariables, SkuList as Skus } from '../graphql/types';
 import Paper from '@mui/material/Paper';
 import { Typography } from '@mui/material';
-import { SKU_LIST } from '../graphql/skus.graphql';
+import { PRODUCT_LIST } from '../graphql/products.graphql';
 import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
 import { ErrorNofification } from './error/ErrorBoundary';
@@ -49,21 +49,21 @@ const columns: GridColDef[] = [
 ];
 
 
-export function SkusMain() {
+export function ProductsMain() {
   return (
     <div>
-      <Typography variant="h4" gutterBottom>SKUs</Typography>
-      <SkuList />
+      <Typography variant="h4" gutterBottom>Products</Typography>
+      <ProductsList />
     </div>
   );
 }
 
-export function SkuList() {
+export function ProductsList() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams({ offset: OFFSET_DEFAULT.toString(), limit: LIMIT_DEFAULT.toString() });
   const [skuList, setSkuList] = useState<Skus>({ skus: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = useQuery<SkusQuery, SkusQueryVariables>(
-    SKU_LIST,
+    PRODUCT_LIST,
     {
       variables: {
         offset: skuList.offset,
@@ -123,7 +123,7 @@ export function SkuList() {
 
       {error && <ErrorNofification error={error} />}
       <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a SKU to see details</Typography>
+        <Typography variant="h6" gutterBottom>Click on a Product to see details</Typography>
         <DataGrid
           sx={{ minHeight: 400 }}
           rows={(skuList.skus) ? skuList.skus.map(value => {

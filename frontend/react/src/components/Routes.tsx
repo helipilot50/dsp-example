@@ -9,8 +9,8 @@ import { LineitemList } from './LineitemList';
 import { RetailerDetails } from './RetailerDetails';
 import { BrandDetails } from './BrandDetails';
 import { BrandsMain } from './BrandList';
-import { SkuDetails } from './SkuDetails';
-import { SkusMain } from './SkuList';
+import { ProductDetails } from './ProductDetails';
+import { ProductsMain } from './PoductList';
 import { AllRetailerList } from './RetailerList';
 
 import { Dashboard } from './Dashboard';
@@ -27,8 +27,8 @@ export function AppRoutes() {
       <Route path='accounts/:accountId/campaigns/:campaignId' element={<SignedIn><CampaignDetails /></SignedIn>} />
       <Route path='accounts/:accountId/campaigns/:campaignId/lineitems' element={<SignedIn><LineitemList /></SignedIn>} />
       <Route path='accounts/:accountId/campaigns/:campaignId/lineitems/:lineitemId' element={<SignedIn><LineitemDetails /></SignedIn>} />
-      <Route path="skus" element={<SignedIn><SkusMain /></SignedIn>} />
-      <Route path="skus/:skuKey" element={<SignedIn><SkuDetails /></SignedIn>} />
+      <Route path="products" element={<SignedIn><ProductsMain /></SignedIn>} />
+      <Route path="products/:skuKey" element={<SignedIn><ProductDetails /></SignedIn>} />
       <Route path="brands" element={<SignedIn><SignedIn><BrandsMain /></SignedIn></SignedIn>} />
       <Route path="brands/:brandId" element={<SignedIn><SignedIn><BrandDetails /></SignedIn></SignedIn>} />
       <Route path="lineitems/:lineitemId" element={<SignedIn><LineitemDetails /></SignedIn>} />

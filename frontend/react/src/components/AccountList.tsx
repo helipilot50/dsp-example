@@ -48,10 +48,19 @@ export function AccountsMain() {
   );
 }
 
-export function AccountList() {
+export interface AccountListProps {
+  retailerId?: string;
+}
+
+export function AccountList(props: AccountListProps) {
   const navigate = useNavigate();
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
-    ACCOUNTS_LIST
+    ACCOUNTS_LIST,
+    {
+      variables: {
+        retailerId: props.retailerId || null,
+      },
+    }
   );
 
   return (

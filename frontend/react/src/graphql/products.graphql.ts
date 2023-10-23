@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client/core";
 
-export const SKU_DETAILS = gql`
+export const PRODUCT_DETAILS = gql`
 query Sku($skuKey: ID!) {
   sku(skuKey: $skuKey) {
     skuKey
@@ -15,7 +15,7 @@ query Sku($skuKey: ID!) {
 }
 `;
 
-export const SKU_LIST = gql`
+export const PRODUCT_LIST = gql`
 query Skus($offset: Int, $limit: Int) {
   skus(offset: $offset, limit: $limit) {
     skus {

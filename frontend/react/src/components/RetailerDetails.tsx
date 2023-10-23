@@ -14,6 +14,7 @@ import { RetailerQuery, RetailerQueryVariables } from '../graphql/types';
 import { RETAILER_DETAILS } from '../graphql/retailer.graphql';
 import { CampaignList } from './CampaignList';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { AccountList } from './AccountList';
 
 export function RetailerDetails() {
   const params = useParams();
@@ -90,16 +91,29 @@ export function RetailerDetails() {
                 readOnly: true,
               }} />
           </Stack>
+
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              aria-controls="campaigns-content"
+              id="campaigns-header"
             >
               <Typography>Campaigns</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <CampaignList retailerId={params.retailerId} />
+            </AccordionDetails>
+          </Accordion>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="accounts-content"
+              id="accounts-header"
+            >
+              <Typography>Accounts</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <AccountList retailerId={params.retailerId} />
             </AccordionDetails>
           </Accordion>
         </CardContent>

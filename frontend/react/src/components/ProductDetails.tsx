@@ -6,18 +6,18 @@ import {
   LinearProgress, Paper, TextField
 } from '@mui/material';
 import { SkuQuery, SkuQueryVariables } from '../graphql/types';
-import { SKU_DETAILS } from '../graphql/skus.graphql';
+import { PRODUCT_DETAILS } from '../graphql/products.graphql';
 import { Scalars } from '../graphql/types';
 import { ErrorNofification } from './error/ErrorBoundary';
 
-export interface SkuDetailsProps {
+export interface ProductDetailsProps {
   skuKey?: Scalars['ID'];
 }
 
-export function SkuDetails(props: SkuDetailsProps) {
+export function ProductDetails(props: ProductDetailsProps) {
   const params = useParams();
 
-  const { data, loading, error } = useQuery<SkuQuery, SkuQueryVariables>(SKU_DETAILS,
+  const { data, loading, error } = useQuery<SkuQuery, SkuQueryVariables>(PRODUCT_DETAILS,
     {
       variables: {
         skuKey: (props.skuKey) ? props.skuKey : params.skuKey || 'no-id',
@@ -31,7 +31,7 @@ export function SkuDetails(props: SkuDetailsProps) {
       elevation={6} >
       <Card>
         <CardHeader
-          title={'SKU'}
+          title={'PRODUCT'}
         />
         <CardContent>
           <Box

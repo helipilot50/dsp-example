@@ -11,8 +11,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: Date;
-  EmailAddress: string;
   Money: number;
+  URL: any;
 };
 
 /**
@@ -55,7 +55,7 @@ export type Account = {
   /** Type of the account: supply or demand */
   type?: Maybe<AccountType>;
   /** List of Users permitted to act on the Account */
-  users?: Maybe<UserList>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 
@@ -132,6 +132,8 @@ export type AdvertiserList = {
   totalCount?: Maybe<Scalars['Int']>;
 };
 
+export type Attribute = BooleanAttribute | DateTimeAttribute | NumberAttribute | StringAttribute;
+
 /** Generic audiance */
 export type Audience = {
   description?: Maybe<Scalars['String']>;
@@ -156,6 +158,12 @@ export type AudienceList = {
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   totalCount?: Maybe<Scalars['Int']>;
+};
+
+export type BooleanAttribute = {
+  __typename?: 'BooleanAttribute';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['Boolean']>;
 };
 
 /** Brands are marketing and identity forms of business entities. */
@@ -1202,6 +1210,37 @@ export type CurrencySettings = {
   something?: Maybe<Scalars['String']>;
 };
 
+export type DateTimeAttribute = {
+  __typename?: 'DateTimeAttribute';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['DateTime']>;
+};
+
+export type EmailAddress = {
+  __typename?: 'EmailAddress';
+  emailAddress?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['ID']>;
+  linkedTo?: Maybe<Array<Maybe<IdentificationLink>>>;
+  verification?: Maybe<Verification>;
+};
+
+export type ExternalAccount = {
+  __typename?: 'ExternalAccount';
+  approvedScopes?: Maybe<Scalars['String']>;
+  emailAddress?: Maybe<Scalars['String']>;
+  externalId?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  id?: Maybe<Scalars['String']>;
+  identificationId?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  provider?: Maybe<Scalars['String']>;
+  publicMetadata?: Maybe<Array<Maybe<Attribute>>>;
+  username?: Maybe<Scalars['String']>;
+  verification?: Maybe<Verification>;
+};
+
 export enum FinancialStatus {
   Active = 'Active',
   BudgetHitDaily = 'BudgetHitDaily',
@@ -1210,6 +1249,12 @@ export enum FinancialStatus {
   NoFunds = 'NoFunds',
   Unknown = 'Unknown'
 }
+
+export type IdentificationLink = {
+  __typename?: 'IdentificationLink';
+  id?: Maybe<Scalars['ID']>;
+  type?: Maybe<Scalars['String']>;
+};
 
 export type Lineitem = {
   __typename?: 'Lineitem';
@@ -1690,6 +1735,12 @@ export type NewWhiteLabelSettings = {
   things?: InputMaybe<Scalars['String']>;
 };
 
+export type NumberAttribute = {
+  __typename?: 'NumberAttribute';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['Int']>;
+};
+
 /** Offsite audiance */
 export type OffsiteAudience = Audience & {
   __typename?: 'OffsiteAudience';
@@ -1735,6 +1786,16 @@ export enum PageType {
   Product = 'Product',
   Search = 'Search'
 }
+
+export type PhoneNumber = {
+  __typename?: 'PhoneNumber';
+  defaultSecondFactor?: Maybe<Scalars['Boolean']>;
+  id?: Maybe<Scalars['ID']>;
+  linkedTo?: Maybe<Array<Maybe<IdentificationLink>>>;
+  phoneNumber?: Maybe<Scalars['String']>;
+  reservedForSecondFactor?: Maybe<Scalars['Boolean']>;
+  verification?: Maybe<Verification>;
+};
 
 /** TODO: add description */
 export type Portfolio = {
@@ -1786,6 +1847,7 @@ export type Query = {
   lineitem?: Maybe<Lineitem>;
   /** retrives a list of lineitems for a campaign */
   lineitems?: Maybe<LineitemList>;
+  me?: Maybe<User>;
   retailer?: Maybe<Retailer>;
   retailers: RetailerList;
   segment?: Maybe<Segment>;
@@ -1794,7 +1856,7 @@ export type Query = {
   /** List of SKUs by search phrase */
   skus?: Maybe<SkuList>;
   user?: Maybe<User>;
-  users?: Maybe<UserList>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 
@@ -1804,6 +1866,7 @@ export type QueryAccountArgs = {
 
 
 export type QueryAccountsArgs = {
+  retailerId?: InputMaybe<Scalars['ID']>;
   searchName?: InputMaybe<Scalars['String']>;
 };
 
@@ -1922,7 +1985,7 @@ export type QueryUserArgs = {
 
 
 export type QueryUsersArgs = {
-  someCriteria?: InputMaybe<Scalars['String']>;
+  searchCriteria?: InputMaybe<Scalars['String']>;
 };
 
 /** TODO: add description */
@@ -2061,6 +2124,12 @@ export type SkuList = {
   totalCount?: Maybe<Scalars['Int']>;
 };
 
+export type StringAttribute = {
+  __typename?: 'StringAttribute';
+  key: Scalars['String'];
+  value?: Maybe<Scalars['String']>;
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   accountBrandedKeywordsDisabled?: Maybe<Account>;
@@ -2135,28 +2204,55 @@ export type UpdateWhiteLabelSettings = {
 
 export type User = {
   __typename?: 'User';
-  accounts?: Maybe<Array<Maybe<Account>>>;
-  emailAddress?: Maybe<Scalars['EmailAddress']>;
+  backupCodeEnabled?: Maybe<Scalars['Boolean']>;
+  banned?: Maybe<Scalars['Boolean']>;
+  birthday?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  emailAddresses?: Maybe<Array<Maybe<EmailAddress>>>;
+  externalAccounts?: Maybe<Array<Maybe<ExternalAccount>>>;
+  externalId?: Maybe<Scalars['ID']>;
   firstName?: Maybe<Scalars['String']>;
+  gender?: Maybe<Scalars['String']>;
+  hasImage?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   imageUrl?: Maybe<Scalars['String']>;
-  jobTitle?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  status?: Maybe<Scalars['String']>;
+  lastSignInAt?: Maybe<Scalars['DateTime']>;
+  passwordEnabled?: Maybe<Scalars['Boolean']>;
+  phoneNumbers?: Maybe<Array<Maybe<PhoneNumber>>>;
+  primaryEmailAddressId?: Maybe<Scalars['String']>;
+  primaryPhoneNumberId?: Maybe<Scalars['String']>;
+  primaryWeb3WalletId?: Maybe<Scalars['String']>;
+  privateMetadata?: Maybe<Array<Maybe<Attribute>>>;
+  publicMetadata?: Maybe<Array<Maybe<Attribute>>>;
+  totpEnabled?: Maybe<Scalars['Boolean']>;
+  twoFactorEnabled?: Maybe<Scalars['Boolean']>;
+  unsafeMetadata?: Maybe<Array<Maybe<Attribute>>>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
   username?: Maybe<Scalars['String']>;
+  web3Wallets?: Maybe<Array<Maybe<Web3Wallet>>>;
 };
 
-export type UserList = {
-  __typename?: 'UserList';
-  cursor?: Maybe<Scalars['String']>;
-  hasMore?: Maybe<Scalars['Boolean']>;
-  limit?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  totalCount?: Maybe<Scalars['Int']>;
-  users: Array<Maybe<User>>;
+export type Verification = {
+  __typename?: 'Verification';
+  attempts?: Maybe<Scalars['Int']>;
+  expireAt?: Maybe<Scalars['Int']>;
+  externalVerificationRedirectURL?: Maybe<Scalars['URL']>;
+  nonce?: Maybe<Scalars['String']>;
+  status?: Maybe<Scalars['String']>;
+  strategy?: Maybe<Scalars['String']>;
 };
 
-export type AccountsQueryVariables = Exact<{ [key: string]: never; }>;
+export type Web3Wallet = {
+  __typename?: 'Web3Wallet';
+  id?: Maybe<Scalars['ID']>;
+  verification?: Maybe<Verification>;
+  web3Wallet?: Maybe<Scalars['String']>;
+};
+
+export type AccountsQueryVariables = Exact<{
+  retailerId?: InputMaybe<Scalars['ID']>;
+}>;
 
 
 export type AccountsQuery = { __typename?: 'Query', accounts: Array<{ __typename?: 'Account', id: string, name: string, type?: AccountType | null, accountExternalId?: string | null, currency?: { __typename?: 'Currency', code: CurrencyCode, name?: string | null, symbol?: string | null } | null, countries?: Array<{ __typename?: 'Country', code: CountryCode, name: string } | null> | null, retailers?: Array<{ __typename?: 'Retailer', id: string, name: string, status: RetailerStatus } | null> | null } | null> };
@@ -2286,21 +2382,6 @@ export type AllCountriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AllCountriesQuery = { __typename?: 'Query', countries: Array<{ __typename?: 'Country', name: string, code: CountryCode, currency: CurrencyCode } | null> };
 
-export type RetailerQueryVariables = Exact<{
-  retailerId: Scalars['ID'];
-}>;
-
-
-export type RetailerQuery = { __typename?: 'Query', retailer?: { __typename?: 'Retailer', id: string, name: string, status: RetailerStatus, rank?: number | null, countryOfOrigin?: string | null, retailRevenue?: number | null, parentRevenue?: number | null, parentCompanyNetIncome?: number | null, operationalFormat?: string | null, countriesOfOperation?: number | null, retailRevenueCagr?: number | null } | null };
-
-export type RetailersQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type RetailersQuery = { __typename?: 'Query', retailers: { __typename?: 'RetailerList', limit?: number | null, offset?: number | null, totalCount?: number | null, retailers: Array<{ __typename?: 'Retailer', id: string, name: string, status: RetailerStatus, countryOfOrigin?: string | null } | null> } };
-
 export type SkuQueryVariables = Exact<{
   skuKey: Scalars['ID'];
 }>;
@@ -2315,3 +2396,18 @@ export type SkusQueryVariables = Exact<{
 
 
 export type SkusQuery = { __typename?: 'Query', skus?: { __typename?: 'SkuList', offset?: number | null, limit?: number | null, totalCount?: number | null, skus: Array<{ __typename?: 'SKU', skuKey: string, name?: string | null, description?: string | null, image?: string | null, quantity?: number | null, price?: number | null } | null> } | null };
+
+export type RetailerQueryVariables = Exact<{
+  retailerId: Scalars['ID'];
+}>;
+
+
+export type RetailerQuery = { __typename?: 'Query', retailer?: { __typename?: 'Retailer', id: string, name: string, status: RetailerStatus, rank?: number | null, countryOfOrigin?: string | null, retailRevenue?: number | null, parentRevenue?: number | null, parentCompanyNetIncome?: number | null, operationalFormat?: string | null, countriesOfOperation?: number | null, retailRevenueCagr?: number | null } | null };
+
+export type RetailersQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type RetailersQuery = { __typename?: 'Query', retailers: { __typename?: 'RetailerList', limit?: number | null, offset?: number | null, totalCount?: number | null, retailers: Array<{ __typename?: 'Retailer', id: string, name: string, status: RetailerStatus, countryOfOrigin?: string | null } | null> } };

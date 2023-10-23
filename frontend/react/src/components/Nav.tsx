@@ -195,12 +195,12 @@ export function Nav() {
                 <ListItemText primary='Brands' />
               </ListItemButton>
             </ListItem>
-            <ListItem key='menuSkus' disablePadding >
-              <ListItemButton onClick={() => { navigate(`/skus`); }}>
+            <ListItem key='menuProducts' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/products`); }}>
                 <ListItemIcon>
                   <InventoryIcon />
                 </ListItemIcon>
-                <ListItemText primary='SKUs' />
+                <ListItemText primary='Products' />
               </ListItemButton>
             </ListItem>
             <ListItem key='menuRetailers' disablePadding >

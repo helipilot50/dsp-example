@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client/core';
 
 export const ACCOUNTS_LIST = gql`
-query Accounts {
-  accounts {
+query Accounts ($retailerId: ID){
+  accounts (retailerId: $retailerId){
     id
     name
     type
