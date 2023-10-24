@@ -1897,6 +1897,7 @@ export type QueryBrandArgs = {
 
 
 export type QueryBrandsArgs = {
+  brandIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
 };

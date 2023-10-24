@@ -41,7 +41,7 @@ extend type Account @key(fields: "id") {
 
 type Query {
   brand(brandId: ID!): Brand
-  brands(offset: Int = 0, limit: Int = 100): BrandList
+  brands(brandIds: [ID], offset: Int = 0, limit: Int = 100): BrandList
 }
 
 input NewBrand {

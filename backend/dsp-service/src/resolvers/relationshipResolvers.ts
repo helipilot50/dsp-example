@@ -41,9 +41,9 @@ export const relationshipResolvers/*: Resolvers*/ = {
       };
       return campaignsResolvers.Query.campaigns(parent, campaignArgs, context, info);
     },
-    brands(parent: Account, args: any, context: DspContext, info: GraphQLResolveInfo) {
+    brands(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
       const brandsArgs: QueryBrandsArgs = {
-
+        brandIds: parent.brandIds
       };
       return brandResolvers.Query.brands(parent, brandsArgs, context, info);
     },
