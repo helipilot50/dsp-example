@@ -12,6 +12,7 @@ const config: CodegenConfig = {
           Money: 'number',
           GTIN: 'string',
           URL: 'string',
+          ID: 'string',
         },
         allowParentTypeOverride: true,
         mapperTypeSuffix: "Model",

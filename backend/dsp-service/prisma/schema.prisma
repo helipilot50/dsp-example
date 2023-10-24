@@ -27,10 +27,23 @@ model Account {
   countryIds           String[]
   retailerIds          String[]    @db.ObjectId
   retailers            Retailer[]  @relation(fields: [retailerIds], references: [id])
+  fees                 AccountFees
+  brandIds             String[]    @db.ObjectId
+  bands                Brand[]     @relation(fields: [brandIds], references: [id])
 
   @@index([accountExternalId])
   @@index([salesForceAccountId])
   @@fulltext([name])
+}
+
+type AccountFees {
+  demandSideFee               Float?
+  supplySideFee               Float?
+  managementFee               Float?
+  startDate                   DateTime?
+  accountServicing            Float?
+  sponsoredProductsManagedFee Boolean?
+  commerceDisplayManagedFee   Boolean?
 }
 
 enum AccountType {
@@ -39,28 +52,43 @@ enum AccountType {
 }
 
 model Campaign {
-  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  id                 String           @id @default(auto()) @map("_id") @db.ObjectId
   name               String
   externalCampaignId String?
   externalAccountId  String?
   accountId          String
-  type               CampaignType   @default(SponsoredProducts)
-  status             CampaignStatus @default(Unknown)
+  type               CampaignType     @default(SponsoredProducts)
+  status             CampaignStatus   @default(Unknown)
   isLockout          Boolean?
   startDate          DateTime?
-  updatedAt          DateTime       @updatedAt
+  updatedAt          DateTime         @updatedAt
   endDate            DateTime?
-  budgetId           String?        @db.ObjectId
-  advertiserId       String?        @db.ObjectId
-  retailerId         String?        @db.ObjectId
-  brandId            String?        @db.ObjectId
-  createdAt          DateTime       @default(now())
+  budgetId           String?          @db.ObjectId
+  advertiserId       String?          @db.ObjectId
+  retailerId         String?          @db.ObjectId
+  brandIds           String[]         @db.ObjectId
+  brands             Brand[]          @relation(fields: [brandIds], references: [id])
+  createdAt          DateTime         @default(now())
+  cappingTarget      CampaignCapping?
+  budget             CampaignBudget?
 
   @@index([accountId])
   @@index([externalCampaignId])
   @@index([externalAccountId])
   @@index([advertiserId])
   @@fulltext([name])
+}
+
+type CampaignBudget {
+  isCapped Boolean
+  amount   Float
+  memo     String
+  type     BudgetType
+}
+
+type CampaignCapping {
+  count    Int
+  duration Int
 }
 
 enum CampaignStatus {
@@ -159,6 +187,10 @@ model Brand {
   rating      String
   retailerIds String[]   @db.ObjectId
   retailers   Retailer[] @relation(fields: [retailerIds], references: [id])
+  accountIds  String[]   @db.ObjectId
+  accounts    Account[]  @relation(fields: [accountIds], references: [id])
+  campaignIds String[]   @db.ObjectId
+  campaigns   Campaign[] @relation(fields: [campaignIds], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
