@@ -24,6 +24,7 @@
     "graphql": "^16.6.0",
     "graphql-sse": "^2.2.3",
     "moment": "^2.29.4",
+    "not-dsp-graphql": "../not-dsp-graphql",
     "react": "^18.2.0",
     "react-country-region-selector": "^3.6.1",
     "react-dom": "^18.2.0",
@@ -63,8 +64,7 @@
     "dev": "env-cmd -f .env-local react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "codegen": "graphql-codegen "
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

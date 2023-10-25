@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import React, { HTMLAttributes } from 'react';
-import { ALL_COUNTRIES } from '../graphql/common.graphql';
-import { AllCountriesQuery, AllCountriesQueryVariables, Country } from '../graphql/types';
+import { ALL_COUNTRIES } from 'not-dsp-graphql';
+import { AllCountriesQuery, AllCountriesQueryVariables, Country } from 'not-dsp-graphql';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Box, TextField } from '@mui/material';
 import { ErrorNofification } from './error/ErrorBoundary';

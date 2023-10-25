@@ -2,12 +2,12 @@ import {
   RetailersQuery,
   RetailersQueryVariables,
   RetailerList as Retailers,
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Paper, Typography } from '@mui/material';
 import { QueryResult, useQuery } from '@apollo/client';
-import { RETAILER_LIST } from '../graphql/retailer.graphql';
+import { RETAILER_LIST } from 'not-dsp-graphql';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorNofification } from './error/ErrorBoundary';

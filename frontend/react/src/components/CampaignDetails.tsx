@@ -7,7 +7,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange, SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CAMPAIGNS_LIST, CAMPAIGN_DETAILS, CAMPAIGN_NEW } from '../graphql/campaigns.graphql';
+import { CAMPAIGNS_LIST, CAMPAIGN_DETAILS, CAMPAIGN_NEW } from 'not-dsp-graphql';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { LineitemList } from './LineitemList';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -15,7 +15,7 @@ import {
   NewCampaign,
   NewCampaignMutation, NewCampaignMutationVariables,
   Campaign, CampaignType, CampaignStatus, BudgetType
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import dayjs, { Dayjs } from 'dayjs';
 import { ErrorNofification } from './error/ErrorBoundary';
 

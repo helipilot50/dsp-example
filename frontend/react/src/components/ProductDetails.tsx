@@ -5,9 +5,9 @@ import {
   Box, Card, CardContent, CardHeader, FormControl,
   LinearProgress, Paper, TextField
 } from '@mui/material';
-import { SkuQuery, SkuQueryVariables } from '../graphql/types';
-import { PRODUCT_DETAILS } from '../graphql/products.graphql';
-import { Scalars } from '../graphql/types';
+import { SkuQuery, SkuQueryVariables } from 'not-dsp-graphql';
+import { PRODUCT_DETAILS } from 'not-dsp-graphql';
+import { Scalars } from 'not-dsp-graphql';
 import { ErrorNofification } from './error/ErrorBoundary';
 
 export interface ProductDetailsProps {

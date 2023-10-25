@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
-import { CAMPAIGNS_LIST } from '../graphql/campaigns.graphql';
+import { CAMPAIGNS_LIST } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { dateFormatter } from '../lib/utility';
-import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from '../graphql/types';
+import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from 'not-dsp-graphql';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { useEffect, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';

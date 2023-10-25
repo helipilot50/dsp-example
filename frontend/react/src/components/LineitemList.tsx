@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
-import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from '../graphql/campaigns.graphql';
+import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams } from '@mui/x-data-grid';
 import { Box, Button, ButtonGroup, Paper, Typography } from '@mui/material';
 import {
   MutationActivateLineitemsArgs, LineitemsQuery,
   LineitemsQueryVariables, Scalars, ActivateLineitemsMutation
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { dateFormatter } from '../lib/utility';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';

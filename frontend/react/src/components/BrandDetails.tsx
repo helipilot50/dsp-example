@@ -5,8 +5,8 @@ import {
 } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
-import { BrandQuery, BrandQueryVariables } from '../graphql/types';
-import { BRAND_DETAILS } from '../graphql/brands.graphql';
+import { BrandQuery, BrandQueryVariables } from 'not-dsp-graphql';
+import { BRAND_DETAILS } from 'not-dsp-graphql';
 import { ErrorNofification } from './error/ErrorBoundary';
 
 export function BrandDetails() {

@@ -10,8 +10,8 @@ import {
 } from '@mui/material';
 // import FormControl from '@mui/material/FormControl';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { RetailerQuery, RetailerQueryVariables } from '../graphql/types';
-import { RETAILER_DETAILS } from '../graphql/retailer.graphql';
+import { RetailerQuery, RetailerQueryVariables } from 'not-dsp-graphql';
+import { RETAILER_DETAILS } from 'not-dsp-graphql';
 import { CampaignList } from './CampaignList';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { AccountList } from './AccountList';

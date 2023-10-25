@@ -1,9 +1,9 @@
 
 import { useQuery, useSubscription } from '@apollo/client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ACCOUNTS_LIST, ACCOUNT_CREATED } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST, ACCOUNT_CREATED } from 'not-dsp-graphql';
 import { useNavigate } from 'react-router';
-import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from '../graphql/types';
+import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from 'not-dsp-graphql';
 import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar } from '@mui/material';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';

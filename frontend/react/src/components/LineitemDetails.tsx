@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   LINEITEMS_ACTIVATE, LINEITEMS_PAUSE, LINEITEM_DETAILS,
   LINEITEM_LIST, LINEITEM_ACTIVATED, LINEITEM_NEW, LINEITEM_PAUSED
-} from '../graphql/campaigns.graphql';
+} from 'not-dsp-graphql';
 import { useMutation, useQuery, useSubscription, ApolloError } from '@apollo/client';
 import {
   ActivateLineitemsMutation, BudgetType, Lineitem, LineitemActivatedSubscription,
@@ -18,7 +18,7 @@ import {
   LineitemQuery, LineitemQueryVariables, LineitemStatus, MutationActivateLineitemsArgs,
   MutationPauseLineitemsArgs,
   NewLineitem, NewLineitemMutation, NewLineitemMutationVariables, PauseLineitemsMutation
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { useMemo, useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';

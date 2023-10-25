@@ -1,7 +1,7 @@
 
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS } from 'not-dsp-graphql';
 import {
   Accordion, AccordionDetails, AccordionSummary,
   TextField, Typography, LinearProgress, Stack, Paper,
@@ -13,7 +13,7 @@ import {
   Account, AccountQuery, AccountQueryVariables,
   AccountType, NewAccountMutation, NewAccountMutationVariables,
   CurrencyCode, NewAccount, Country, Retailer, MapAccountRetailersMutation, MapAccountRetailersMutationVariables
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect, useMemo, useState } from 'react';
 

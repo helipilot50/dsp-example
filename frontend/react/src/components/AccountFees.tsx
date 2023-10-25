@@ -1,5 +1,5 @@
-import { AccountFee } from '../graphql/types';
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { AccountFee } from 'not-dsp-graphql';
+import { Box, TextField, Typography } from '@mui/material';
 
 export interface AccountFeesProps {
   fee?: AccountFee | undefined;

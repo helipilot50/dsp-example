@@ -3,8 +3,8 @@ import { Alert, AlertTitle, Box, Paper, Snackbar, Typography } from '@mui/materi
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { BRANDS_LIST } from '../graphql/brands.graphql';
-import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from '../graphql/types';
+import { BRANDS_LIST } from 'not-dsp-graphql';
+import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from 'not-dsp-graphql';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorBoundary, ErrorNofification } from './error/ErrorBoundary';
 
