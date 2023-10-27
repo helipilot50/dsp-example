@@ -18,6 +18,11 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import { schemaFromDirectory } from './fetchSchema';
 import gql from 'graphql-tag';
 
+import {
+  hasPermissions,
+  applyDirectivesToSchema
+} from '@profusion/apollo-validation-directives';
+
 // SSE
 // import { createHandler } from 'graphql-sse/lib/use/express';
 
@@ -65,11 +70,17 @@ async function listen() {
 
     logger.info(`[server] building schema`);
 
+
     const graphSchema = buildSubgraphSchema({
       typeDefs: defs,
       resolvers: resolvers,
 
     });
+
+    const schemaWithPermissions = applyDirectivesToSchema(
+      [hasPermissions],
+      graphSchema
+    );
 
     //---------------------------------------------------------------------------------
     //   socket server for subscriptions
@@ -126,7 +137,7 @@ async function listen() {
 
     const server = new ApolloServer<DspContext>(
       {
-        schema: graphSchema,
+        schema: schemaWithPermissions,//graphSchema,
         cache: new InMemoryLRUCache({
           // ~100MiB
           maxSize: Math.pow(2, 20) * 100,

@@ -29,14 +29,19 @@ export async function makeRequestContext({ req, res }: any): Promise<DspContext>
 
     if (req.auth && req.auth.userId) {
       const auth = req.auth;
+      const user: User = await userById(auth.userId);
+      const token = auth.getToken();
       newContext = {
         ...newContext,
-        user: await userById(auth.userId),
-        token: auth.getToken(),
+        user,
+        token,
       };
+      // console.log('auth:', auth);
+      // console.log('user:', user);//.username, user.emailAddresses[0].emailAddress);
     }
   } catch (error) {
     logger.error(`[server.makeRequestContext] 💀 Error creating context ${JSON.stringify(error, undefined, 2)}`);
+    throw error;
   }
   return newContext;
 }

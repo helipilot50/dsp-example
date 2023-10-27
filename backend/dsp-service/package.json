@@ -37,6 +37,7 @@
     "@graphql-tools/mock": "^8.7.18",
     "@graphql-tools/schema": "^9.0.19",
     "@prisma/client": "^5.2.0",
+    "@profusion/apollo-validation-directives": "^4.1.1",
     "arg": "^5.0.2",
     "casual": "^1.6.2",
     "cors": "^2.8.5",

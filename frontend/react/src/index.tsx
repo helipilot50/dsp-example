@@ -6,7 +6,7 @@ import App from './App';
 import { ApolloProvider } from '@apollo/client/react';
 
 import { clerkConfig } from './components/auth/clerkConfig';
-import { ClerkProvider } from '@clerk/clerk-react';
+import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-react';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { client } from './lib/apollo';
@@ -19,11 +19,13 @@ root.render(
   <React.StrictMode>
     <ErrorBoundary>
       <ClerkProvider {...clerkConfig}>
-        <ApolloProvider client={client}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <App />
-          </LocalizationProvider>
-        </ApolloProvider>
+        <ClerkLoaded>
+          <ApolloProvider client={client}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <App />
+            </LocalizationProvider>
+          </ApolloProvider>
+        </ClerkLoaded>
       </ClerkProvider>
     </ErrorBoundary>
   </React.StrictMode>
