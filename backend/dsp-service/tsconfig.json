@@ -103,7 +103,8 @@
     "src/@types/graphql.d.ts"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/prismaDataSource.tszzzzz"
   ],
   "exclude": [
     "node_modules",

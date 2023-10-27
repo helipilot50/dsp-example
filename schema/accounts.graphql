@@ -115,21 +115,21 @@ input NewWhiteLabelSettings {
 # Event Model
 
 extend type Subscription {
-  accountBrandedKeywordsDisabled: Account
-  accountBrandedKeywordsEnabled: Account
-  accountBrandsUpated: Account
-  accountCountryAdded: Account
+  accountBrandedKeywordsDisabled(accountId: ID!): Account
+  accountBrandedKeywordsEnabled(accountId: ID!): Account
+  accountBrandsUpated(accountId: ID!): Account
+  accountCountryAdded(accountId: ID!): Account
   accountCreated: Account
-  accountCurrencyDataChanged: Account
-  accountFeesModified: AccountFee
-  accountInitialized: Account
-  accountReportingLabelModified: Account
-  accountRetailerConnected: Account
-  accountRetailersUpdated: Account
-  accountSalesforceDataModified: SalesForceAccount
-  accountSellerModified: Account
-  accountWhileLabelSettingsCreated: AccountSettings
-  accountWhileLabelSettingsUpdated: AccountSettings
+  accountCurrencyDataChanged(accountId: ID!): Account
+  accountFeesModified(accountId: ID!): AccountFee
+  accountInitialized(accountId: ID!): Account
+  accountReportingLabelModified(accountId: ID!): Account
+  accountRetailerConnected(accountId: ID!): Retailer
+  accountRetailersUpdated(accountId: ID!): [Retailer]
+  accountSalesforceDataModified(accountId: ID!): SalesForceAccount
+  accountSellerModified(accountId: ID!): Account
+  accountWhileLabelSettingsCreated(accountId: ID!): AccountSettings
+  accountWhileLabelSettingsUpdated(accountId: ID!): AccountSettings
   childAccountCreated: Account
   externalUserNameUpdated: Account
   portfolioBrandsModified: Portfolio

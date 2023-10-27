@@ -1369,6 +1369,7 @@ export type Mutation = {
   addAccountSeller?: Maybe<Seller>;
   addDemandAccountBrands?: Maybe<Array<Maybe<Brand>>>;
   addRemoveBrandsToPortfolio?: Maybe<Portfolio>;
+  addTaxonomyManually?: Maybe<Sku>;
   addUser?: Maybe<User>;
   /** archives the Lineitems by ID and returns the lineitems */
   archiveLineitems: Array<Maybe<Lineitem>>;
@@ -1436,6 +1437,12 @@ export type MutationAddDemandAccountBrandsArgs = {
 export type MutationAddRemoveBrandsToPortfolioArgs = {
   brandIds: Array<Scalars['ID']>;
   portfolioId: Scalars['ID'];
+};
+
+
+export type MutationAddTaxonomyManuallyArgs = {
+  skyKey: Scalars['ID'];
+  taxonomy: Array<Scalars['String']>;
 };
 
 
@@ -2147,8 +2154,8 @@ export type Subscription = {
   accountFeesModified?: Maybe<AccountFee>;
   accountInitialized?: Maybe<Account>;
   accountReportingLabelModified?: Maybe<Account>;
-  accountRetailerConnected?: Maybe<Account>;
-  accountRetailersUpdated?: Maybe<Account>;
+  accountRetailerConnected?: Maybe<Retailer>;
+  accountRetailersUpdated?: Maybe<Array<Maybe<Retailer>>>;
   accountSalesforceDataModified?: Maybe<SalesForceAccount>;
   accountSellerModified?: Maybe<Account>;
   accountUserAdded?: Maybe<User>;
@@ -2175,7 +2182,77 @@ export type Subscription = {
   retailerUpdated?: Maybe<Retailer>;
   retailerWentLive?: Maybe<Retailer>;
   skuInformationModified?: Maybe<Array<Maybe<Sku>>>;
-  taxonomyManuallyAdded?: Maybe<Taxonomy>;
+  taxonomyManuallyAdded?: Maybe<Array<Maybe<Taxonomy>>>;
+};
+
+
+export type SubscriptionAccountBrandedKeywordsDisabledArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountBrandedKeywordsEnabledArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountBrandsUpatedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountCountryAddedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountCurrencyDataChangedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountFeesModifiedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountInitializedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountReportingLabelModifiedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountRetailerConnectedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountRetailersUpdatedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountSalesforceDataModifiedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountSellerModifiedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountWhileLabelSettingsCreatedArgs = {
+  accountId: Scalars['ID'];
+};
+
+
+export type SubscriptionAccountWhileLabelSettingsUpdatedArgs = {
+  accountId: Scalars['ID'];
 };
 
 
@@ -2830,6 +2907,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   addAccountSeller?: Resolver<Maybe<ResolversTypes['Seller']>, ParentType, ContextType, RequireFields<MutationAddAccountSellerArgs, 'accountId' | 'sellerId'>>;
   addDemandAccountBrands?: Resolver<Maybe<Array<Maybe<ResolversTypes['Brand']>>>, ParentType, ContextType, RequireFields<MutationAddDemandAccountBrandsArgs, 'accountId' | 'brandIds'>>;
   addRemoveBrandsToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationAddRemoveBrandsToPortfolioArgs, 'brandIds' | 'portfolioId'>>;
+  addTaxonomyManually?: Resolver<Maybe<ResolversTypes['SKU']>, ParentType, ContextType, RequireFields<MutationAddTaxonomyManuallyArgs, 'skyKey' | 'taxonomy'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'accountId' | 'userId'>>;
   archiveLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationArchiveLineitemsArgs, 'lineitemIds'>>;
   configureTOP?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -3046,24 +3124,24 @@ export type StringAttributeResolvers<ContextType = DspContext, ParentType = Reso
 };
 
 export type SubscriptionResolvers<ContextType = DspContext, ParentType = ResolversParentTypes['Subscription']> = {
-  accountBrandedKeywordsDisabled?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandedKeywordsDisabled", ParentType, ContextType>;
-  accountBrandedKeywordsEnabled?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandedKeywordsEnabled", ParentType, ContextType>;
-  accountBrandsUpated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandsUpated", ParentType, ContextType>;
-  accountCountryAdded?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountCountryAdded", ParentType, ContextType>;
+  accountBrandedKeywordsDisabled?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandedKeywordsDisabled", ParentType, ContextType, RequireFields<SubscriptionAccountBrandedKeywordsDisabledArgs, 'accountId'>>;
+  accountBrandedKeywordsEnabled?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandedKeywordsEnabled", ParentType, ContextType, RequireFields<SubscriptionAccountBrandedKeywordsEnabledArgs, 'accountId'>>;
+  accountBrandsUpated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountBrandsUpated", ParentType, ContextType, RequireFields<SubscriptionAccountBrandsUpatedArgs, 'accountId'>>;
+  accountCountryAdded?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountCountryAdded", ParentType, ContextType, RequireFields<SubscriptionAccountCountryAddedArgs, 'accountId'>>;
   accountCreated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountCreated", ParentType, ContextType>;
-  accountCurrencyDataChanged?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountCurrencyDataChanged", ParentType, ContextType>;
-  accountFeesModified?: SubscriptionResolver<Maybe<ResolversTypes['AccountFee']>, "accountFeesModified", ParentType, ContextType>;
-  accountInitialized?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountInitialized", ParentType, ContextType>;
-  accountReportingLabelModified?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountReportingLabelModified", ParentType, ContextType>;
-  accountRetailerConnected?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountRetailerConnected", ParentType, ContextType>;
-  accountRetailersUpdated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountRetailersUpdated", ParentType, ContextType>;
-  accountSalesforceDataModified?: SubscriptionResolver<Maybe<ResolversTypes['SalesForceAccount']>, "accountSalesforceDataModified", ParentType, ContextType>;
-  accountSellerModified?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountSellerModified", ParentType, ContextType>;
+  accountCurrencyDataChanged?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountCurrencyDataChanged", ParentType, ContextType, RequireFields<SubscriptionAccountCurrencyDataChangedArgs, 'accountId'>>;
+  accountFeesModified?: SubscriptionResolver<Maybe<ResolversTypes['AccountFee']>, "accountFeesModified", ParentType, ContextType, RequireFields<SubscriptionAccountFeesModifiedArgs, 'accountId'>>;
+  accountInitialized?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountInitialized", ParentType, ContextType, RequireFields<SubscriptionAccountInitializedArgs, 'accountId'>>;
+  accountReportingLabelModified?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountReportingLabelModified", ParentType, ContextType, RequireFields<SubscriptionAccountReportingLabelModifiedArgs, 'accountId'>>;
+  accountRetailerConnected?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "accountRetailerConnected", ParentType, ContextType, RequireFields<SubscriptionAccountRetailerConnectedArgs, 'accountId'>>;
+  accountRetailersUpdated?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['Retailer']>>>, "accountRetailersUpdated", ParentType, ContextType, RequireFields<SubscriptionAccountRetailersUpdatedArgs, 'accountId'>>;
+  accountSalesforceDataModified?: SubscriptionResolver<Maybe<ResolversTypes['SalesForceAccount']>, "accountSalesforceDataModified", ParentType, ContextType, RequireFields<SubscriptionAccountSalesforceDataModifiedArgs, 'accountId'>>;
+  accountSellerModified?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "accountSellerModified", ParentType, ContextType, RequireFields<SubscriptionAccountSellerModifiedArgs, 'accountId'>>;
   accountUserAdded?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "accountUserAdded", ParentType, ContextType>;
   accountUserRemoved?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "accountUserRemoved", ParentType, ContextType>;
   accountUserUpdated?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "accountUserUpdated", ParentType, ContextType>;
-  accountWhileLabelSettingsCreated?: SubscriptionResolver<Maybe<ResolversTypes['AccountSettings']>, "accountWhileLabelSettingsCreated", ParentType, ContextType>;
-  accountWhileLabelSettingsUpdated?: SubscriptionResolver<Maybe<ResolversTypes['AccountSettings']>, "accountWhileLabelSettingsUpdated", ParentType, ContextType>;
+  accountWhileLabelSettingsCreated?: SubscriptionResolver<Maybe<ResolversTypes['AccountSettings']>, "accountWhileLabelSettingsCreated", ParentType, ContextType, RequireFields<SubscriptionAccountWhileLabelSettingsCreatedArgs, 'accountId'>>;
+  accountWhileLabelSettingsUpdated?: SubscriptionResolver<Maybe<ResolversTypes['AccountSettings']>, "accountWhileLabelSettingsUpdated", ParentType, ContextType, RequireFields<SubscriptionAccountWhileLabelSettingsUpdatedArgs, 'accountId'>>;
   campaignCreated?: SubscriptionResolver<ResolversTypes['Campaign'], "campaignCreated", ParentType, ContextType>;
   childAccountCreated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "childAccountCreated", ParentType, ContextType>;
   externalUserNameUpdated?: SubscriptionResolver<Maybe<ResolversTypes['Account']>, "externalUserNameUpdated", ParentType, ContextType>;
@@ -3083,7 +3161,7 @@ export type SubscriptionResolvers<ContextType = DspContext, ParentType = Resolve
   retailerUpdated?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerUpdated", ParentType, ContextType>;
   retailerWentLive?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerWentLive", ParentType, ContextType>;
   skuInformationModified?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['SKU']>>>, "skuInformationModified", ParentType, ContextType>;
-  taxonomyManuallyAdded?: SubscriptionResolver<Maybe<ResolversTypes['Taxonomy']>, "taxonomyManuallyAdded", ParentType, ContextType>;
+  taxonomyManuallyAdded?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['Taxonomy']>>>, "taxonomyManuallyAdded", ParentType, ContextType>;
 };
 
 export type TaxonomyResolvers<ContextType = DspContext, ParentType = ResolversParentTypes['Taxonomy']> = {
