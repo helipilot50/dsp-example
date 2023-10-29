@@ -1,0 +1,48 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>SKU details</mat-card-title>
+    <div *ngIf="loading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div *ngIf="error">
+      <p>Error: {{ error }}</p>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="sku">
+      <p>
+        <mat-form-field class="formField">
+          <mat-label>Key:</mat-label>
+          <input matInput value="{{(sku.skuKey)?sku.skuKey:''}}" readonly>
+        </mat-form-field>
+      </p>
+
+      <p>
+        <mat-form-field class="formField">
+          <mat-label>Name:</mat-label>
+          <input matInput value="{{sku.name}}">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="formField">
+          <mat-label>Desctiption:</mat-label>
+          <textarea matInput >
+            {{sku.description}}
+          </textarea>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="formField">
+          <mat-label>Price:</mat-label>
+          <input matInput value="{{sku.price}}">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="formField">
+          <mat-label>Quantity:</mat-label>
+          <input matInput value="{{sku.quantity}}">
+        </mat-form-field>
+      </p>
+    </div>
+  </mat-card-content>
+</mat-card>

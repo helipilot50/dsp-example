@@ -15,8 +15,8 @@ yarn install
 yarn build
 cd ..
 
-# # Angular
-# cd angular
-# yarn install
-# yarn build
-# cd ..
+# Angular
+cd angular
+yarn install
+yarn build
+cd ..

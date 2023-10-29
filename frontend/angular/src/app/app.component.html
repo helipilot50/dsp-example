@@ -1,0 +1,16 @@
+<h1>{{title}}</h1>
+<mat-sidenav-container>
+  <mat-sidenav #drawer mode="side" opened role="navigation">
+    <mat-nav-list>
+      <a mat-list-item routerLink='/'>Dashboard</a>
+      <a mat-list-item routerLink='/accounts'>Accounts</a>
+      <a mat-list-item routerLink='/brands'>Brands</a>
+      <a mat-list-item routerLink='/skus'>SKUs</a>
+      <a mat-list-item routerLink='/retailers'>Retailers</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

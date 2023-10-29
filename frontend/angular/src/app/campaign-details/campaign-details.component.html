@@ -1,0 +1,67 @@
+
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Campaign: {{campaign.id||''}}</mat-card-title>
+    <div *ngIf="loading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div *ngIf="error">
+      <p>Error: {{ error }}</p>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Name:</mat-label>
+        <input matInput type="text" [(ngModel)]="campaign.name" >
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="fill" *ngIf="!isNew" >
+        <mat-label>Status:</mat-label>
+        <mat-select [(ngModel)]="campaign.status" >
+          <mat-option *ngFor="let status of statusValues" [value]="status">
+            {{status}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="fill" >
+        <mat-label>Type:</mat-label>
+        <mat-select [(ngModel)]="campaign.type" >
+          <mat-option *ngFor="let type of types" [value]="type">
+            {{type}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field appearance="fill"  >
+        <mat-label>Campaign date range:</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate placeholder="Start date" [(ngModel)]="campaign.startDate">
+          <input matEndDate placeholder="End date" [(ngModel)]="campaign.endDate">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker>
+          <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>Cancel</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+      </mat-form-field>
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onFormSubmit()">{{(isNew)?'Create':'Save'}}</button>
+  </mat-card-actions>
+  <div *ngIf="!isNew">
+    <app-lineitem-list/>
+  </div>
+</mat-card>
+
+

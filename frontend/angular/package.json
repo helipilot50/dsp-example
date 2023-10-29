@@ -1,0 +1,58 @@
+{
+  "name": "not-dsp-angular",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --configuration production",
+    "dev": "ng serve --configuration development",
+    "build": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular-material-extensions/select-country": "^8.1.0",
+    "@angular/animations": "^15.2.0",
+    "@angular/cdk": "^15.2.6",
+    "@angular/common": "^15.2.0",
+    "@angular/compiler": "^15.2.0",
+    "@angular/core": "^15.2.0",
+    "@angular/forms": "^15.2.0",
+    "@angular/google-maps": "15.2.5",
+    "@angular/material": "15.2.5",
+    "@angular/platform-browser": "^15.2.0",
+    "@angular/platform-browser-dynamic": "^15.2.0",
+    "@angular/router": "^15.2.0",
+    "@apollo/client": "^3.8.3",
+    "apollo-angular": "^5.0.0",
+    "graphql": "^16.6.0",
+    "lodash-es": "^4.17.21",
+    "ng-material-treetable": "^0.5.5",
+    "not-dsp-graphql": "../not-dsp-graphql",
+    "rxjs": "~7.8.0",
+    "subscriptions-transport-ws": "^0.11.0",
+    "svg-country-flags": "^1.2.10",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.12.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^15.2.1",
+    "@angular/cli": "~15.2.1",
+    "@angular/compiler-cli": "^15.2.0",
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-apollo-angular": "^3.5.6",
+    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "@types/jasmine": "~4.3.0",
+    "jasmine-core": "~4.5.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "typescript": "~4.9.4"
+  },
+  "engines": {
+    "node": ">=16.0.0 <19.0.0"
+  }
+}
