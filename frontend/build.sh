@@ -9,14 +9,20 @@ yarn build
 cd ..
 
 # React
-echo "building react"
-cd react
-yarn install
-yarn build
-cd ..
+if [[ $1 == React ]]; then
+  echo "*** building react *** "
+  cd react
+  yarn install
+  yarn build
+  cd ..
+fi
 
 # Angular
-cd angular
-yarn install
-yarn build
-cd ..
+if [[ $1 == Angular ]]; then
+  echo "*** building angular ***"
+  cd angular
+  yarn install
+  yarn build
+  cd ..
+fi
+
