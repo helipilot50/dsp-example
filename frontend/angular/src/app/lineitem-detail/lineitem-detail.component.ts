@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Apollo } from 'apollo-angular';
 import { FetchResult } from '@apollo/client/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { notifyConfig } from '../snackBarDefaults';
 
 
 @Component({
@@ -39,7 +41,7 @@ export class LineitemDetailComponent {
   constructor(private apollo: Apollo,
     private route: ActivatedRoute,
     private router: Router,
-    // private fb: FormBuilder,
+    private snackBar: MatSnackBar,
     private location: Location) { }
 
   ngOnInit(): void {
@@ -74,6 +76,7 @@ export class LineitemDetailComponent {
       }
     }).subscribe((result: FetchResult<LineitemActivatedSubscription>) => {
       console.debug('[LineitemDetailComponent] activated subscription result', result);
+      this.snackBar.open(`Lineitem ${result.data?.lineitemActivated.name} activated`, 'OK', notifyConfig);
     });
 
     // Lineitem paused subscription
@@ -84,6 +87,7 @@ export class LineitemDetailComponent {
       }
     }).subscribe((result: FetchResult<LineitemPausedSubscription>) => {
       console.debug('[LineitemDetailComponent] paused subscription result', result);
+      this.snackBar.open(`Lineitem ${result.data?.lineitemPaused.name} paused`, 'OK', notifyConfig);
     }
     );
   }

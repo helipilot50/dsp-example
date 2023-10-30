@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -20,6 +18,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import StoreIcon from '@mui/icons-material/Store';
 import { useNavigate, useLocation, Link as RouterLink, Outlet } from 'react-router-dom';
 
 import BreadCrumbs from '@mui/material/Breadcrumbs';
@@ -206,7 +205,7 @@ export function Nav() {
             <ListItem key='menuRetailers' disablePadding >
               <ListItemButton onClick={() => { navigate(`/retailers`); }}>
                 <ListItemIcon>
-                  <InventoryIcon />
+                  <StoreIcon />
                 </ListItemIcon>
                 <ListItemText primary='Retailers' />
               </ListItemButton>
