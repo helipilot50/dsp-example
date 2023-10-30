@@ -5,7 +5,7 @@ import {
 } from 'not-dsp-graphql';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Box, Paper, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { QueryResult, useQuery } from '@apollo/client';
 import { RETAILER_LIST } from 'not-dsp-graphql';
 import { useEffect, useState } from 'react';
@@ -95,13 +95,13 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
   console.log('[RetailerList] pagination', retailerList);
 
   return (
-    <Paper square={false}
-      elevation={6}>
-      <Box sx={{ m: 2 }}>
+    <Card elevation={6} >
+      <CardHeader title={'Retailers'} />
+      <CardHeader subheader={'Click on a Retailer to see details'} />
+      <CardContent>
         {error && <ErrorNofification error={error} />}
-        <Typography variant="h6" gutterBottom>Retailers</Typography>
         <DataGrid
-          sx={{ minHeight: 400 }}
+          sx={{ minHeight: 400, maxWidth: 500 }}
           rows={(retailerList.retailers) ? retailerList.retailers : []}
           columns={columns}
           loading={loading}
@@ -122,7 +122,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
           }}
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }

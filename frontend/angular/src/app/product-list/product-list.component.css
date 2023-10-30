@@ -1,0 +1,25 @@
+.product-list {
+  width: 100%;
+  min-height:400px;
+  margin: 20px;
+}
+
+.mat-column-skuKey {
+  max-width: 100px;
+  /* border-right: 1px solid currentColor; */
+  /* padding-right: 24px; */
+  text-align: left;
+}
+
+.mat-column-name {
+  max-width: 200px;
+  text-align: left;
+}
+
+.mat-column-price {
+  text-align: right;
+}
+
+.mat-column-quantity {
+  text-align: right;
+}

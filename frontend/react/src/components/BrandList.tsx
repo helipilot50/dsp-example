@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Alert, AlertTitle, Box, Paper, Snackbar, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Card, CardContent, CardHeader, Paper, Snackbar, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -33,15 +33,6 @@ const columns: GridColDef[] = [
 
 
 ];
-
-export function BrandsMain() {
-  return (
-    <ErrorBoundary>
-      <Typography variant="h4" gutterBottom>Brands</Typography>
-      <BrandList />
-    </ErrorBoundary>
-  );
-}
 
 export function BrandList() {
   const navigate = useNavigate();
@@ -96,34 +87,36 @@ export function BrandList() {
   console.log('[BrandList] result', data, error, loading);
   console.log('[BrandList] pagination', brandList);
   return (
-    <Paper square={false}
-      elevation={6}>
-      {error && <ErrorNofification error={error} />}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Brand to see details</Typography>
-        <DataGrid
-          sx={{ minHeight: 400 }}
-          rows={(brandList && brandList.brands) ? brandList.brands : []}
-          columns={columns}
-          loading={loading}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: LIMIT_DEFAULT,
-                page: OFFSET_DEFAULT / LIMIT_DEFAULT,
+    <ErrorBoundary>
+      <Card elevation={6}>
+        <CardHeader title={'Brands'} />
+        <CardHeader subheader={'Click on a Brand to see details'} />
+        <CardContent>
+          {error && <ErrorNofification error={error} />}
+          <DataGrid
+            sx={{ minHeight: 400 }}
+            rows={(brandList && brandList.brands) ? brandList.brands : []}
+            columns={columns}
+            loading={loading}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: LIMIT_DEFAULT,
+                  page: OFFSET_DEFAULT / LIMIT_DEFAULT,
+                },
               },
-            },
-          }}
-          rowCount={brandList.totalCount || LIMIT_DEFAULT}
-          pageSizeOptions={[LIMIT_DEFAULT]}
-          paginationMode="server"
-          onPaginationModelChange={({ pageSize, page }) => {
-            console.debug("[BrandList.onPaginationModelChange]", page, pageSize);
-            fetchNext(pageSize * page, pageSize);
-          }}
-          onRowClick={(row) => navigate(`${row.row.id}`)}
-        />
-      </Box>
-    </Paper>
+            }}
+            rowCount={brandList.totalCount || LIMIT_DEFAULT}
+            pageSizeOptions={[LIMIT_DEFAULT]}
+            paginationMode="server"
+            onPaginationModelChange={({ pageSize, page }) => {
+              console.debug("[BrandList.onPaginationModelChange]", page, pageSize);
+              fetchNext(pageSize * page, pageSize);
+            }}
+            onRowClick={(row) => navigate(`${row.row.id}`)}
+          />
+        </CardContent>
+      </Card>
+    </ErrorBoundary>
   );
 }

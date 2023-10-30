@@ -257,7 +257,7 @@ export function AccountDetails() {
               <Typography>Campaigns</Typography>
             </AccordionSummary>
             {data?.account && <AccordionDetails>
-              <CampaignList accountId={params.accountId} />
+              <CampaignList accountId={params.accountId} allowCreate />
             </AccordionDetails>}
           </Accordion>}
 

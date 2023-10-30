@@ -165,7 +165,7 @@ export function Nav() {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            <MenuIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />

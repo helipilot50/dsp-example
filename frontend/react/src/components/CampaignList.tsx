@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
 import { CAMPAIGNS_LIST } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, Paper, Typography } from '@mui/material';
 import { dateFormatter } from '../lib/utility';
 import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from 'not-dsp-graphql';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
@@ -52,6 +52,7 @@ const columns: GridColDef[] = [
 export interface CampaignListProps {
   accountId?: string;
   retailerId?: string;
+  allowCreate?: boolean;
 }
 export function CampaignList(props: CampaignListProps) {
   const params = useParams();
@@ -107,12 +108,13 @@ export function CampaignList(props: CampaignListProps) {
   console.log('[CampaignList] result', data, error, loading);
   console.log('[CampaignList] pagination', campaignList);
   return (
-    <Paper square={false}
-      elevation={6}>
-      {error && <ErrorNofification error={error} />}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Campaign to see details</Typography>
-        <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>
+    <Card elevation={6}>
+      <CardHeader title={'Campaigns'} />
+      <CardHeader subheader={'Click on a Campaign to see details'} />
+
+      <CardContent >
+        {error && <ErrorNofification error={error} />}
+        {props.allowCreate && <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>}
         <DataGrid
           rows={(campaignList.campaigns) ? campaignList.campaigns : []}
           columns={columns}
@@ -137,8 +139,8 @@ export function CampaignList(props: CampaignListProps) {
           }
           }
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 

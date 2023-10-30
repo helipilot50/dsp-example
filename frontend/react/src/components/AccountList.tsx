@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ACCOUNTS_LIST, ACCOUNT_CREATED } from 'not-dsp-graphql';
 import { useNavigate } from 'react-router';
 import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from 'not-dsp-graphql';
-import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar } from '@mui/material';
+import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar, Card, CardContent, CardHeader } from '@mui/material';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
@@ -39,17 +39,9 @@ const columns: GridColDef[] = [
   },
 ];
 
-export function AccountsMain() {
-  return (
-    <>
-      <Typography variant="h4" gutterBottom>Accounts</Typography>
-      <AccountList />
-    </>
-  );
-}
-
 export interface AccountListProps {
   retailerId?: string;
+  allowCreate?: boolean;
 }
 
 export function AccountList(props: AccountListProps) {
@@ -65,13 +57,13 @@ export function AccountList(props: AccountListProps) {
 
   return (
 
-    <Paper square={false}
-      elevation={6}>
-      {error && <ErrorNofification error={error} />}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on an account to see details</Typography>
+    <Card elevation={6}>
+      <CardHeader title={'Accounts'} />
+      <CardHeader subheader={'Click on a Account to see details'} />
+      <CardContent>
         <AccountCreated />
-        <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>
+        {error && <ErrorNofification error={error} />}
+        {props.allowCreate && <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>}
         <DataGrid
           sx={{ minHeight: 400 }}
           rows={(data && data.accounts) ? data.accounts : []}
@@ -88,8 +80,8 @@ export function AccountList(props: AccountListProps) {
           // checkboxSelection
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 

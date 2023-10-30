@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
 import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams } from '@mui/x-data-grid';
-import { Box, Button, ButtonGroup, Paper, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Paper, Typography } from '@mui/material';
 import {
   MutationActivateLineitemsArgs, LineitemsQuery,
   LineitemsQueryVariables, Scalars, ActivateLineitemsMutation
@@ -48,17 +48,6 @@ const columns: GridColDef[] = [
 
 export interface LineitemListProps {
   campaignId?: Scalars['ID'];
-}
-
-export function LineitemsMain(props: LineitemListProps) {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Lineitems
-      </Typography>
-      <LineitemList campaignId={props.campaignId} />
-    </div>
-  );
 }
 
 export function LineitemList(props: LineitemListProps) {
@@ -158,11 +147,12 @@ export function LineitemList(props: LineitemListProps) {
 
   console.log('Lineitem list', params, data);
   return (
-    <Paper square={false}
-      elevation={6}>
-      {error && <ErrorNofification error={error} />}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Lineitem to see details</Typography>
+    <Card elevation={6}>
+      <CardHeader title={'Lineitems'} />
+      <CardHeader subheader={'Click on a Lineitem to see details'} />
+
+      <CardContent >
+        {error && <ErrorNofification error={error} />}
         <ButtonGroup variant="contained" aria-label="activation-group">
           <Button onClick={addLineitem}>New</Button>
           <Button onClick={activate}>Activate</Button>
@@ -184,8 +174,8 @@ export function LineitemList(props: LineitemListProps) {
           }
           onRowSelectionModelChange={selectionCanged}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 

@@ -1,19 +1,19 @@
 
-<div *ngIf="error">
-  <p>Error: {{ error }}</p>
-</div>
+
 <mat-card>
   <mat-card-header>
     <mat-card-title>Lineitems</mat-card-title>
-    <!-- <div *ngIf="loading">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </div> -->
+    <mat-card-subtitle>Click on a Lineitem to see details</mat-card-subtitle>
   </mat-card-header>
   <mat-card-actions>
     <button mat-raised-button (click)="newLineitem()">Create</button>
   </mat-card-actions>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
   <mat-card-content>
-    <mat-table [dataSource]="datasource" class="mat-elevation-z8">
+    <div *ngIf="error">
+    <p>Error: {{ error }}</p>
+  </div>
+    <mat-table [dataSource]="datasource" >
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>

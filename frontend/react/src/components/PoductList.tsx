@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router';
 import { SkusQuery, SkusQueryVariables, SkuList as Skus } from 'not-dsp-graphql';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import { PRODUCT_LIST } from 'not-dsp-graphql';
 import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
@@ -47,16 +47,6 @@ const columns: GridColDef[] = [
     },
   },
 ];
-
-
-export function ProductsMain() {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>Products</Typography>
-      <ProductsList />
-    </div>
-  );
-}
 
 export function ProductsList() {
   const navigate = useNavigate();
@@ -118,12 +108,11 @@ export function ProductsList() {
   console.log('[SkuList] searchParams', searchParams);
 
   return (
-    <Paper square={false}
-      elevation={6}>
-
-      {error && <ErrorNofification error={error} />}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Product to see details</Typography>
+    <Card elevation={6}>
+      <CardHeader title={'Products'} />
+      <CardHeader subheader={'Click on a Product to see details'} />
+      <CardContent>
+        {error && <ErrorNofification error={error} />}
         <DataGrid
           sx={{ minHeight: 400 }}
           rows={(skuList.skus) ? skuList.skus.map(value => {
@@ -151,7 +140,7 @@ export function ProductsList() {
           }}
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
