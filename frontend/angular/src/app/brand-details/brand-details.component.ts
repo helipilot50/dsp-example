@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Brand, BrandQuery, BrandQueryVariables, Sku } from 'not-dsp-graphql';
-import { BRAND_DETAILS } from '../graphql/brands.graphql';
+import { BRAND_DETAILS } from 'not-dsp-graphql';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 

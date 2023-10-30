@@ -4,7 +4,7 @@ import { map, startWith } from 'rxjs/operators';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { Location } from '@angular/common';
 import { Apollo } from 'apollo-angular';
-import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS } from 'not-dsp-graphql';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
@@ -26,10 +26,10 @@ import {
 } from 'not-dsp-graphql';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { ALL_COUNTRIES } from '../graphql/common.graphql';
+import { ALL_COUNTRIES } from 'not-dsp-graphql';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { RETAILER_LIST } from '../graphql/retailer.graphql';
+import { RETAILER_LIST } from 'not-dsp-graphql';
 
 
 

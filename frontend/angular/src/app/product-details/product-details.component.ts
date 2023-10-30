@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { Sku, SkuQuery, SkuQueryVariables } from 'not-dsp-graphql';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
-import { SKU_DETAILS } from '../graphql/skus.graphql';
+import { PRODUCT_DETAILS } from 'not-dsp-graphql';
 
 @Component({
-  selector: 'app-sku-details',
-  templateUrl: './sku-details.component.html',
-  styleUrls: ['./sku-details.component.css']
+  selector: 'app-product-details',
+  templateUrl: './product-details.component.html',
+  styleUrls: ['./product-details.component.css']
 })
-export class SkuDetailsComponent {
+export class ProductDetailsComponent {
 
   sku: Sku | undefined = undefined;
   loading: boolean = true;
@@ -21,7 +21,7 @@ export class SkuDetailsComponent {
   ngOnInit(): void {
     const id = this.route.snapshot.params['skuKey'];
     this.apollo.watchQuery<SkuQuery, SkuQueryVariables>({
-      query: SKU_DETAILS,
+      query: PRODUCT_DETAILS,
       variables: {
         skuKey: id
       }
@@ -33,7 +33,8 @@ export class SkuDetailsComponent {
     });
   }
   saveDetails(form: any) {
-    alert('SKU Form Validated)' + JSON.stringify(form.value, null, 4));
+    console.debug("[ProductListComponent.saveDetails] clicked");
+    alert('Product Form Validated)' + JSON.stringify(form.value, null, 4));
   }
 }
 

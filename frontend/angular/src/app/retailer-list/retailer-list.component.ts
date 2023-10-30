@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Retailer, RetailersQuery, RetailersQueryVariables } from 'not-dsp-graphql';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Apollo } from 'apollo-angular';
-import { RETAILER_LIST } from '../graphql/retailer.graphql';
+import { RETAILER_LIST } from 'not-dsp-graphql';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 

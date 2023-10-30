@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Account, AccountsQuery } from 'not-dsp-graphql';
-import { ACCOUNTS_LIST } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST } from 'not-dsp-graphql';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';

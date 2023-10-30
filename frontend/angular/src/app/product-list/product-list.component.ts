@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Sku, SkusQuery, SkusQueryVariables } from 'not-dsp-graphql';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SKU_LIST } from '../graphql/skus.graphql';
+import { PRODUCT_LIST } from 'not-dsp-graphql';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -10,11 +10,11 @@ import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
-  selector: 'app-sku-list',
-  templateUrl: './sku-list.component.html',
-  styleUrls: ['./sku-list.component.css']
+  selector: 'app-product-list',
+  templateUrl: './product-list.component.html',
+  styleUrls: ['./product-list.component.css']
 })
-export class SkuListComponent implements OnInit {
+export class ProductListComponent implements OnInit {
   displayedColumns: string[] = ['skuKey', 'name', 'description', 'price', 'quantity'];
 
   skus: Sku[] = [];
@@ -37,7 +37,7 @@ export class SkuListComponent implements OnInit {
 
   ngOnInit(): void {
     this.skusQuery = this.apollo.watchQuery<SkusQuery, SkusQueryVariables>({
-      query: SKU_LIST,
+      query: PRODUCT_LIST,
       variables: {
         offset: this.offset,
         limit: this.limit
@@ -46,16 +46,14 @@ export class SkuListComponent implements OnInit {
     });
     this.skusQuery.valueChanges.subscribe((result: any) => {
       this.skus = result.data.skus?.skus ? result.data.skus?.skus as Sku[] : [];
-      // this.datasource.data = mockSKUs.slice(this.offset, this.offset + this.limit);
       this.datasource.data = this.skus.slice(this.offset, this.offset + this.limit);
       this.loading = result.loading;
       this.error = result.errors;
       this.skusCount = result.data.skus?.totalCount;
       this.offset = result.data.skus?.offset;
       this.limit = result.data.skus?.limit;
-      // this.page = this.offset / this.limit;
-      console.debug('[SkuListComponent.ngOnInit] offset, limit, page', this.offset, this.limit, this.page);
-      console.debug('[SkuListComponent.ngOnInit] skus', result.data.skus);
+      console.debug('[ProductListComponent.ngOnInit] offset, limit, page', this.offset, this.limit, this.page);
+      console.debug('[ProductListComponent.ngOnInit] skus', result.data.skus);
     });
 
   }
@@ -63,16 +61,16 @@ export class SkuListComponent implements OnInit {
   ngAfterViewInit() {
     console.debug("ngAfterViewInit");
     this.paginator.page.subscribe(page => {
-      console.debug('[SkuListComponent.ngAfterViewInit] page event', page);
+      console.debug('[ProductListComponent.ngAfterViewInit] page event', page);
       const newPageindex = page.pageIndex;
       const previousPageindex = page.previousPageIndex || 0;
 
       this.offset = page.pageIndex * this.limit;
       this.page = this.offset / this.limit;
       this.limit = page.pageSize;
-      console.debug('[SkuListComponent.ngAfterViewInit] offset, limit, page',
+      console.debug('[ProductListComponent.ngAfterViewInit] offset, limit, page',
         this.offset, this.limit, this.page);
-      console.debug('[SkuListComponent.ngAfterViewInit] skus',
+      console.debug('[ProductListComponent.ngAfterViewInit] skus',
         this.skus);
 
       if (newPageindex > previousPageindex)
@@ -83,12 +81,12 @@ export class SkuListComponent implements OnInit {
   }
 
   fetchPrevious(offset: number, limit: number) {
-    console.debug("[SkuListComponent.fetchPrevious]", offset, limit);
+    console.debug("[ProductListComponent.fetchPrevious]", offset, limit);
     this.datasource.data = this.skus.slice(offset, offset + limit);
   }
 
   fetchNext(offset: number, limit: number) {
-    console.debug("[SkuListComponent.fetchNext]",
+    console.debug("[ProductListComponent.fetchNext]",
       offset, limit);
     this.skusQuery?.fetchMore({
       variables: {
@@ -98,7 +96,7 @@ export class SkuListComponent implements OnInit {
       fetchPolicy: 'cache-and-network',
       updateQuery: (prev: any, { fetchMoreResult }: any) => {
         if (!fetchMoreResult) return prev;
-        console.debug("[SkuListComponent.fetchNext.updateQuery]",
+        console.debug("[ProductListComponent.fetchNext.updateQuery]",
           prev,
           fetchMoreResult);
         const merged = Object.assign({}, prev, {
@@ -118,7 +116,7 @@ export class SkuListComponent implements OnInit {
   }
 
   clickedRow(row: Sku) {
-    console.debug('[SkuListComponent] clicked row', row);
-    this.router.navigate(['/skus', row.skuKey]);
+    console.debug('[ProductListComponent.clickedRow] row', row);
+    this.router.navigate(['/products', row.skuKey]);
   }
 }

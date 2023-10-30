@@ -60,8 +60,8 @@ import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { LayoutModule } from '@angular/cdk/layout';
 import { RetailerDetailsComponent } from './retailer-details/retailer-details.component';
 import { RetailerListComponent } from './retailer-list/retailer-list.component';
-import { SkuDetailsComponent } from './sku-details/sku-details.component';
-import { SkuListComponent } from './sku-list/sku-list.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ProductListComponent } from './product-list/product-list.component';
 import { BrandDetailsComponent } from './brand-details/brand-details.component';
 import { BrandListComponent } from './brand-list/brand-list.component';
 import { LineitemListComponent } from './lineitem-list/lineitem-list.component';
@@ -77,8 +77,8 @@ import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.compo
     CampaignDetailsComponent,
     RetailerDetailsComponent,
     RetailerListComponent,
-    SkuDetailsComponent,
-    SkuListComponent,
+    ProductDetailsComponent,
+    ProductListComponent,
     BrandDetailsComponent,
     BrandListComponent,
     LineitemListComponent,

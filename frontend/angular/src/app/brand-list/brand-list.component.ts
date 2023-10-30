@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Brand, BrandsQuery, BrandsQueryVariables } from 'not-dsp-graphql';
-import { BRANDS_LIST } from '../graphql/brands.graphql';
+import { BRANDS_LIST } from 'not-dsp-graphql';
 import { Apollo, QueryRef } from 'apollo-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';

@@ -4,8 +4,8 @@ import { AccountListComponent } from './account-list/account-list.component';
 import { AccountDetailsComponent } from './account-details/account-details.component';
 import { CampaignListComponent } from './campaign-list/campaign-list.component';
 import { CampaignDetailsComponent } from './campaign-details/campaign-details.component';
-import { SkuDetailsComponent } from './sku-details/sku-details.component';
-import { SkuListComponent } from './sku-list/sku-list.component';
+import { ProductDetailsComponent } from './product-details/product-details.component';
+import { ProductListComponent } from './product-list/product-list.component';
 import { BrandDetailsComponent } from './brand-details/brand-details.component';
 import { BrandListComponent } from './brand-list/brand-list.component';
 import { RetailerListComponent } from './retailer-list/retailer-list.component';
@@ -73,16 +73,12 @@ const routes: Routes = [
     component: BrandDetailsComponent
   },
   {
-    path: 'skus',
-    component: SkuListComponent
+    path: 'products',
+    component: ProductListComponent
   },
   {
-    path: 'skus/:skuKey',
-    component: SkuDetailsComponent
-  },
-  {
-    path: 'lineitems/:lineitemId',
-    component: LineitemDetailComponent
+    path: 'products/:skuKey',
+    component: ProductDetailsComponent
   }];
 
 @NgModule({
