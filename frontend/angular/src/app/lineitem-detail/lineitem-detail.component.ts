@@ -130,6 +130,7 @@ export class LineitemDetailComponent {
     }).subscribe(({ data, errors, loading }) => {
       if (errors) {
         console.error('[LineitemDetailComponent.deactivate] Error pausing lineitem', errors);
+        this.snackBar.open(`Error pausing lineitem: ${errors[0].message} `, 'OK');
       }
       if (data) {
         console.debug('[LineitemDetailComponent.deactivate] Lineitem paused', JSON.stringify(data, null, 2));
@@ -180,13 +181,13 @@ export class LineitemDetailComponent {
     }).subscribe(({ data, errors, loading }) => {
       if (errors) {
         console.error('[LineitemDetailComponent.createLineitem] Error creating lineitem', errors);
-        alert(`Error creating lineitem: ${errors[0].message}`);
+        this.snackBar.open(`Error creating lineitem: ${errors[0].message}`, 'OK');
         this.location.back();
       }
       if (data) {
         console.debug('[LineitemDetailComponent.createLineitem] New lineitem created', JSON.stringify(data, null, 2));
         const newLineitemId = (data as any).newLineitem.id;
-        // alert(`New lineitem created, id: ${newLineitemId} `);
+        this.snackBar.open(`New lineitem created, id: ${newLineitemId} `, 'OK', notifyConfig);
         this.location.back();
       }
     });

@@ -10,6 +10,8 @@ import {
 } from 'not-dsp-graphql';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CAMPAIGNS_LIST, CAMPAIGN_DETAILS, CAMPAIGN_NEW } from 'not-dsp-graphql';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { notifyConfig } from '../snackBarDefaults';
 
 @Component({
   selector: 'app-campaign-details',
@@ -41,6 +43,7 @@ export class CampaignDetailsComponent {
   constructor(private apollo: Apollo,
     private route: ActivatedRoute,
     private router: Router,
+    private snackBar: MatSnackBar,
     private location: Location) { }
 
   ngOnInit(): void {
@@ -62,6 +65,9 @@ export class CampaignDetailsComponent {
         this.campaign = result.data.campaign as Campaign;
         this.loading = result.loading;
         this.error = result.errors;
+        if (this.error) {
+          this.snackBar.open(`Campaign error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
+        }
       });
     }
   }
@@ -108,13 +114,13 @@ export class CampaignDetailsComponent {
     }).subscribe(({ data, errors, loading }) => {
       if (errors) {
         console.error('Error creating campaign', errors);
-        alert(`Error creating campaign: ${errors[0].message}`);
+        this.snackBar.open(`Error creating campaign: ${errors[0].message} `, 'OK');
         this.location.back();
       }
       if (data) {
         console.debug('New campaign created', JSON.stringify(data, null, 2));
         const newCampaignId = (data as any).newCampaign.id;
-        alert(`New campaign created, id: ${newCampaignId} `);
+        this.snackBar.open(`New campaign created, id: ${newCampaignId} `, 'OK', notifyConfig);
         this.location.back();
       }
     });
