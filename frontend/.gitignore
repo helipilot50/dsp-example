@@ -2,4 +2,6 @@ publish/react
 publish/angular
 not-dsp-graphql/dist
 not-dsp-graphql/node_modules
+.env
+.env-local
 

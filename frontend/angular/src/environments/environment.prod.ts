@@ -1,6 +1,10 @@
 export const environment = {
   production: true,
   name: 'production environment',
-  gqlServer: 'https://not-dsp-backend.onrender.com/graphql',
-  gqlSubscriptionServer: 'wss://not-dsp-backend.onrender.com/subscriptions',
+  envVar: {
+    GQL_URL: 'gql-url',
+    GQL_WS_URL: 'gql-ws-url',
+    CLERK_PUBLISHABLE_KEY: 'clerk-publishable-key',
+  }
+
 };

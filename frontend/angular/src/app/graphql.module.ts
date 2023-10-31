@@ -7,13 +7,12 @@ import {
 import { HttpLink } from 'apollo-angular/http';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
-import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 
-const uri = `${environment.gqlServer}`; //  URL of the GraphQL server here
-const wsUrl = `${environment.gqlSubscriptionServer}`; //  URL of the GraphQL subscroptions here
+const uri = process.env['NG_APP_GQL_URL']; //  URL of the GraphQL server here
+const wsUrl = process.env['NG_APP_GQL_WS_URL']; //  URL of the GraphQL subscroptions here
 console.log('[graphql.module] url', uri);
 console.log('[graphql.module] subscriptions url', wsUrl);
 
