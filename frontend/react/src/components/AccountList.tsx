@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ACCOUNTS_LIST, ACCOUNT_CREATED } from 'not-dsp-graphql';
 import { useNavigate } from 'react-router';
 import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from 'not-dsp-graphql';
-import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse, Snackbar, Card, CardContent, CardHeader } from '@mui/material';
+import { Button, Alert, AlertTitle, Collapse, Snackbar, Card, CardContent, CardHeader, CardActions } from '@mui/material';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
@@ -14,7 +14,6 @@ import { ErrorNofification } from './error/ErrorBoundary';
 
 
 const columns: GridColDef[] = [
-  // { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'name',
     headerName: 'Name',
@@ -34,7 +33,7 @@ const columns: GridColDef[] = [
     type: 'number',
     width: 110,
     valueGetter: (params) => {
-      return params.row.currency?.code;
+      return `${params.row.currency?.symbol} ${params.row.currency?.code}`;
     },
   },
 ];
@@ -60,12 +59,14 @@ export function AccountList(props: AccountListProps) {
     <Card elevation={6}>
       <CardHeader title={'Accounts'} />
       <CardHeader subheader={'Click on a Account to see details'} />
+      {props.allowCreate && <CardActions sx={{ ml: 2 }}>
+        <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>
+      </CardActions>}
       <CardContent>
         <AccountCreated />
         {error && <ErrorNofification error={error} />}
-        {props.allowCreate && <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>}
         <DataGrid
-          sx={{ minHeight: 400 }}
+          className='DataGrid'
           rows={(data && data.accounts) ? data.accounts : []}
           columns={columns}
           loading={loading}
@@ -77,7 +78,6 @@ export function AccountList(props: AccountListProps) {
             },
           }}
           pageSizeOptions={[LIMIT_DEFAULT]}
-          // checkboxSelection
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
       </CardContent>

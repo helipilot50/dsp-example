@@ -2,11 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router';
 import { SkusQuery, SkusQueryVariables, SkuList as Skus } from 'not-dsp-graphql';
-import Paper from '@mui/material/Paper';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { PRODUCT_LIST } from 'not-dsp-graphql';
 import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
@@ -114,7 +112,7 @@ export function ProductsList() {
       <CardContent>
         {error && <ErrorNofification error={error} />}
         <DataGrid
-          sx={{ minHeight: 400 }}
+          className='DataGrid'
           rows={(skuList.skus) ? skuList.skus.map(value => {
             return {
               id: value?.skuKey,

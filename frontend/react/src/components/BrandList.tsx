@@ -94,7 +94,7 @@ export function BrandList() {
         <CardContent>
           {error && <ErrorNofification error={error} />}
           <DataGrid
-            sx={{ minHeight: 400 }}
+            className='DataGrid'
             rows={(brandList && brandList.brands) ? brandList.brands : []}
             columns={columns}
             loading={loading}

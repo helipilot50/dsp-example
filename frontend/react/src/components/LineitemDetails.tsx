@@ -186,75 +186,71 @@ export function LineitemDetails() {
 
   console.log('[LineitemDetails] params data', params, data);
   return (
-    <Paper square={false}
-      elevation={6}
+    <Card elevation={6}
       sx={{
         '& .MuiTextField-root': { m: 1, width: '50ch' },
-      }}
-    >
-      <Card >
-        <CardHeader
-          title={`Lineitem: ${lineitemId}`}
-          subheader={`for campaign: ${(data) ? data.lineitem?.campaign?.name : ''}`}
-        />
-        <CardActions>
-          <ButtonGroup variant="contained" aria-label="activation-group">
-            <Button type='submit'>{isNew ? 'Create' : 'Save'}</Button>
-            {!isNew && <Button onClick={activate}>Activate</Button>}
-            {!isNew && <Button onClick={pause} >Pause</Button>}
-          </ButtonGroup>
-        </CardActions>
-        <CardContent component="form"
-          onSubmit={onFormSubmit}
-          noValidate
-          autoComplete="off"
-        >
-          {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
-          {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
-          {loading && <LinearProgress variant="query" />}
-          {error && <ErrorNofification error={error} />}
+      }}>
+      <CardHeader
+        title={`Lineitem: ${lineitemId}`}
+        subheader={`for campaign: ${(data) ? data.lineitem?.campaign?.name : ''}`}
+      />
+      <CardActions sx={{ ml: 2 }}>
+        <ButtonGroup variant="contained" aria-label="activation-group">
+          <Button type='submit'>{isNew ? 'Create' : 'Save'}</Button>
+          {!isNew && <Button onClick={activate} variant="outlined">Activate</Button>}
+          {!isNew && <Button onClick={pause} variant="outlined">Pause</Button>}
+        </ButtonGroup>
+      </CardActions>
+      <CardContent component="form"
+        onSubmit={onFormSubmit}
+        noValidate
+        autoComplete="off"
+      >
+        {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
+        {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
+        {loading && <LinearProgress variant="query" />}
+        {error && <ErrorNofification error={error} />}
 
-          <Stack>
-            <TextField
-              label="Name"
-              name="name"
-              id='name'
-              value={lineitem.name}
-              onChange={handleInputChange} />
-            <TextField
-              name='status'
-              id='status'
-              label="Status"
-              value={lineitem.status}
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <DateRangePicker
-              label="Start - End"
-              slots={{ field: SingleInputDateRangeField }}
-              localeText={{ start: 'start date', end: 'end date' }}
-              value={dates}
-              onChange={(newValue: DateRange<Dayjs>) => {
-                console.log('[LineitemDetails] new DateRange', newValue);
-                const startDate = newValue[0]?.toDate();
-                const endDate = newValue[1]?.toDate();
-                setLineitem({
-                  ...lineitem,
-                  startDate: startDate,
-                  endDate: endDate
-                });
-              }}
-            />
+        <Stack>
+          <TextField
+            label="Name"
+            name="name"
+            id='name'
+            value={lineitem.name}
+            onChange={handleInputChange} />
+          <TextField
+            name='status'
+            id='status'
+            label="Status"
+            value={lineitem.status}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+          <DateRangePicker
+            label="Start - End"
+            slots={{ field: SingleInputDateRangeField }}
+            localeText={{ start: 'start date', end: 'end date' }}
+            value={dates}
+            onChange={(newValue: DateRange<Dayjs>) => {
+              console.log('[LineitemDetails] new DateRange', newValue);
+              const startDate = newValue[0]?.toDate();
+              const endDate = newValue[1]?.toDate();
+              setLineitem({
+                ...lineitem,
+                startDate: startDate,
+                endDate: endDate
+              });
+            }}
+          />
 
-            <TextField
-              label="Budget"
-              value={(lineitem.budget) ? lineitem.budget.amount : 0}
-              type='number' />
-          </Stack>
-        </CardContent>
-      </Card>
-    </Paper >
+          <TextField
+            label="Budget"
+            value={(lineitem.budget) ? lineitem.budget.amount : 0}
+            type='number' />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 

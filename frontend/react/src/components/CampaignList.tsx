@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
 import { CAMPAIGNS_LIST } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Box, Button, Card, CardContent, CardHeader, Paper, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Paper, Typography } from '@mui/material';
 import { dateFormatter } from '../lib/utility';
 import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } from 'not-dsp-graphql';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
@@ -111,11 +111,15 @@ export function CampaignList(props: CampaignListProps) {
     <Card elevation={6}>
       <CardHeader title={'Campaigns'} />
       <CardHeader subheader={'Click on a Campaign to see details'} />
-
+      {props.allowCreate &&
+        <CardActions sx={{ ml: 2 }}>
+          <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>
+        </CardActions>}
       <CardContent >
         {error && <ErrorNofification error={error} />}
-        {props.allowCreate && <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>}
+
         <DataGrid
+          className='DataGrid'
           rows={(campaignList.campaigns) ? campaignList.campaigns : []}
           columns={columns}
           loading={loading}
@@ -133,7 +137,6 @@ export function CampaignList(props: CampaignListProps) {
             console.debug("[CampaignList.onPaginationModelChange]", page, pageSize);
             fetchNext(pageSize * page, pageSize);
           }}
-          checkboxSelection
           onRowClick={(row) => {
             navigate(`campaigns/${row.row.id}`);
           }

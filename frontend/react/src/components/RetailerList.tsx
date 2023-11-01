@@ -101,7 +101,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
       <CardContent>
         {error && <ErrorNofification error={error} />}
         <DataGrid
-          sx={{ minHeight: 400 }}
+          className='DataGrid'
           rows={(retailerList.retailers) ? retailerList.retailers : []}
           columns={columns}
           loading={loading}

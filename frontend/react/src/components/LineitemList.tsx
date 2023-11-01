@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
 import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams } from '@mui/x-data-grid';
-import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, Paper, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CardActionArea, CardContent, CardHeader, Paper, Typography } from '@mui/material';
 import {
   MutationActivateLineitemsArgs, LineitemsQuery,
   LineitemsQueryVariables, Scalars, ActivateLineitemsMutation
@@ -150,15 +150,18 @@ export function LineitemList(props: LineitemListProps) {
     <Card elevation={6}>
       <CardHeader title={'Lineitems'} />
       <CardHeader subheader={'Click on a Lineitem to see details'} />
-
-      <CardContent >
-        {error && <ErrorNofification error={error} />}
+      <CardActionArea sx={{ ml: 2 }}>
         <ButtonGroup variant="contained" aria-label="activation-group">
           <Button onClick={addLineitem}>New</Button>
-          <Button onClick={activate}>Activate</Button>
-          <Button onClick={pause}>Pause</Button>
+          <Button onClick={activate} variant="outlined">Activate</Button>
+          <Button onClick={pause} variant="outlined">Pause</Button>
         </ButtonGroup>
+      </CardActionArea>
+      <CardContent >
+        {error && <ErrorNofification error={error} />}
+
         <DataGrid
+          className='DataGrid'
           rows={(data?.lineitems) ? data?.lineitems?.lineitems : [] as any}
           columns={columns}
           loading={loading}

@@ -21,84 +21,82 @@ export function BrandDetails() {
 
   console.log('params', params);
   return (
-    <Paper square={false}
-      elevation={6}
+
+    <Card elevation={6}
       sx={{
         '& .MuiTextField-root': { m: 1, width: '55ch' },
       }}>
-      <Card>
-        <CardHeader
-          title={'Brand'}
-          subheader={<Link
-            href={(data && data.brand && data.brand.website) ? data.brand.website : ''}
-            target='_blank'>website</Link>}
-        />
-        <CardContent
-          component="form"
-          noValidate
-          autoComplete="off">
-          {loading && <LinearProgress variant="query" />}
-          {error && <ErrorNofification error={error} />}
-          <Stack spacing={1}>
-            <TextField
-              label="ID"
-              value={(data && data.brand) ? data?.brand?.id : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Name"
-              value={(data && data.brand) ? data?.brand?.name : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
+      <CardHeader
+        title={'Brand'}
+        subheader={<Link
+          href={(data && data.brand && data.brand.website) ? data.brand.website : ''}
+          target='_blank'>website</Link>}
+      />
+      <CardContent
+        component="form"
+        noValidate
+        autoComplete="off">
+        {loading && <LinearProgress variant="query" />}
+        {error && <ErrorNofification error={error} />}
+        <Stack spacing={1}>
+          <TextField
+            label="ID"
+            value={(data && data.brand) ? data?.brand?.id : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Name"
+            value={(data && data.brand) ? data?.brand?.name : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
 
 
-            <TextField
-              label="Country"
-              value={(data && data.brand) ? data?.brand?.country : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Industry"
-              value={(data && data.brand) ? data?.brand?.industry : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Founded in"
-              value={(data && data.brand) ? data?.brand?.foundedIn : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Founded by"
-              value={(data && data.brand) ? data?.brand?.foundedBy : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Rank"
-              value={(data && data.brand) ? data?.brand?.rank : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Rating"
-              value={(data && data.brand) ? data?.brand?.rating : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-            <TextField
-              label="Brand Value USD(m)"
-              value={(data && data.brand) ? data?.brand?.brandValue : ''}
-              InputProps={{
-                readOnly: true,
-              }} />
-          </Stack>
-        </CardContent>
-      </Card>
-    </Paper>
+          <TextField
+            label="Country"
+            value={(data && data.brand) ? data?.brand?.country : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Industry"
+            value={(data && data.brand) ? data?.brand?.industry : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Founded in"
+            value={(data && data.brand) ? data?.brand?.foundedIn : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Founded by"
+            value={(data && data.brand) ? data?.brand?.foundedBy : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Rank"
+            value={(data && data.brand) ? data?.brand?.rank : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Rating"
+            value={(data && data.brand) ? data?.brand?.rating : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+          <TextField
+            label="Brand Value USD(m)"
+            value={(data && data.brand) ? data?.brand?.brandValue : ''}
+            InputProps={{
+              readOnly: true,
+            }} />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
