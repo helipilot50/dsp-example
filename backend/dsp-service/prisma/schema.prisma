@@ -27,7 +27,7 @@ model Account {
   countryIds           String[]
   retailerIds          String[]    @db.ObjectId
   retailers            Retailer[]  @relation(fields: [retailerIds], references: [id])
-  fees                 AccountFees
+  fee                  AccountFees
   brandIds             String[]    @db.ObjectId
   bands                Brand[]     @relation(fields: [brandIds], references: [id])
 

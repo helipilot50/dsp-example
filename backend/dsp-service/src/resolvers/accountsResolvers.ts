@@ -79,6 +79,7 @@ export const accountResolvers/*: Resolvers*/ = {
             currencyCode: true,
             countryIds: true,
             retailerIds: true,
+            fee: true,
           }
         }
       );

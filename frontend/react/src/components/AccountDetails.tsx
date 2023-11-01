@@ -1,11 +1,11 @@
 
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS } from 'not-dsp-graphql';
+import { ACCOUNTS_LIST, ACCOUNT_NEW, ACCOUNT_DETAILS, MAP_ACCOUNT_RETAILERS, AccountFee } from 'not-dsp-graphql';
 import {
   Accordion, AccordionDetails, AccordionSummary,
   TextField, Typography, LinearProgress, Stack, Paper,
-  Button, FormLabel, MenuItem, Select, FormControl, Card, CardContent, CardHeader, CardActions,
+  Button, FormLabel, MenuItem, Select, FormControl, Card, CardContent, CardHeader, CardActions, Divider,
 } from '@mui/material';
 
 import { CampaignList } from './CampaignList';
@@ -20,6 +20,7 @@ import { useEffect, useMemo, useState } from 'react';
 import CountriesChooser from './CountriesChooser';
 import { RetailersChooser } from './RetailersChooser';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { AccountFees } from './AccountFees';
 
 
 
@@ -140,130 +141,128 @@ export function AccountDetails() {
 
   return (
 
-    <Paper square={false}
+    <Card
       elevation={6}
-      sx={{ width: '800px', minWidth: '400px' }}
-    >
-      <Card>
-        <CardHeader
-          title={`Account: ${account.id}`} />
-        <CardActions>
-          {isNew && <Button type="submit" variant='contained' onClick={onSubmit}>Create</Button>}
-        </CardActions>
-        <CardContent
-          component="form"
-          noValidate
-          autoComplete="off"
-        >
-          {(loading || createLoading) && <LinearProgress variant="query" />}
-          {error && <ErrorNofification error={error} />}
-          {createError && <ErrorNofification error={createError} />}
-          {mappedError && <ErrorNofification error={mappedError} />}
-          <Stack >
-            <FormControl>
-              <FormLabel>Name</FormLabel>
-              <TextField
-                variant='outlined'
-                required
-                id="name"
-                name="name"
-                fullWidth
-                autoComplete="name"
-                value={account.name}
-                onChange={handleInputChange}
+      sx={{ width: '800px', minWidth: '400px' }}>
+      <CardHeader
+        title={`Account: ${account.id}`} />
+      <CardActions>
+        {isNew && <Button type="submit" variant='contained' onClick={onSubmit}>Create</Button>}
+      </CardActions>
+      <CardContent
+        component="form"
+        noValidate
+        autoComplete="off"
+      >
+        {(loading || createLoading) && <LinearProgress variant="query" />}
+        {error && <ErrorNofification error={error} />}
+        {createError && <ErrorNofification error={createError} />}
+        {mappedError && <ErrorNofification error={mappedError} />}
+        <Stack spacing={2}>
+          <FormControl>
+            <FormLabel>Name</FormLabel>
+            <TextField
+              variant='outlined'
+              required
+              id="name"
+              name="name"
+              fullWidth
+              autoComplete="name"
+              value={account.name}
+              onChange={handleInputChange}
 
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel>Type</FormLabel>
-              <Select id="type" name="type" value={account.type} onChange={handleInputChange}
-                label="Type" required
-              >
-                <MenuItem key={AccountType.Demand} value={AccountType.Demand}>Demand</MenuItem>
-                <MenuItem key={AccountType.Supply} value={AccountType.Supply}>Supply</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Currency</FormLabel>
-              <Select id="currency" name="currency"
-                value={account.currency?.code}
-                onChange={handleInputChange}
-                label="Currency" required
-              >
-                {Object.values(CurrencyCode).map((currency: any) => {
-                  return <MenuItem key={currency} value={currency}>{currency}</MenuItem>;
-                })
-                }
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel>Countries</FormLabel>
-              <CountriesChooser
-                id='account-countries'
-                selectedValues={countries}
-                countryChange={(countries: Country[]) => {
-                  console.log('[AccountDetails] selected countries', countries);
+            />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Type</FormLabel>
+            <Select id="type" name="type" value={account.type} onChange={handleInputChange}
+              label="Type" required
+            >
+              <MenuItem key={AccountType.Demand} value={AccountType.Demand}>Demand</MenuItem>
+              <MenuItem key={AccountType.Supply} value={AccountType.Supply}>Supply</MenuItem>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Currency</FormLabel>
+            <Select id="currency" name="currency"
+              value={account.currency?.code}
+              onChange={handleInputChange}
+              label="Currency" required
+            >
+              {Object.values(CurrencyCode).map((currency: any) => {
+                return <MenuItem key={currency} value={currency}>{currency}</MenuItem>;
+              })
+              }
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Countries</FormLabel>
+            <CountriesChooser
+              id='account-countries'
+              selectedValues={countries}
+              countryChange={(countries: Country[]) => {
+                console.log('[AccountDetails] selected countries', countries);
 
-                  setAccount({
-                    ...account,
-                    countries: countries,
-                  });
-                }}
-              />
-            </FormControl>
-            {!isNew && <FormControl>
-              <FormLabel>Retailers</FormLabel>
-              <RetailersChooser id='account-retailers'
-                selectedValues={account.retailers as Retailer[]}
-                retailersChange={(retailers: Retailer[]) => {
-                  console.log('[AccountDetails] selected retailers', retailers);
+                setAccount({
+                  ...account,
+                  countries: countries,
+                });
+              }}
+            />
+          </FormControl>
+          {!isNew && <FormControl>
+            <FormLabel>Retailers</FormLabel>
+            <RetailersChooser id='account-retailers'
+              selectedValues={account.retailers as Retailer[]}
+              retailersChange={(retailers: Retailer[]) => {
+                console.log('[AccountDetails] selected retailers', retailers);
 
-                  mapRetailers({
+                mapRetailers({
+                  variables: {
+                    accountId: accountId,
+                    retailerIds: retailers.map((retailer: Retailer) => retailer.id),
+                  },
+                  refetchQueries: [{
+                    query: ACCOUNT_DETAILS,
                     variables: {
                       accountId: accountId,
-                      retailerIds: retailers.map((retailer: Retailer) => retailer.id),
-                    },
-                    refetchQueries: [{
-                      query: ACCOUNT_DETAILS,
-                      variables: {
-                        accountId: accountId,
-                      }
-                    }],
-                    onCompleted: (data: any) => {
-                      console.debug('[AccountDetails.mapRetailers]  completed', data);
-                      setAccount({
-                        ...account,
-                        retailers: retailers,
-                      });
-                    },
-                    onError: (error: ApolloError) => {
-                      alert(`[AccountDetails.mapRetailers] error: ${error} `);
-                      console.error('[AccountDetails.mapRetailers] error', error);
                     }
-                  });
+                  }],
+                  onCompleted: (data: any) => {
+                    console.debug('[AccountDetails.mapRetailers]  completed', data);
+                    setAccount({
+                      ...account,
+                      retailers: retailers,
+                    });
+                  },
+                  onError: (error: ApolloError) => {
+                    alert(`[AccountDetails.mapRetailers] error: ${error} `);
+                    console.error('[AccountDetails.mapRetailers] error', error);
+                  }
+                });
 
-                }}
-              />
-            </FormControl>}
-          </Stack>
-
-          {!isNew && <Accordion
+              }}
+            />
+          </FormControl>}
+          {data && data.account && data.account.fee && <AccountFees fee={data.account.fee as AccountFee} />}
+        </Stack>
+        <Divider sx={{ m: 1 }} />
+        {!isNew && <Accordion
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>Campaigns</Typography>
-            </AccordionSummary>
-            {data?.account && <AccordionDetails>
-              <CampaignList accountId={params.accountId} allowCreate />
-            </AccordionDetails>}
-          </Accordion>}
+            <Typography>Campaigns</Typography>
+          </AccordionSummary>
+          {data?.account && <AccordionDetails>
+            <CampaignList accountId={params.accountId} allowCreate />
+          </AccordionDetails>}
+        </Accordion>}
 
-        </CardContent>
-      </Card>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 

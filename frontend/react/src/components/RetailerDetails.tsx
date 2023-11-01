@@ -5,7 +5,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Card, CardContent, CardHeader, LinearProgress,
+  Card, CardContent, CardHeader, Divider, LinearProgress,
   Paper, Stack, TextField, Typography
 } from '@mui/material';
 // import FormControl from '@mui/material/FormControl';
@@ -91,7 +91,7 @@ export function RetailerDetails() {
                 readOnly: true,
               }} />
           </Stack>
-
+          <Divider sx={{ m: 1 }} />
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -104,6 +104,7 @@ export function RetailerDetails() {
               <CampaignList retailerId={params.retailerId} />
             </AccordionDetails>
           </Accordion>
+          <Divider sx={{ m: 1 }} />
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
