@@ -178,7 +178,7 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      ClerkExpressWithAuth(),
+      // ClerkExpressWithAuth(),
       expressMiddleware(server,
         {
           context: async (args: any) => {

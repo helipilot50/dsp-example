@@ -117,8 +117,26 @@ extend type Account @key(fields: "id") {
   users: [User]
 }
 
+type Portfolio @key(fields: "id") {
+  id: ID
+  name: String
+  description: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  users: [User]
+  accounts: [Account]
+}
+
 extend type Query {
   user(userId: ID!): User
   me: User
+  myPortfolio: Portfolio
+  portfolio(portfolioId: ID!): Portfolio
   users(searchCriteria: String): [User]
+}
+
+extend type Mutation {
+  newPortfolio(name: String!, description: String): Portfolio
+  addUserToPortfolio(portfolioId: ID!, userId: ID!): Portfolio
+  removeUserFromPortfolio(portfolioId: ID!, userId: ID!): Portfolio
 }

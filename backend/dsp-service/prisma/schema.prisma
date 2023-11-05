@@ -305,3 +305,12 @@ model SKU {
 
   @@fulltext([name, description, matchingSearchPhrases])
 }
+
+model PortfolioId {
+  id         String   @id @map("_id")
+  name       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userIds    String[] @db.ObjectId
+  accountIds String[] @db.ObjectId
+}

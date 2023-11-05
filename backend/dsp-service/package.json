@@ -19,7 +19,7 @@
   "exports": "./dist/cli.js",
   "scripts": {
     "build": "tsc --project . && mkdir dist/public && cp src/public/* dist/public && cp prisma/schema.prisma dist/prisma && mkdir dist/schema && cp ../../schema/*graphql dist/schema",
-    "start": "nodemon -r dotenv/config --watch './**/*' --watch '../../schema' -e ts,graphql --exec 'node --loader ts-node/esm' src/server.ts  ",
+    "start": "nodemon -r dotenv/config --watch './**/*' --watch '../../schema' -e ts,graphql --exec node --loader ts-node/esm src/server.ts  ",
     "codegen": "graphql-codegen",
     "seed": "ts-node --transpile-only prisma/seed.ts",
     "prisma": "npx prisma generate && npx prisma db push",

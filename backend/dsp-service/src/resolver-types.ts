@@ -1369,6 +1369,7 @@ export type Mutation = {
   addRemoveBrandsToPortfolio?: Maybe<Portfolio>;
   addTaxonomyManually?: Maybe<Sku>;
   addUser?: Maybe<User>;
+  addUserToPortfolio?: Maybe<Portfolio>;
   applyAccountFees?: Maybe<AccountFee>;
   /** archives the Lineitems by ID and returns the lineitems */
   archiveLineitems: Array<Maybe<Lineitem>>;
@@ -1401,6 +1402,7 @@ export type Mutation = {
   removeDemandAccountBrands?: Maybe<Array<Maybe<Brand>>>;
   removePortfolio?: Maybe<Portfolio>;
   removePortfolioFromAccount?: Maybe<Portfolio>;
+  removeUserFromPortfolio?: Maybe<Portfolio>;
   setRetailerPreferencesDefaultValues?: Maybe<RetailerPreferences>;
   setupWhiteLabelSettings?: Maybe<AccountWhiteLabelSettings>;
   updateSKUs?: Maybe<Array<Maybe<Sku>>>;
@@ -1446,6 +1448,12 @@ export type MutationAddTaxonomyManuallyArgs = {
 
 export type MutationAddUserArgs = {
   accountId: Scalars['ID'];
+  userId: Scalars['ID'];
+};
+
+
+export type MutationAddUserToPortfolioArgs = {
+  portfolioId: Scalars['ID'];
   userId: Scalars['ID'];
 };
 
@@ -1543,6 +1551,8 @@ export type MutationNewLineitemArgs = {
 
 
 export type MutationNewPortfolioArgs = {
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
   portfolio: NewPortfolio;
 };
 
@@ -1601,6 +1611,12 @@ export type MutationRemovePortfolioArgs = {
 export type MutationRemovePortfolioFromAccountArgs = {
   accountId: Scalars['ID'];
   portfolioId: Scalars['ID'];
+};
+
+
+export type MutationRemoveUserFromPortfolioArgs = {
+  portfolioId: Scalars['ID'];
+  userId: Scalars['ID'];
 };
 
 
@@ -1811,8 +1827,12 @@ export type PhoneNumber = {
 export type Portfolio = {
   __typename?: 'Portfolio';
   accounts?: Maybe<Array<Maybe<Account>>>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type PrivateMarketAccount = {
@@ -1858,6 +1878,8 @@ export type Query = {
   /** retrives a list of lineitems for a campaign */
   lineitems?: Maybe<LineitemList>;
   me?: Maybe<User>;
+  myPortfolio?: Maybe<Portfolio>;
+  portfolio?: Maybe<Portfolio>;
   retailer?: Maybe<Retailer>;
   retailers: RetailerList;
   segment?: Maybe<Segment>;
@@ -1953,6 +1975,11 @@ export type QueryLineitemsArgs = {
   campaignId: Scalars['ID'];
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPortfolioArgs = {
+  portfolioId: Scalars['ID'];
 };
 
 
@@ -2906,6 +2933,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   addRemoveBrandsToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationAddRemoveBrandsToPortfolioArgs, 'brandIds' | 'portfolioId'>>;
   addTaxonomyManually?: Resolver<Maybe<ResolversTypes['SKU']>, ParentType, ContextType, RequireFields<MutationAddTaxonomyManuallyArgs, 'skyKey' | 'taxonomy'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'accountId' | 'userId'>>;
+  addUserToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationAddUserToPortfolioArgs, 'portfolioId' | 'userId'>>;
   applyAccountFees?: Resolver<Maybe<ResolversTypes['AccountFee']>, ParentType, ContextType, RequireFields<MutationApplyAccountFeesArgs, 'accountId' | 'fees'>>;
   archiveLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationArchiveLineitemsArgs, 'lineitemIds'>>;
   configureTOP?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -2923,7 +2951,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   newBrand?: Resolver<Maybe<ResolversTypes['Brand']>, ParentType, ContextType, RequireFields<MutationNewBrandArgs, 'brand'>>;
   newCampaign?: Resolver<Maybe<ResolversTypes['Campaign']>, ParentType, ContextType, RequireFields<MutationNewCampaignArgs, 'advertiserId' | 'campaign'>>;
   newLineitem?: Resolver<Maybe<ResolversTypes['Lineitem']>, ParentType, ContextType, RequireFields<MutationNewLineitemArgs, 'campaignId' | 'lineitem'>>;
-  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'portfolio'>>;
+  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'name' | 'portfolio'>>;
   newPrivateMarketAccount?: Resolver<Maybe<ResolversTypes['PrivateMarketAccount']>, ParentType, ContextType, RequireFields<MutationNewPrivateMarketAccountArgs, 'accountId' | 'privateMarketAccount'>>;
   newRetailer?: Resolver<Maybe<ResolversTypes['Retailer']>, ParentType, ContextType, RequireFields<MutationNewRetailerArgs, 'retailer'>>;
   pauseLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationPauseLineitemsArgs, 'lineitemIds'>>;
@@ -2934,6 +2962,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   removeDemandAccountBrands?: Resolver<Maybe<Array<Maybe<ResolversTypes['Brand']>>>, ParentType, ContextType, RequireFields<MutationRemoveDemandAccountBrandsArgs, 'accountId' | 'brandIds'>>;
   removePortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemovePortfolioArgs, 'portfolioId'>>;
   removePortfolioFromAccount?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemovePortfolioFromAccountArgs, 'accountId' | 'portfolioId'>>;
+  removeUserFromPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemoveUserFromPortfolioArgs, 'portfolioId' | 'userId'>>;
   setRetailerPreferencesDefaultValues?: Resolver<Maybe<ResolversTypes['RetailerPreferences']>, ParentType, ContextType, RequireFields<MutationSetRetailerPreferencesDefaultValuesArgs, 'preferences'>>;
   setupWhiteLabelSettings?: Resolver<Maybe<ResolversTypes['AccountWhiteLabelSettings']>, ParentType, ContextType, RequireFields<MutationSetupWhiteLabelSettingsArgs, 'accountId' | 'whiteLabelSettings'>>;
   updateSKUs?: Resolver<Maybe<Array<Maybe<ResolversTypes['SKU']>>>, ParentType, ContextType, Partial<MutationUpdateSkUsArgs>>;
@@ -2976,8 +3005,12 @@ export type PhoneNumberResolvers<ContextType = DspContext, ParentType = Resolver
 
 export type PortfolioResolvers<ContextType = DspContext, ParentType = ResolversParentTypes['Portfolio']> = {
   accounts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Account']>>>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -3006,6 +3039,8 @@ export type QueryResolvers<ContextType = DspContext, ParentType = ResolversParen
   lineitem?: Resolver<Maybe<ResolversTypes['Lineitem']>, ParentType, ContextType, RequireFields<QueryLineitemArgs, 'id'>>;
   lineitems?: Resolver<Maybe<ResolversTypes['LineitemList']>, ParentType, ContextType, RequireFields<QueryLineitemsArgs, 'campaignId' | 'limit' | 'offset'>>;
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  myPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType>;
+  portfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<QueryPortfolioArgs, 'portfolioId'>>;
   retailer?: Resolver<Maybe<ResolversTypes['Retailer']>, ParentType, ContextType, RequireFields<QueryRetailerArgs, 'id'>>;
   retailers?: Resolver<ResolversTypes['RetailerList'], ParentType, ContextType, RequireFields<QueryRetailersArgs, 'limit' | 'offset'>>;
   segment?: Resolver<Maybe<ResolversTypes['Segment']>, ParentType, ContextType, RequireFields<QuerySegmentArgs, 'segmentId'>>;
