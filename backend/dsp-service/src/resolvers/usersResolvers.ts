@@ -130,7 +130,7 @@ export const usersResolvers/*: Resolvers*/ = {
       }
     },
     async mapUsersToPortfolio(_: any, args: MutationMapUsersToPortfolioArgs, context: DspContext, info: GraphQLResolveInfo) {
-      context.logger.info(`[usersResolvers.mapUsersToPortfolio] args ${JSON.stringify(args, undefined, 2)}`);
+      context.logger.debug(`[usersResolvers.mapUsersToPortfolio] args ${JSON.stringify(args, undefined, 2)}`);
       try {
         const userIds: string[] = (args.userIds.length > 0) ? args.userIds as string[] : [];
         const dbResult = await context.prisma.portfolio.update({
