@@ -6,8 +6,9 @@ import { brandResolvers } from "./brandsResolvers";
 import { accountResolvers } from './accountsResolvers';
 import { campaignsResolvers } from './campaignsResolvers';
 import { commonResolvers } from './commonResolvers';
-import { Account, Campaign, Lineitem, QueryBrandArgs, QueryBrandsArgs, QueryCampaignsArgs, QueryCountriesArgs, QueryLineitemsArgs, QueryRetailerArgs, QueryRetailersArgs, Retailer } from "../resolver-types";
+import { Account, Campaign, Lineitem, QueryAccountsArgs, QueryBrandArgs, QueryBrandsArgs, QueryCampaignsArgs, QueryCountriesArgs, QueryLineitemsArgs, QueryRetailerArgs, QueryRetailersArgs, Retailer } from "../resolver-types";
 import { retailerResolvers } from "./retailerResolvers";
+import { userById } from "../clerk";
 
 export const relationshipResolvers/*: Resolvers*/ = {
   Money: scalarMoney,
@@ -79,5 +80,30 @@ export const relationshipResolvers/*: Resolvers*/ = {
       };
       return campaignsResolvers.Query.campaigns(parent, campaignArgs, context, info);
     },
-  }
+  },
+  Portfolio: {
+    async users(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.debug(`[relationshipResolvers.Portfolio.userIds] args ${JSON.stringify(parent.userIds, undefined, 2)}`);
+
+        return Promise.all(parent.userIds.map((userId: string) => userById(userId)));
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.users] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    },
+    async accounts(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.debug(`[relationshipResolvers.Portfolio.accounts] accountIds ${JSON.stringify(parent.accountIds, undefined, 2)}`);
+        const accountsArgs: QueryAccountsArgs = {
+          accountIds: parent.accountIds
+        };
+
+        return accountResolvers.Query.accounts(null, accountsArgs, context, info);
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.accounts] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    }
+  },
 };

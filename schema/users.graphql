@@ -108,6 +108,7 @@ type User @key(fields: "id") @shareable {
   phoneNumbers: [PhoneNumber]
   web3Wallets: [Web3Wallet]
   externalAccounts: [ExternalAccount]
+  portfolio: Portfolio
 }
 extend type Account @key(fields: "id") {
   id: ID! @external
@@ -125,6 +126,7 @@ type Portfolio @key(fields: "id") {
   updatedAt: DateTime
   users: [User]
   accounts: [Account]
+  brands: [Brand]
 }
 
 extend type Query {
@@ -133,10 +135,19 @@ extend type Query {
   myPortfolio: Portfolio
   portfolio(portfolioId: ID!): Portfolio
   users(searchCriteria: String): [User]
+  portfolios: [Portfolio]
 }
 
 extend type Mutation {
   newPortfolio(name: String!, description: String): Portfolio
-  addUserToPortfolio(portfolioId: ID!, userId: ID!): Portfolio
-  removeUserFromPortfolio(portfolioId: ID!, userId: ID!): Portfolio
+  mapUsersToPortfolio(portfolioId: ID!, userIds: [ID]!): Portfolio
+  mapAccountsToPortfolio(portfolioId: ID!, accountIds: [ID]!): Portfolio
+  mapBrandsToPortfolio(portfolioId: ID!, brandIds: [ID]!): Portfolio
+}
+
+extend type Subscription {
+  portfolioCreated: Portfolio
+  portfolioUsersModified(portfolioId: ID!): Portfolio
+  portfolioAccountsModified(portfolioId: ID!): Portfolio
+  portfolioBrandsModified: Portfolio
 }

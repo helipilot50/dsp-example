@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { Campaign as CampaignModel, Account as AccountModel, Country as CountryModel, Lineitem as LineitemModel, SKU as SKUModel, Retailer as RetailerModel, Brand as BrandModel, Currency as CurrencyModel } from '@prisma/client/index.d';
+import { Campaign as CampaignModel, Account as AccountModel, Country as CountryModel, Lineitem as LineitemModel, SKU as SKUModel, Retailer as RetailerModel, Brand as BrandModel, Currency as CurrencyModel, Portfolio as PortfolioModel } from '@prisma/client/index.d';
 import { DspContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -1369,7 +1369,6 @@ export type Mutation = {
   addRemoveBrandsToPortfolio?: Maybe<Portfolio>;
   addTaxonomyManually?: Maybe<Sku>;
   addUser?: Maybe<User>;
-  addUserToPortfolio?: Maybe<Portfolio>;
   applyAccountFees?: Maybe<AccountFee>;
   /** archives the Lineitems by ID and returns the lineitems */
   archiveLineitems: Array<Maybe<Lineitem>>;
@@ -1379,6 +1378,9 @@ export type Mutation = {
   enableBrandedKeywords?: Maybe<Account>;
   grantBrandAccessForUser?: Maybe<Portfolio>;
   mapAccountRetailers?: Maybe<Array<Maybe<Retailer>>>;
+  mapAccountsToPortfolio?: Maybe<Portfolio>;
+  mapBrandsToPortfolio?: Maybe<Portfolio>;
+  mapUsersToPortfolio?: Maybe<Portfolio>;
   modifyAccoutSettings?: Maybe<AccountSettings>;
   modifyCountrySettings?: Maybe<CountrySettings>;
   modifyCurrencySettings?: Maybe<CurrencySettings>;
@@ -1402,7 +1404,6 @@ export type Mutation = {
   removeDemandAccountBrands?: Maybe<Array<Maybe<Brand>>>;
   removePortfolio?: Maybe<Portfolio>;
   removePortfolioFromAccount?: Maybe<Portfolio>;
-  removeUserFromPortfolio?: Maybe<Portfolio>;
   setRetailerPreferencesDefaultValues?: Maybe<RetailerPreferences>;
   setupWhiteLabelSettings?: Maybe<AccountWhiteLabelSettings>;
   updateSKUs?: Maybe<Array<Maybe<Sku>>>;
@@ -1452,12 +1453,6 @@ export type MutationAddUserArgs = {
 };
 
 
-export type MutationAddUserToPortfolioArgs = {
-  portfolioId: Scalars['ID'];
-  userId: Scalars['ID'];
-};
-
-
 export type MutationApplyAccountFeesArgs = {
   accountId: Scalars['ID'];
   fees: NewAccountFee;
@@ -1495,6 +1490,24 @@ export type MutationGrantBrandAccessForUserArgs = {
 export type MutationMapAccountRetailersArgs = {
   accountId: Scalars['ID'];
   retailerIds: Array<InputMaybe<Scalars['ID']>>;
+};
+
+
+export type MutationMapAccountsToPortfolioArgs = {
+  accountIds: Array<InputMaybe<Scalars['ID']>>;
+  portfolioId: Scalars['ID'];
+};
+
+
+export type MutationMapBrandsToPortfolioArgs = {
+  brandIds: Array<InputMaybe<Scalars['ID']>>;
+  portfolioId: Scalars['ID'];
+};
+
+
+export type MutationMapUsersToPortfolioArgs = {
+  portfolioId: Scalars['ID'];
+  userIds: Array<InputMaybe<Scalars['ID']>>;
 };
 
 
@@ -1553,7 +1566,6 @@ export type MutationNewLineitemArgs = {
 export type MutationNewPortfolioArgs = {
   description?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
-  portfolio: NewPortfolio;
 };
 
 
@@ -1611,12 +1623,6 @@ export type MutationRemovePortfolioArgs = {
 export type MutationRemovePortfolioFromAccountArgs = {
   accountId: Scalars['ID'];
   portfolioId: Scalars['ID'];
-};
-
-
-export type MutationRemoveUserFromPortfolioArgs = {
-  portfolioId: Scalars['ID'];
-  userId: Scalars['ID'];
 };
 
 
@@ -1736,12 +1742,6 @@ export type NewLineitemPage = {
   type: PageType;
 };
 
-export type NewPortfolio = {
-  account: Scalars['ID'];
-  brands: Array<InputMaybe<Scalars['ID']>>;
-  name: Scalars['String'];
-};
-
 export type NewPrivateMarketAccount = {
   account: Scalars['ID'];
   name: Scalars['String'];
@@ -1827,6 +1827,7 @@ export type PhoneNumber = {
 export type Portfolio = {
   __typename?: 'Portfolio';
   accounts?: Maybe<Array<Maybe<Account>>>;
+  brands?: Maybe<Array<Maybe<Brand>>>;
   createdAt?: Maybe<Scalars['DateTime']>;
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -1880,6 +1881,7 @@ export type Query = {
   me?: Maybe<User>;
   myPortfolio?: Maybe<Portfolio>;
   portfolio?: Maybe<Portfolio>;
+  portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   retailer?: Maybe<Retailer>;
   retailers: RetailerList;
   segment?: Maybe<Segment>;
@@ -1898,6 +1900,7 @@ export type QueryAccountArgs = {
 
 
 export type QueryAccountsArgs = {
+  accountIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   retailerId?: InputMaybe<Scalars['ID']>;
   searchName?: InputMaybe<Scalars['String']>;
 };
@@ -2195,13 +2198,10 @@ export type Subscription = {
   lineitemActivated: Lineitem;
   lineitemCreated: Lineitem;
   lineitemPaused: Lineitem;
+  portfolioAccountsModified?: Maybe<Portfolio>;
   portfolioBrandsModified?: Maybe<Portfolio>;
   portfolioCreated?: Maybe<Portfolio>;
-  portfolioMappedToUser?: Maybe<Portfolio>;
-  portfolioNameModified?: Maybe<Portfolio>;
-  portfolioUserAdded?: Maybe<User>;
-  portfolioUserRemovedFrom?: Maybe<User>;
-  portfoliosRemoved?: Maybe<Portfolio>;
+  portfolioUsersModified?: Maybe<Portfolio>;
   privateMarketAccountCrated?: Maybe<PrivateMarketAccount>;
   retailerInitialized?: Maybe<Retailer>;
   retailerUpdated?: Maybe<Retailer>;
@@ -2290,6 +2290,16 @@ export type SubscriptionLineitemPausedArgs = {
   lineitemId: Scalars['ID'];
 };
 
+
+export type SubscriptionPortfolioAccountsModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
+
+export type SubscriptionPortfolioUsersModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
 export type Taxonomy = {
   __typename?: 'Taxonomy';
   key?: Maybe<Scalars['ID']>;
@@ -2328,6 +2338,7 @@ export type User = {
   lastSignInAt?: Maybe<Scalars['DateTime']>;
   passwordEnabled?: Maybe<Scalars['Boolean']>;
   phoneNumbers?: Maybe<Array<Maybe<PhoneNumber>>>;
+  portfolio?: Maybe<Portfolio>;
   primaryEmailAddressId?: Maybe<Scalars['String']>;
   primaryPhoneNumberId?: Maybe<Scalars['String']>;
   primaryWeb3WalletId?: Maybe<Scalars['String']>;
@@ -2497,7 +2508,6 @@ export type ResolversTypes = {
   NewLineitem: NewLineitem;
   NewLineitemBudget: NewLineitemBudget;
   NewLineitemPage: NewLineitemPage;
-  NewPortfolio: NewPortfolio;
   NewPrivateMarketAccount: NewPrivateMarketAccount;
   NewRetailer: NewRetailer;
   NewSalesForeAccount: NewSalesForeAccount;
@@ -2508,7 +2518,7 @@ export type ResolversTypes = {
   PageEnvironment: PageEnvironment;
   PageType: PageType;
   PhoneNumber: ResolverTypeWrapper<PhoneNumber>;
-  Portfolio: ResolverTypeWrapper<Omit<Portfolio, 'accounts'> & { accounts?: Maybe<Array<Maybe<ResolversTypes['Account']>>> }>;
+  Portfolio: ResolverTypeWrapper<PortfolioModel>;
   PrivateMarketAccount: ResolverTypeWrapper<PrivateMarketAccount>;
   Query: ResolverTypeWrapper<{}>;
   ReportingLabel: ResolverTypeWrapper<ReportingLabel>;
@@ -2531,7 +2541,7 @@ export type ResolversTypes = {
   URL: ResolverTypeWrapper<Scalars['URL']>;
   UpdateAccountSettings: UpdateAccountSettings;
   UpdateWhiteLabelSettings: UpdateWhiteLabelSettings;
-  User: ResolverTypeWrapper<Omit<User, 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { privateMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>> }>;
+  User: ResolverTypeWrapper<Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>> }>;
   Verification: ResolverTypeWrapper<Verification>;
   Web3Wallet: ResolverTypeWrapper<Web3Wallet>;
 };
@@ -2587,7 +2597,6 @@ export type ResolversParentTypes = {
   NewLineitem: NewLineitem;
   NewLineitemBudget: NewLineitemBudget;
   NewLineitemPage: NewLineitemPage;
-  NewPortfolio: NewPortfolio;
   NewPrivateMarketAccount: NewPrivateMarketAccount;
   NewRetailer: NewRetailer;
   NewSalesForeAccount: NewSalesForeAccount;
@@ -2596,7 +2605,7 @@ export type ResolversParentTypes = {
   OffsiteAudience: OffsiteAudience;
   OnsiteAudience: OnsiteAudience;
   PhoneNumber: PhoneNumber;
-  Portfolio: Omit<Portfolio, 'accounts'> & { accounts?: Maybe<Array<Maybe<ResolversParentTypes['Account']>>> };
+  Portfolio: PortfolioModel;
   PrivateMarketAccount: PrivateMarketAccount;
   Query: {};
   ReportingLabel: ReportingLabel;
@@ -2618,7 +2627,7 @@ export type ResolversParentTypes = {
   URL: Scalars['URL'];
   UpdateAccountSettings: UpdateAccountSettings;
   UpdateWhiteLabelSettings: UpdateWhiteLabelSettings;
-  User: Omit<User, 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { privateMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>> };
+  User: Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversParentTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>> };
   Verification: Verification;
   Web3Wallet: Web3Wallet;
 };
@@ -2933,7 +2942,6 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   addRemoveBrandsToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationAddRemoveBrandsToPortfolioArgs, 'brandIds' | 'portfolioId'>>;
   addTaxonomyManually?: Resolver<Maybe<ResolversTypes['SKU']>, ParentType, ContextType, RequireFields<MutationAddTaxonomyManuallyArgs, 'skyKey' | 'taxonomy'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'accountId' | 'userId'>>;
-  addUserToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationAddUserToPortfolioArgs, 'portfolioId' | 'userId'>>;
   applyAccountFees?: Resolver<Maybe<ResolversTypes['AccountFee']>, ParentType, ContextType, RequireFields<MutationApplyAccountFeesArgs, 'accountId' | 'fees'>>;
   archiveLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationArchiveLineitemsArgs, 'lineitemIds'>>;
   configureTOP?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -2942,6 +2950,9 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   enableBrandedKeywords?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<MutationEnableBrandedKeywordsArgs, 'accountId'>>;
   grantBrandAccessForUser?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationGrantBrandAccessForUserArgs, 'brandId' | 'portfolioId' | 'userId'>>;
   mapAccountRetailers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Retailer']>>>, ParentType, ContextType, RequireFields<MutationMapAccountRetailersArgs, 'accountId' | 'retailerIds'>>;
+  mapAccountsToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationMapAccountsToPortfolioArgs, 'accountIds' | 'portfolioId'>>;
+  mapBrandsToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationMapBrandsToPortfolioArgs, 'brandIds' | 'portfolioId'>>;
+  mapUsersToPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationMapUsersToPortfolioArgs, 'portfolioId' | 'userIds'>>;
   modifyAccoutSettings?: Resolver<Maybe<ResolversTypes['AccountSettings']>, ParentType, ContextType, RequireFields<MutationModifyAccoutSettingsArgs, 'accountId' | 'settings'>>;
   modifyCountrySettings?: Resolver<Maybe<ResolversTypes['CountrySettings']>, ParentType, ContextType, RequireFields<MutationModifyCountrySettingsArgs, 'accountId'>>;
   modifyCurrencySettings?: Resolver<Maybe<ResolversTypes['CurrencySettings']>, ParentType, ContextType, RequireFields<MutationModifyCurrencySettingsArgs, 'accountId' | 'currency'>>;
@@ -2951,7 +2962,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   newBrand?: Resolver<Maybe<ResolversTypes['Brand']>, ParentType, ContextType, RequireFields<MutationNewBrandArgs, 'brand'>>;
   newCampaign?: Resolver<Maybe<ResolversTypes['Campaign']>, ParentType, ContextType, RequireFields<MutationNewCampaignArgs, 'advertiserId' | 'campaign'>>;
   newLineitem?: Resolver<Maybe<ResolversTypes['Lineitem']>, ParentType, ContextType, RequireFields<MutationNewLineitemArgs, 'campaignId' | 'lineitem'>>;
-  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'name' | 'portfolio'>>;
+  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'name'>>;
   newPrivateMarketAccount?: Resolver<Maybe<ResolversTypes['PrivateMarketAccount']>, ParentType, ContextType, RequireFields<MutationNewPrivateMarketAccountArgs, 'accountId' | 'privateMarketAccount'>>;
   newRetailer?: Resolver<Maybe<ResolversTypes['Retailer']>, ParentType, ContextType, RequireFields<MutationNewRetailerArgs, 'retailer'>>;
   pauseLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationPauseLineitemsArgs, 'lineitemIds'>>;
@@ -2962,7 +2973,6 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   removeDemandAccountBrands?: Resolver<Maybe<Array<Maybe<ResolversTypes['Brand']>>>, ParentType, ContextType, RequireFields<MutationRemoveDemandAccountBrandsArgs, 'accountId' | 'brandIds'>>;
   removePortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemovePortfolioArgs, 'portfolioId'>>;
   removePortfolioFromAccount?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemovePortfolioFromAccountArgs, 'accountId' | 'portfolioId'>>;
-  removeUserFromPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationRemoveUserFromPortfolioArgs, 'portfolioId' | 'userId'>>;
   setRetailerPreferencesDefaultValues?: Resolver<Maybe<ResolversTypes['RetailerPreferences']>, ParentType, ContextType, RequireFields<MutationSetRetailerPreferencesDefaultValuesArgs, 'preferences'>>;
   setupWhiteLabelSettings?: Resolver<Maybe<ResolversTypes['AccountWhiteLabelSettings']>, ParentType, ContextType, RequireFields<MutationSetupWhiteLabelSettingsArgs, 'accountId' | 'whiteLabelSettings'>>;
   updateSKUs?: Resolver<Maybe<Array<Maybe<ResolversTypes['SKU']>>>, ParentType, ContextType, Partial<MutationUpdateSkUsArgs>>;
@@ -3005,6 +3015,7 @@ export type PhoneNumberResolvers<ContextType = DspContext, ParentType = Resolver
 
 export type PortfolioResolvers<ContextType = DspContext, ParentType = ResolversParentTypes['Portfolio']> = {
   accounts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Account']>>>, ParentType, ContextType>;
+  brands?: Resolver<Maybe<Array<Maybe<ResolversTypes['Brand']>>>, ParentType, ContextType>;
   createdAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -3041,6 +3052,7 @@ export type QueryResolvers<ContextType = DspContext, ParentType = ResolversParen
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   myPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType>;
   portfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<QueryPortfolioArgs, 'portfolioId'>>;
+  portfolios?: Resolver<Maybe<Array<Maybe<ResolversTypes['Portfolio']>>>, ParentType, ContextType>;
   retailer?: Resolver<Maybe<ResolversTypes['Retailer']>, ParentType, ContextType, RequireFields<QueryRetailerArgs, 'id'>>;
   retailers?: Resolver<ResolversTypes['RetailerList'], ParentType, ContextType, RequireFields<QueryRetailersArgs, 'limit' | 'offset'>>;
   segment?: Resolver<Maybe<ResolversTypes['Segment']>, ParentType, ContextType, RequireFields<QuerySegmentArgs, 'segmentId'>>;
@@ -3181,13 +3193,10 @@ export type SubscriptionResolvers<ContextType = DspContext, ParentType = Resolve
   lineitemActivated?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemActivated", ParentType, ContextType, RequireFields<SubscriptionLineitemActivatedArgs, 'lineitemId'>>;
   lineitemCreated?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemCreated", ParentType, ContextType>;
   lineitemPaused?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemPaused", ParentType, ContextType, RequireFields<SubscriptionLineitemPausedArgs, 'lineitemId'>>;
+  portfolioAccountsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioAccountsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioAccountsModifiedArgs, 'portfolioId'>>;
   portfolioBrandsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioBrandsModified", ParentType, ContextType>;
   portfolioCreated?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioCreated", ParentType, ContextType>;
-  portfolioMappedToUser?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioMappedToUser", ParentType, ContextType>;
-  portfolioNameModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioNameModified", ParentType, ContextType>;
-  portfolioUserAdded?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "portfolioUserAdded", ParentType, ContextType>;
-  portfolioUserRemovedFrom?: SubscriptionResolver<Maybe<ResolversTypes['User']>, "portfolioUserRemovedFrom", ParentType, ContextType>;
-  portfoliosRemoved?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfoliosRemoved", ParentType, ContextType>;
+  portfolioUsersModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioUsersModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioUsersModifiedArgs, 'portfolioId'>>;
   privateMarketAccountCrated?: SubscriptionResolver<Maybe<ResolversTypes['PrivateMarketAccount']>, "privateMarketAccountCrated", ParentType, ContextType>;
   retailerInitialized?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerInitialized", ParentType, ContextType>;
   retailerUpdated?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerUpdated", ParentType, ContextType>;
@@ -3223,6 +3232,7 @@ export type UserResolvers<ContextType = DspContext, ParentType = ResolversParent
   lastSignInAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
   passwordEnabled?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   phoneNumbers?: Resolver<Maybe<Array<Maybe<ResolversTypes['PhoneNumber']>>>, ParentType, ContextType>;
+  portfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType>;
   primaryEmailAddressId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   primaryPhoneNumberId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   primaryWeb3WalletId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

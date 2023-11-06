@@ -30,6 +30,14 @@ export const accountResolvers/*: Resolvers*/ = {
           where.retailerIds = {
             has: args.retailerId
           };
+        } else if (args.accountIds) {
+          where.id = {
+            in: args.accountIds
+          };
+        } else if (args.searchName) {
+          where.name = {
+            contains: args.searchName
+          };
         }
         return context.prisma.account.findMany({
           where,
@@ -89,7 +97,7 @@ export const accountResolvers/*: Resolvers*/ = {
   Mutation: {
     async newAccount(_: any, args: MutationNewAccountArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug(`[newAccount] args ${JSON.stringify(args, undefined, 2)}`);
+        context.logger.debug(`[accountsResolvers.newAccount] args ${JSON.stringify(args, undefined, 2)}`);
 
         // const code = args.account.currency;
         // const currency = await prisma.currency.findFirst({
@@ -110,17 +118,17 @@ export const accountResolvers/*: Resolvers*/ = {
         const dbResult = await context.prisma.account.create({
           data: c
         });
-        context.logger.debug(`[newAccount] dbResult ${JSON.stringify(dbResult, undefined, 2)} `);
+        context.logger.debug(`[accountsResolvers.newAccount] dbResult ${JSON.stringify(dbResult, undefined, 2)} `);
         context.pubsub.publish(ACCOUNT_CREATED, dbResult);
         return dbResult;
       } catch (err) {
-        context.logger.error(`[newAccount] error ${JSON.stringify(err, undefined, 2)}`);
+        context.logger.error(`[accountsResolvers.newAccount] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     },
     async mapAccountRetailers(_: any, args: MutationMapAccountRetailersArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.info(`[addAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
+        context.logger.info(`[accountsResolvers.mapAccountRetailers] args ${JSON.stringify(args, undefined, 2)}`);
         const connectIds = args.retailerIds.map((id: InputMaybe<string>) => {
           return {
             id: id || ''
@@ -148,7 +156,7 @@ export const accountResolvers/*: Resolvers*/ = {
         context.pubsub.publish(ACCOUNT_RETAILERS_UPDATED, dbResult);
         return retailers;
       } catch (err) {
-        context.logger.error(`[addAccountRetailers] error ${JSON.stringify(err, undefined, 2)}`);
+        context.logger.error(`[accountsResolvers.addAccountRetailers] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     }
