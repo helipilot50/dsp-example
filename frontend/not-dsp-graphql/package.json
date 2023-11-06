@@ -1,6 +1,6 @@
 {
   "name": "not-dsp-graphql",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/not-dsp-graphql.js",
   "types": "dist/types/index.d.ts",

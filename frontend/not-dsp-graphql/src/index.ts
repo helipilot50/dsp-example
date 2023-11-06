@@ -5,4 +5,5 @@ export * from './accounts.graphql';
 export * from './brands.graphql';
 export * from './common.graphql';
 export * from './products.graphql';
+export * from './users.graphql';
 export * from './types';

@@ -1373,6 +1373,9 @@ export type Mutation = {
   enableBrandedKeywords?: Maybe<Account>;
   grantBrandAccessForUser?: Maybe<Portfolio>;
   mapAccountRetailers?: Maybe<Array<Maybe<Retailer>>>;
+  mapAccountsToPortfolio?: Maybe<Portfolio>;
+  mapBrandsToPortfolio?: Maybe<Portfolio>;
+  mapUsersToPortfolio?: Maybe<Portfolio>;
   modifyAccoutSettings?: Maybe<AccountSettings>;
   modifyCountrySettings?: Maybe<CountrySettings>;
   modifyCurrencySettings?: Maybe<CurrencySettings>;
@@ -1485,6 +1488,24 @@ export type MutationMapAccountRetailersArgs = {
 };
 
 
+export type MutationMapAccountsToPortfolioArgs = {
+  accountIds: Array<InputMaybe<Scalars['ID']>>;
+  portfolioId: Scalars['ID'];
+};
+
+
+export type MutationMapBrandsToPortfolioArgs = {
+  brandIds: Array<InputMaybe<Scalars['ID']>>;
+  portfolioId: Scalars['ID'];
+};
+
+
+export type MutationMapUsersToPortfolioArgs = {
+  portfolioId: Scalars['ID'];
+  userIds: Array<InputMaybe<Scalars['ID']>>;
+};
+
+
 export type MutationModifyAccoutSettingsArgs = {
   accountId: Scalars['ID'];
   settings: UpdateAccountSettings;
@@ -1538,7 +1559,8 @@ export type MutationNewLineitemArgs = {
 
 
 export type MutationNewPortfolioArgs = {
-  portfolio: NewPortfolio;
+  description?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
 };
 
 
@@ -1715,12 +1737,6 @@ export type NewLineitemPage = {
   type: PageType;
 };
 
-export type NewPortfolio = {
-  account: Scalars['ID'];
-  brands: Array<InputMaybe<Scalars['ID']>>;
-  name: Scalars['String'];
-};
-
 export type NewPrivateMarketAccount = {
   account: Scalars['ID'];
   name: Scalars['String'];
@@ -1806,8 +1822,13 @@ export type PhoneNumber = {
 export type Portfolio = {
   __typename?: 'Portfolio';
   accounts?: Maybe<Array<Maybe<Account>>>;
+  brands?: Maybe<Array<Maybe<Brand>>>;
+  createdAt?: Maybe<Scalars['DateTime']>;
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  users?: Maybe<Array<Maybe<User>>>;
 };
 
 export type PrivateMarketAccount = {
@@ -1853,6 +1874,9 @@ export type Query = {
   /** retrives a list of lineitems for a campaign */
   lineitems?: Maybe<LineitemList>;
   me?: Maybe<User>;
+  myPortfolio?: Maybe<Portfolio>;
+  portfolio?: Maybe<Portfolio>;
+  portfolios?: Maybe<Array<Maybe<Portfolio>>>;
   retailer?: Maybe<Retailer>;
   retailers: RetailerList;
   segment?: Maybe<Segment>;
@@ -1871,6 +1895,7 @@ export type QueryAccountArgs = {
 
 
 export type QueryAccountsArgs = {
+  accountIds?: InputMaybe<Array<InputMaybe<Scalars['ID']>>>;
   retailerId?: InputMaybe<Scalars['ID']>;
   searchName?: InputMaybe<Scalars['String']>;
 };
@@ -1948,6 +1973,11 @@ export type QueryLineitemsArgs = {
   campaignId: Scalars['ID'];
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryPortfolioArgs = {
+  portfolioId: Scalars['ID'];
 };
 
 
@@ -2163,13 +2193,10 @@ export type Subscription = {
   lineitemActivated: Lineitem;
   lineitemCreated: Lineitem;
   lineitemPaused: Lineitem;
+  portfolioAccountsModified?: Maybe<Portfolio>;
   portfolioBrandsModified?: Maybe<Portfolio>;
   portfolioCreated?: Maybe<Portfolio>;
-  portfolioMappedToUser?: Maybe<Portfolio>;
-  portfolioNameModified?: Maybe<Portfolio>;
-  portfolioUserAdded?: Maybe<User>;
-  portfolioUserRemovedFrom?: Maybe<User>;
-  portfoliosRemoved?: Maybe<Portfolio>;
+  portfolioUsersModified?: Maybe<Portfolio>;
   privateMarketAccountCrated?: Maybe<PrivateMarketAccount>;
   retailerInitialized?: Maybe<Retailer>;
   retailerUpdated?: Maybe<Retailer>;
@@ -2258,6 +2285,16 @@ export type SubscriptionLineitemPausedArgs = {
   lineitemId: Scalars['ID'];
 };
 
+
+export type SubscriptionPortfolioAccountsModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
+
+export type SubscriptionPortfolioUsersModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
 export type Taxonomy = {
   __typename?: 'Taxonomy';
   key?: Maybe<Scalars['ID']>;
@@ -2296,6 +2333,7 @@ export type User = {
   lastSignInAt?: Maybe<Scalars['DateTime']>;
   passwordEnabled?: Maybe<Scalars['Boolean']>;
   phoneNumbers?: Maybe<Array<Maybe<PhoneNumber>>>;
+  portfolio?: Maybe<Portfolio>;
   primaryEmailAddressId?: Maybe<Scalars['String']>;
   primaryPhoneNumberId?: Maybe<Scalars['String']>;
   primaryWeb3WalletId?: Maybe<Scalars['String']>;
@@ -2487,3 +2525,8 @@ export type RetailersQueryVariables = Exact<{
 
 
 export type RetailersQuery = { __typename?: 'Query', retailers: { __typename?: 'RetailerList', limit?: number | null, offset?: number | null, totalCount?: number | null, retailers: Array<{ __typename?: 'Retailer', id: string, name: string, status: RetailerStatus, countryOfOrigin?: string | null } | null> } };
+
+export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, username?: string | null, primaryEmailAddressId?: string | null, primaryPhoneNumberId?: string | null, hasImage?: boolean | null, imageUrl?: string | null, twoFactorEnabled?: boolean | null, updatedAt?: Date | null, createdAt?: Date | null } | null> | null };
