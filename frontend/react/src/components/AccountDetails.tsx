@@ -143,7 +143,8 @@ export function AccountDetails() {
 
     <Card
       elevation={6}
-      sx={{ width: '800px', minWidth: '400px' }}>
+    // sx={{ width: '800px', minWidth: '400px' }}
+    >
       <CardHeader
         title={`Account: ${account.id}`} />
       <CardActions>

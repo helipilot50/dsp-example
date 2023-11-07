@@ -2530,3 +2530,31 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, username?: string | null, primaryEmailAddressId?: string | null, primaryPhoneNumberId?: string | null, hasImage?: boolean | null, imageUrl?: string | null, twoFactorEnabled?: boolean | null, updatedAt?: Date | null, createdAt?: Date | null } | null> | null };
+
+export type NewPortfolioMutationVariables = Exact<{
+  name: Scalars['String'];
+  description?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type NewPortfolioMutation = { __typename?: 'Mutation', newPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null, description?: string | null } | null };
+
+export type PortfoliosQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PortfoliosQuery = { __typename?: 'Query', portfolios?: Array<{ __typename?: 'Portfolio', id: string, name?: string | null, updatedAt?: Date | null, createdAt?: Date | null, description?: string | null, users?: Array<{ __typename?: 'User', id: string, username?: string | null, firstName?: string | null, lastName?: string | null } | null> | null } | null> | null };
+
+export type PortfolioQueryVariables = Exact<{
+  portfolioId: Scalars['ID'];
+}>;
+
+
+export type PortfolioQuery = { __typename?: 'Query', portfolio?: { __typename?: 'Portfolio', id: string, name?: string | null, description?: string | null, brands?: Array<{ __typename?: 'Brand', id: string, name: string } | null> | null, users?: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } | null> | null, accounts?: Array<{ __typename?: 'Account', id: string, name: string } | null> | null } | null };
+
+export type MapUsersToPortfolioMutationVariables = Exact<{
+  portfolioId: Scalars['ID'];
+  userIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type MapUsersToPortfolioMutation = { __typename?: 'Mutation', mapUsersToPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null } | null };

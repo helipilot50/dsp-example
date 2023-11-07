@@ -162,7 +162,6 @@ export function LineitemDetails() {
     };
     console.debug('[LineitemDetails.createLineitem] newLineitem', newLineitem, campaignId, accountId);
     addLineitem({
-      mutation: LINEITEM_NEW,
       variables: {
         campaignId: campaignId as string,
         lineitem: newLineitem

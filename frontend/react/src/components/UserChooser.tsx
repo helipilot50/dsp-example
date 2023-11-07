@@ -10,7 +10,7 @@ export function UserChooser(props: {
   disabled?: boolean;
   onToggle?: () => void;
   selectedValues: User[];
-  chosenUsers?: (retailers: User[]) => void;
+  chosenUsers?: (users: User[]) => void;
 }) {
   const id = useId();
   const { data, error, loading } = useQuery<UsersQuery, UsersQueryVariables>(

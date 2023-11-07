@@ -15,6 +15,8 @@ import { AllRetailerList } from './RetailerList';
 
 import { Dashboard } from './Dashboard';
 import { SignedIn } from '@clerk/clerk-react';
+import { PortfolioDetails } from './PortfolioDetails';
+import { PortfolioList } from './PortfolioList';
 
 export function AppRoutes() {
   return (
@@ -27,6 +29,8 @@ export function AppRoutes() {
       <Route path='accounts/:accountId/campaigns/:campaignId' element={<SignedIn><CampaignDetails /></SignedIn>} />
       <Route path='accounts/:accountId/campaigns/:campaignId/lineitems' element={<SignedIn><LineitemList /></SignedIn>} />
       <Route path='accounts/:accountId/campaigns/:campaignId/lineitems/:lineitemId' element={<SignedIn><LineitemDetails /></SignedIn>} />
+      <Route path="portfolios" element={<SignedIn><SignedIn><PortfolioList /></SignedIn></SignedIn>} />
+      <Route path="portfolios/:portfolioId" element={<SignedIn><SignedIn><PortfolioDetails /></SignedIn></SignedIn>} />
       <Route path="products" element={<SignedIn><ProductsList /></SignedIn>} />
       <Route path="products/:skuKey" element={<SignedIn><ProductDetails /></SignedIn>} />
       <Route path="brands" element={<SignedIn><SignedIn><BrandList /></SignedIn></SignedIn>} />
