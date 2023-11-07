@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { ACCOUNTS_LIST, Account, AccountsQuery, AccountsQueryVariables } from 'not-dsp-graphql';
 import React, { HTMLAttributes, useId, useMemo } from 'react';
-import { ErrorNofification, ErrorNofification } from './error/ErrorBoundary';
+import { ErrorNofification } from './error/ErrorBoundary';
 import { Autocomplete, Box, LinearProgress, TextField } from '@mui/material';
 
 export function AccountChooser(props: {

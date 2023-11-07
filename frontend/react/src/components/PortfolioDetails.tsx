@@ -1,9 +1,9 @@
 import { Button, Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, LinearProgress, Stack, TextField } from '@mui/material';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Account, Brand, LIST_PORTFOLIOS, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
+import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_USERS, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { UserChooser } from './UserChooser';
 import { AccountChooser } from './AccountChooser';
@@ -27,6 +27,8 @@ export function PortfolioDetails() {
 
   const [newPortfolio, { loading: createLoading, error: createError }] = useMutation<NewPortfolioMutation, NewPortfolioMutationVariables>(
     NEW_PORTFOLIO);
+  const [mapUsers, { loading: mapUsersLoading, error: mapUsersError }] = useMutation<MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables>(
+    MAP_PORTFOLIO_USERS);
 
   const { data, loading, error } = useQuery<PortfolioQuery, PortfolioQueryVariables>(PORTFOLIO_DETAILS,
     {
@@ -35,6 +37,14 @@ export function PortfolioDetails() {
       },
       skip: isNew,
     });
+
+  useEffect(() => {
+    if (!isNew && data) {
+      console.debug('[PortfolioDetails.useEffect] data', data);
+      setPortfolio(data.portfolio as Portfolio);
+    }
+  }
+    , [data, isNew]);
 
   function createPortfolio() {
 
@@ -74,6 +84,24 @@ export function PortfolioDetails() {
 
   function chosenUsers(users: User[]) {
     console.log('[PortfolioDetails.chosenUsers]', users);
+    mapUsers({
+      variables: {
+        portfolioId: portfolio.id as string,
+        userIds: users.map(u => u.id),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: portfolio.id
+        }
+      }],
+      onCompleted: (data: NewPortfolioMutation) => {
+        console.debug('[PortfolioDetails.chosenUsers]  completed', data);
+      },
+      onError: (error: ApolloError) => {
+        console.error('[PortfolioDetails.chosenUsers] error', error);
+      }
+    });
     setPortfolio({
       ...portfolio,
       users: users,
@@ -111,10 +139,10 @@ export function PortfolioDetails() {
         noValidate
         autoComplete="off"
       >
-        {(loading || createLoading) && <LinearProgress variant="query" />}
+        {(loading || createLoading || mapUsersLoading) && <LinearProgress variant="query" />}
         {error && <ErrorNofification error={error} />}
         {createError && <ErrorNofification error={createError} />}
-        {/* {mappedError && <ErrorNofification error={mappedError} />} */}
+        {mapUsersError && <ErrorNofification error={mapUsersError} />}
         <Stack>
           <FormControl>
             <FormLabel>Name</FormLabel>
