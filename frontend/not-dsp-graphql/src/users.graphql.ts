@@ -19,8 +19,8 @@ query Users {
 `;
 
 export const NEW_PORTFOLIO = gql`
-mutation NewPortfolio($name: String!, $description: String) {
-  newPortfolio(name: $name, description: $description) {
+mutation NewPortfolio($portfolio: NewPortfolio!) {
+  newPortfolio(portfolio: $portfolio) {
     id
     name
     description

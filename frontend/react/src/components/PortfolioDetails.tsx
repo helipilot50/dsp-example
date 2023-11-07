@@ -17,7 +17,7 @@ export function PortfolioDetails() {
     return params.portfolioId || 'new';
   }, [params.portfolioId]);
   const [portfolio, setPortfolio] = useState<Portfolio>({
-    id: '',
+    id: 'no-id',
     name: '',
     description: '',
     users: [],
@@ -47,16 +47,27 @@ export function PortfolioDetails() {
       console.debug('[PortfolioDetails.useEffect] data', data);
       setPortfolio(data.portfolio as Portfolio);
     }
+  }, [data, isNew]);
+
+  function handleInputChange(e: any) {
+    const { name, value } = e.target;
+    setPortfolio({
+      ...portfolio,
+      [name]: value,
+    });
   }
-    , [data, isNew]);
 
   function createPortfolio() {
-
     console.log('[PortfolioDetails.createPortfolio] args');
     newPortfolio({
       variables: {
-        name: 'New Portfolio',
-        description: 'New Portfolio Description',
+        portfolio: {
+          name: portfolio.name as string,
+          description: portfolio.description as string,
+          brandIds: portfolio.brands?.map(b => b ? b.id : null) || [],
+          accountIds: portfolio.accounts?.map(a => a ? a.id : null) || [],
+          userIds: portfolio.users?.map(u => u ? u.id : null) || [],
+        }
       },
       refetchQueries: [{
         query: LIST_PORTFOLIOS
@@ -88,81 +99,89 @@ export function PortfolioDetails() {
 
   function chosenUsers(users: User[]) {
     console.log('[PortfolioDetails.chosenUsers]', users);
-    mapUsers({
-      variables: {
-        portfolioId: portfolio.id as string,
-        userIds: users.map(u => u.id),
-      },
-      refetchQueries: [{
-        query: PORTFOLIO_DETAILS,
-        variables: {
-          portfolioId: portfolio.id
-        }
-      }],
-      onCompleted: (data: NewPortfolioMutation) => {
-        console.debug('[PortfolioDetails.chosenUsers]  completed', data);
-        setPortfolio({
-          ...portfolio,
-          users: users,
-        });
-      },
-      onError: (error: ApolloError) => {
-        console.error('[PortfolioDetails.chosenUsers] error', error);
-      }
-    });
 
+    setPortfolio({
+      ...portfolio,
+      users: users
+    });
+    if (!isNew) {
+      mapUsers({
+        variables: {
+          portfolioId: portfolio.id as string,
+          userIds: users.map(u => u.id),
+        },
+        refetchQueries: [{
+          query: PORTFOLIO_DETAILS,
+          variables: {
+            portfolioId: portfolio.id
+          }
+        }],
+        onCompleted: (data: NewPortfolioMutation) => {
+          console.debug('[PortfolioDetails.chosenUsers]  completed', data);
+        },
+        onError: (error: ApolloError) => {
+          console.error('[PortfolioDetails.chosenUsers] error', error);
+        }
+      });
+    }
   }
 
   function chosenBrands(brands: Brand[]) {
     console.log('[PortfolioDetails.chosenBrands]', brands);
-    mapBrands({
-      variables: {
-        portfolioId: portfolio.id as string,
-        brandIds: brands.map(b => b.id),
-      },
-      refetchQueries: [{
-        query: PORTFOLIO_DETAILS,
-        variables: {
-          portfolioId: portfolio.id
-        }
-      }],
-      onCompleted: (data: NewPortfolioMutation) => {
-        console.debug('[PortfolioDetails.chosenBrands]  completed', data);
-        setPortfolio({
-          ...portfolio,
-          brands: brands,
-        });
-      },
-      onError: (error: ApolloError) => {
-        console.error('[PortfolioDetails.chosenBrands] error', error);
-      }
+    setPortfolio({
+      ...portfolio,
+      brands: brands,
     });
+    if (!isNew) {
+      mapBrands({
+        variables: {
+          portfolioId: portfolio.id as string,
+          brandIds: brands.map(b => b.id),
+        },
+        refetchQueries: [{
+          query: PORTFOLIO_DETAILS,
+          variables: {
+            portfolioId: portfolio.id
+          }
+        }],
+        onCompleted: (data: NewPortfolioMutation) => {
+          console.debug('[PortfolioDetails.chosenBrands]  completed', data);
+
+        },
+        onError: (error: ApolloError) => {
+          console.error('[PortfolioDetails.chosenBrands] error', error);
+        }
+      });
+    }
   }
 
   function chosenAccounts(accounts: Account[]) {
     console.log('[PortfolioDetails.chosenAccounts]', accounts);
-    mapAccounts({
-      variables: {
-        portfolioId: portfolio.id as string,
-        accountIds: accounts.map(a => a.id),
-      },
-      refetchQueries: [{
-        query: PORTFOLIO_DETAILS,
-        variables: {
-          portfolioId: portfolio.id
-        }
-      }],
-      onCompleted: (data: NewPortfolioMutation) => {
-        console.debug('[PortfolioDetails.chosenAccounts]  completed', data);
-        setPortfolio({
-          ...portfolio,
-          accounts: accounts,
-        });
-      },
-      onError: (error: ApolloError) => {
-        console.error('[PortfolioDetails.chosenAccounts] error', error);
-      }
+    setPortfolio({
+      ...portfolio,
+      accounts: accounts,
     });
+    if (!isNew) {
+      mapAccounts({
+        variables: {
+          portfolioId: portfolio.id as string,
+          accountIds: accounts.map(a => a.id),
+        },
+        refetchQueries: [{
+          query: PORTFOLIO_DETAILS,
+          variables: {
+            portfolioId: portfolio.id
+          }
+        }],
+        onCompleted: (data: NewPortfolioMutation) => {
+          console.debug('[PortfolioDetails.chosenAccounts]  completed', data);
+
+        },
+        onError: (error: ApolloError) => {
+          console.error('[PortfolioDetails.chosenAccounts] error', error);
+        }
+      });
+    }
 
   }
 
@@ -192,6 +211,7 @@ export function PortfolioDetails() {
               name="name"
               id='name'
               value={portfolio.name}
+              onChange={handleInputChange}
             />
           </FormControl>
           <FormControl>
@@ -200,7 +220,7 @@ export function PortfolioDetails() {
               name='description'
               id='description'
               defaultValue={portfolio.description as string}
-
+              onChange={handleInputChange}
             />
           </FormControl>
           <FormControl>

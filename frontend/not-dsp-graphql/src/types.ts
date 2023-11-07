@@ -1559,8 +1559,7 @@ export type MutationNewLineitemArgs = {
 
 
 export type MutationNewPortfolioArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
+  portfolio: NewPortfolio;
 };
 
 
@@ -1735,6 +1734,14 @@ export type NewLineitemPage = {
   includeSubchildren: Scalars['Boolean'];
   isExclusion: Scalars['Boolean'];
   type: PageType;
+};
+
+export type NewPortfolio = {
+  accountIds: Array<InputMaybe<Scalars['ID']>>;
+  brandIds: Array<InputMaybe<Scalars['ID']>>;
+  description: Scalars['String'];
+  name: Scalars['String'];
+  userIds: Array<InputMaybe<Scalars['ID']>>;
 };
 
 export type NewPrivateMarketAccount = {
@@ -2532,8 +2539,7 @@ export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 export type UsersQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null, username?: string | null, primaryEmailAddressId?: string | null, primaryPhoneNumberId?: string | null, hasImage?: boolean | null, imageUrl?: string | null, twoFactorEnabled?: boolean | null, updatedAt?: Date | null, createdAt?: Date | null } | null> | null };
 
 export type NewPortfolioMutationVariables = Exact<{
-  name: Scalars['String'];
-  description?: InputMaybe<Scalars['String']>;
+  portfolio: NewPortfolio;
 }>;
 
 

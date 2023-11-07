@@ -77,6 +77,7 @@ export function AccountList(props: AccountListProps) {
               },
             },
           }}
+          rowHeight={25}
           pageSizeOptions={[LIMIT_DEFAULT]}
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />

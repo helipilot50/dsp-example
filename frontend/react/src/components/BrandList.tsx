@@ -106,6 +106,7 @@ export function BrandList() {
                 },
               },
             }}
+            rowHeight={25}
             rowCount={brandList.totalCount || LIMIT_DEFAULT}
             pageSizeOptions={[LIMIT_DEFAULT]}
             paginationMode="server"

@@ -20,11 +20,12 @@ const columns: GridColDef[] = [
     field: 'name',
     headerName: 'Name',
     width: 200,
+
   },
   {
     field: 'description',
     headerName: 'Description',
-    width: 500,
+    minWidth: 500,
   },
   {
     field: 'price',
@@ -112,6 +113,7 @@ export function ProductsList() {
       <CardContent>
         {error && <ErrorNofification error={error} />}
         <DataGrid
+
           className='DataGrid'
           rows={(skuList.skus) ? skuList.skus.map(value => {
             return {
@@ -130,6 +132,7 @@ export function ProductsList() {
             },
           }}
           rowCount={skuList.totalCount || 0}
+          rowHeight={25}
           paginationMode='server'
           pageSizeOptions={[LIMIT_DEFAULT]}
           onPaginationModelChange={({ pageSize, page }) => {

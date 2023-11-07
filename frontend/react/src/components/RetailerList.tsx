@@ -101,6 +101,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
       <CardContent>
         {error && <ErrorNofification error={error} />}
         <DataGrid
+          sx={{ minHeight: '400px' }}
           className='DataGrid'
           rows={(retailerList.retailers) ? retailerList.retailers : []}
           columns={columns}
@@ -114,6 +115,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
             },
           }}
           rowCount={retailerList.totalCount || 0}
+          rowHeight={25}
           paginationMode='server'
           pageSizeOptions={[LIMIT_DEFAULT]}
           onPaginationModelChange={({ pageSize, page }) => {

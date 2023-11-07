@@ -63,11 +63,11 @@ export const usersResolvers/*: Resolvers*/ = {
       try {
         context.logger.debug(`[usersResolvers.myPortfolio] args ${JSON.stringify(args, undefined, 2)}`);
         if (!context.user) {
-          throw new Error('No user found');
+          throw new Error('No user in Context');
         }
         const itsMe: User = context.user as User;
         context.logger.debug(`[usersResolvers.myPortfolio] itsMe ${itsMe.username}`);
-        const dbresult = context.prisma.portfolio.findFirst(
+        const dbresult = await context.prisma.portfolio.findFirst(
           {
             where: {
               userIds: {
@@ -121,10 +121,11 @@ export const usersResolvers/*: Resolvers*/ = {
       try {
         const dbresult = await context.prisma.portfolio.create({
           data: {
-            name: args.name as string,
-            description: args.description as string || '',
-            userIds: [],
-            accountIds: [],
+            name: args.portfolio.name as string,
+            description: args.portfolio.description as string || '',
+            userIds: args.portfolio.userIds as string[] || [],
+            accountIds: args.portfolio.accountIds as string[] || [],
+            brandIds: args.portfolio.brandIds as string[] || []
           }
         });
         context.pubsub.publish(PORTFOLIO_CREATED, { portfolioCreated: dbresult });

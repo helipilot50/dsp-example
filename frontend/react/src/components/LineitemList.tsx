@@ -166,6 +166,7 @@ export function LineitemList(props: LineitemListProps) {
           columns={columns}
           loading={loading}
           rowCount={rowCountState}
+          rowHeight={25}
           pageSizeOptions={[LIMIT_DEFAULT]}
           paginationMode="server"
           paginationModel={paginationModel}

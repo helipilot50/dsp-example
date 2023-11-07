@@ -1564,8 +1564,7 @@ export type MutationNewLineitemArgs = {
 
 
 export type MutationNewPortfolioArgs = {
-  description?: InputMaybe<Scalars['String']>;
-  name: Scalars['String'];
+  portfolio: NewPortfolio;
 };
 
 
@@ -1740,6 +1739,14 @@ export type NewLineitemPage = {
   includeSubchildren: Scalars['Boolean'];
   isExclusion: Scalars['Boolean'];
   type: PageType;
+};
+
+export type NewPortfolio = {
+  accountIds: Array<InputMaybe<Scalars['ID']>>;
+  brandIds: Array<InputMaybe<Scalars['ID']>>;
+  description: Scalars['String'];
+  name: Scalars['String'];
+  userIds: Array<InputMaybe<Scalars['ID']>>;
 };
 
 export type NewPrivateMarketAccount = {
@@ -2508,6 +2515,7 @@ export type ResolversTypes = {
   NewLineitem: NewLineitem;
   NewLineitemBudget: NewLineitemBudget;
   NewLineitemPage: NewLineitemPage;
+  NewPortfolio: NewPortfolio;
   NewPrivateMarketAccount: NewPrivateMarketAccount;
   NewRetailer: NewRetailer;
   NewSalesForeAccount: NewSalesForeAccount;
@@ -2597,6 +2605,7 @@ export type ResolversParentTypes = {
   NewLineitem: NewLineitem;
   NewLineitemBudget: NewLineitemBudget;
   NewLineitemPage: NewLineitemPage;
+  NewPortfolio: NewPortfolio;
   NewPrivateMarketAccount: NewPrivateMarketAccount;
   NewRetailer: NewRetailer;
   NewSalesForeAccount: NewSalesForeAccount;
@@ -2962,7 +2971,7 @@ export type MutationResolvers<ContextType = DspContext, ParentType = ResolversPa
   newBrand?: Resolver<Maybe<ResolversTypes['Brand']>, ParentType, ContextType, RequireFields<MutationNewBrandArgs, 'brand'>>;
   newCampaign?: Resolver<Maybe<ResolversTypes['Campaign']>, ParentType, ContextType, RequireFields<MutationNewCampaignArgs, 'advertiserId' | 'campaign'>>;
   newLineitem?: Resolver<Maybe<ResolversTypes['Lineitem']>, ParentType, ContextType, RequireFields<MutationNewLineitemArgs, 'campaignId' | 'lineitem'>>;
-  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'name'>>;
+  newPortfolio?: Resolver<Maybe<ResolversTypes['Portfolio']>, ParentType, ContextType, RequireFields<MutationNewPortfolioArgs, 'portfolio'>>;
   newPrivateMarketAccount?: Resolver<Maybe<ResolversTypes['PrivateMarketAccount']>, ParentType, ContextType, RequireFields<MutationNewPrivateMarketAccountArgs, 'accountId' | 'privateMarketAccount'>>;
   newRetailer?: Resolver<Maybe<ResolversTypes['Retailer']>, ParentType, ContextType, RequireFields<MutationNewRetailerArgs, 'retailer'>>;
   pauseLineitems?: Resolver<Array<Maybe<ResolversTypes['Lineitem']>>, ParentType, ContextType, RequireFields<MutationPauseLineitemsArgs, 'lineitemIds'>>;

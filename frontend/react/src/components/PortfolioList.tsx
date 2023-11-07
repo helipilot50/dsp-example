@@ -16,7 +16,8 @@ const columns: GridColDef[] = [
   {
     field: 'description',
     headerName: 'Description',
-    width: 110,
+    minWidth: 350,
+
   },
 ];
 
@@ -33,7 +34,7 @@ export function PortfolioList() {
     setSelection(selection);
   }
   function addPortfolio() {
-    navigate('portfolios/new');
+    navigate('new');
   }
   if (error) console.error(error);
   if (data) console.debug("[PortfolioList]", data);
@@ -50,10 +51,12 @@ export function PortfolioList() {
         {error && <ErrorNofification error={error} />}
 
         <DataGrid
+          sx={{ minHeight: 100 }}
           className='DataGrid'
           rows={(data?.portfolios) ? data?.portfolios : [] as any}
           columns={columns}
           loading={loading}
+          rowHeight={25}
           onRowClick={(row) => {
             navigate(`${row.row.id}`);
           }

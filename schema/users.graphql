@@ -138,8 +138,16 @@ extend type Query {
   portfolios: [Portfolio]
 }
 
+input NewPortfolio {
+  name: String!
+  description: String!
+  userIds: [ID]!
+  accountIds: [ID]!
+  brandIds: [ID]!
+}
+
 extend type Mutation {
-  newPortfolio(name: String!, description: String): Portfolio
+  newPortfolio(portfolio: NewPortfolio!): Portfolio
   mapUsersToPortfolio(portfolioId: ID!, userIds: [ID]!): Portfolio
   mapAccountsToPortfolio(portfolioId: ID!, accountIds: [ID]!): Portfolio
   mapBrandsToPortfolio(portfolioId: ID!, brandIds: [ID]!): Portfolio

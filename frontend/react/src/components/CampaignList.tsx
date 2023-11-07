@@ -131,6 +131,7 @@ export function CampaignList(props: CampaignListProps) {
               },
             },
           }}
+          rowHeight={25}
           pageSizeOptions={[LIMIT_DEFAULT]}
           paginationMode="server"
           onPaginationModelChange={({ pageSize, page }) => {
