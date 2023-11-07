@@ -3,7 +3,7 @@ import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_USERS, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
+import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS, MAP_PORTFOLIO_BRANDS, MAP_PORTFOLIO_USERS, MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables, MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
 import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { UserChooser } from './UserChooser';
 import { AccountChooser } from './AccountChooser';
@@ -29,6 +29,10 @@ export function PortfolioDetails() {
     NEW_PORTFOLIO);
   const [mapUsers, { loading: mapUsersLoading, error: mapUsersError }] = useMutation<MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables>(
     MAP_PORTFOLIO_USERS);
+  const [mapAccounts, { loading: mapAccountsLoading, error: mapAccountsError }] = useMutation<MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables>(
+    MAP_PORTFOLIO_ACCOUNTS);
+  const [mapBrands, { loading: mapBrandsLoading, error: mapBrandsError }] = useMutation<MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables>(
+    MAP_PORTFOLIO_BRANDS);
 
   const { data, loading, error } = useQuery<PortfolioQuery, PortfolioQueryVariables>(PORTFOLIO_DETAILS,
     {
@@ -97,31 +101,69 @@ export function PortfolioDetails() {
       }],
       onCompleted: (data: NewPortfolioMutation) => {
         console.debug('[PortfolioDetails.chosenUsers]  completed', data);
+        setPortfolio({
+          ...portfolio,
+          users: users,
+        });
       },
       onError: (error: ApolloError) => {
         console.error('[PortfolioDetails.chosenUsers] error', error);
       }
     });
-    setPortfolio({
-      ...portfolio,
-      users: users,
-    });
+
   }
 
   function chosenBrands(brands: Brand[]) {
     console.log('[PortfolioDetails.chosenBrands]', brands);
-    setPortfolio({
-      ...portfolio,
-      brands: brands,
+    mapBrands({
+      variables: {
+        portfolioId: portfolio.id as string,
+        brandIds: brands.map(b => b.id),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: portfolio.id
+        }
+      }],
+      onCompleted: (data: NewPortfolioMutation) => {
+        console.debug('[PortfolioDetails.chosenBrands]  completed', data);
+        setPortfolio({
+          ...portfolio,
+          brands: brands,
+        });
+      },
+      onError: (error: ApolloError) => {
+        console.error('[PortfolioDetails.chosenBrands] error', error);
+      }
     });
   }
 
   function chosenAccounts(accounts: Account[]) {
     console.log('[PortfolioDetails.chosenAccounts]', accounts);
-    setPortfolio({
-      ...portfolio,
-      accounts: accounts,
+    mapAccounts({
+      variables: {
+        portfolioId: portfolio.id as string,
+        accountIds: accounts.map(a => a.id),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: portfolio.id
+        }
+      }],
+      onCompleted: (data: NewPortfolioMutation) => {
+        console.debug('[PortfolioDetails.chosenAccounts]  completed', data);
+        setPortfolio({
+          ...portfolio,
+          accounts: accounts,
+        });
+      },
+      onError: (error: ApolloError) => {
+        console.error('[PortfolioDetails.chosenAccounts] error', error);
+      }
     });
+
   }
 
   return (

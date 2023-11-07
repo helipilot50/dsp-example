@@ -2558,3 +2558,19 @@ export type MapUsersToPortfolioMutationVariables = Exact<{
 
 
 export type MapUsersToPortfolioMutation = { __typename?: 'Mutation', mapUsersToPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null } | null };
+
+export type MapBrandsToPortfolioMutationVariables = Exact<{
+  portfolioId: Scalars['ID'];
+  brandIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type MapBrandsToPortfolioMutation = { __typename?: 'Mutation', mapBrandsToPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null } | null };
+
+export type MapAccountsToPortfolioMutationVariables = Exact<{
+  portfolioId: Scalars['ID'];
+  accountIds: Array<InputMaybe<Scalars['ID']>> | InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type MapAccountsToPortfolioMutation = { __typename?: 'Mutation', mapAccountsToPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null } | null };

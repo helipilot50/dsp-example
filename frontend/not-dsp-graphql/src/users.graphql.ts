@@ -77,3 +77,21 @@ mutation MapUsersToPortfolio($portfolioId: ID!, $userIds: [ID]!) {
   }
 }
 `;
+
+export const MAP_PORTFOLIO_BRANDS = gql`
+mutation MapBrandsToPortfolio($portfolioId: ID!, $brandIds: [ID]!) {
+  mapBrandsToPortfolio(portfolioId: $portfolioId, brandIds: $brandIds) {
+    id
+    name
+  }
+}
+`;
+
+export const MAP_PORTFOLIO_ACCOUNTS = gql`
+mutation MapAccountsToPortfolio($portfolioId: ID!, $accountIds: [ID]!) {
+  mapAccountsToPortfolio(portfolioId: $portfolioId, accountIds: $accountIds) {
+    id
+    name
+  }
+}
+`;
