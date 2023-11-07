@@ -211,7 +211,9 @@ export function Nav() {
                 <ListItemText primary='Retailers' />
               </ListItemButton>
             </ListItem>
-            <Divider variant="inset" component="li" />
+            <Divider component="li">
+              Administration
+            </Divider>
             <ListItem key='menuPortfolios' disablePadding >
               <ListItemButton onClick={() => { navigate(`/portfolios`); }}>
                 <ListItemIcon>

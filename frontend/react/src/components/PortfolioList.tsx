@@ -37,7 +37,7 @@ export function PortfolioList() {
   }
   return (
     <Card elevation={6}>
-      <CardHeader title={'Prrtfolios'} />
+      <CardHeader title={'Portfolios'} />
       <CardHeader subheader={'Click on a Portfolio to see details'} />
       <CardActionArea sx={{ ml: 2 }}>
         <ButtonGroup variant="contained" aria-label="activation-group">
