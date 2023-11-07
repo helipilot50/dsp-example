@@ -35,6 +35,8 @@ export function PortfolioList() {
   function addPortfolio() {
     navigate('portfolios/new');
   }
+  if (error) console.error(error);
+  if (data) console.debug("[PortfolioList]", data);
   return (
     <Card elevation={6}>
       <CardHeader title={'Portfolios'} />

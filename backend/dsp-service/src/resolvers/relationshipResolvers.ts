@@ -1,6 +1,6 @@
 // import { Lineitem, Campaign, Account } from "@prisma/client";
 import { GraphQLResolveInfo } from "graphql";
-import { scalarMoney } from "../MoneyResolver";
+import { scalarMoney } from "./MoneyResolver";
 import { DspContext } from "../context";
 import { brandResolvers } from "./brandsResolvers";
 import { accountResolvers } from './accountsResolvers';
@@ -84,9 +84,11 @@ export const relationshipResolvers/*: Resolvers*/ = {
   Portfolio: {
     async users(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug(`[relationshipResolvers.Portfolio.userIds] args ${JSON.stringify(parent.userIds, undefined, 2)}`);
+        context.logger.info(`[relationshipResolvers.Portfolio.userIds] args ${JSON.stringify(parent.userIds, undefined, 2)}`);
 
-        return Promise.all(parent.userIds.map((userId: string) => userById(userId)));
+        const users = await Promise.all(parent.userIds.map((userId: string) => userById(userId)));
+        context.logger.info(`[relationshipResolvers.Portfolio.users] found ${JSON.stringify(users, undefined, 2)}`);
+        return users;
       } catch (err) {
         context.logger.error(`[relationshipResolvers.Portfolio.users] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
@@ -102,6 +104,23 @@ export const relationshipResolvers/*: Resolvers*/ = {
         return accountResolvers.Query.accounts(null, accountsArgs, context, info);
       } catch (err) {
         context.logger.error(`[relationshipResolvers.Portfolio.accounts] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    },
+    async brands(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.debug(`[relationshipResolvers.Portfolio.brands] brandIds ${JSON.stringify(parent.accountIds, undefined, 2)}`);
+        const brandsArgs: QueryBrandsArgs = {
+          brandIds: parent.brandIds,
+          offset: 0,
+          limit: 100
+        };
+
+        const brandsResult = await brandResolvers.Query.brands(null, brandsArgs, context, info);
+        context.logger.debug(`[relationshipResolvers.Portfolio.brands] brandsResult ${JSON.stringify(brandsResult, undefined, 2)}`);
+        return brandsResult.brands;
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.brands] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
       }
     }

@@ -100,7 +100,13 @@ export const usersResolvers/*: Resolvers*/ = {
     async portfolios(_: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
       try {
         context.logger.debug(`[usersResolvers.portfolios] args ${JSON.stringify(args, undefined, 2)}`);
-        const dbresult = context.prisma.portfolio.findMany();
+        const dbresult = await context.prisma.portfolio.findMany();
+        if (!dbresult || dbresult.length < 1) return [];
+        dbresult.forEach((portfolio: any) => {
+          if (!portfolio.users) portfolio.users = [];
+          if (!portfolio.accounts) portfolio.accounts = [];
+          if (!portfolio.brands) portfolio.brands = [];
+        });
         return dbresult;
       } catch (err) {
         context.logger.error(`[usersResolvers.portfolios] error ${JSON.stringify(err, undefined, 2)}`);
@@ -181,7 +187,7 @@ export const usersResolvers/*: Resolvers*/ = {
             id: args.portfolioId
           },
           data: {
-            userIds: {
+            brandIds: {
               set: brandIds
             }
           }
