@@ -19,6 +19,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import StoreIcon from '@mui/icons-material/Store';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import { useNavigate, useLocation, Link as RouterLink, Outlet } from 'react-router-dom';
 
 import BreadCrumbs from '@mui/material/Breadcrumbs';
@@ -208,6 +209,15 @@ export function Nav() {
                   <StoreIcon />
                 </ListItemIcon>
                 <ListItemText primary='Retailers' />
+              </ListItemButton>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem key='menuPortfolios' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/portfolios`); }}>
+                <ListItemIcon>
+                  <LibraryBooks />
+                </ListItemIcon>
+                <ListItemText primary='Portfolios' />
               </ListItemButton>
             </ListItem>
           </SignedIn >

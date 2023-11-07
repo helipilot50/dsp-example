@@ -1,11 +1,11 @@
 {
   "name": "not-dsp-graphql",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/not-dsp-graphql.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
-    "build": "rimraf dist && tsc --build ./tsconfig.build.json && webpack --mode production",
+    "build": "yarn codegen && rimraf dist && tsc --build ./tsconfig.build.json && webpack --mode production",
     "codegen": "graphql-codegen --config codegen.ts"
   },
   "author": "",
