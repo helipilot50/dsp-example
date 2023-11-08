@@ -1,5 +1,23 @@
 import { GraphQLResolveInfo } from "graphql";
-import { QueryAccountsArgs, QueryAccountArgs, MutationNewAccountArgs, MutationMapAccountRetailersArgs, InputMaybe, SubscriptionAccountBrandedKeywordsDisabledArgs, SubscriptionAccountBrandedKeywordsEnabledArgs, SubscriptionAccountBrandsUpatedArgs, SubscriptionAccountCountryAddedArgs, SubscriptionAccountCurrencyDataChangedArgs, SubscriptionAccountFeesModifiedArgs, SubscriptionAccountInitializedArgs, SubscriptionAccountReportingLabelModifiedArgs, SubscriptionAccountRetailerConnectedArgs, SubscriptionAccountRetailersUpdatedArgs, SubscriptionAccountSalesforceDataModifiedArgs, SubscriptionAccountSellerModifiedArgs, SubscriptionAccountWhileLabelSettingsCreatedArgs, SubscriptionAccountWhileLabelSettingsUpdatedArgs } from "../resolver-types";
+import {
+  QueryAccountsArgs, QueryAccountArgs,
+  MutationNewAccountArgs, MutationMapAccountRetailersArgs,
+  InputMaybe,
+  SubscriptionAccountBrandedKeywordsDisabledArgs,
+  SubscriptionAccountBrandedKeywordsEnabledArgs,
+  SubscriptionAccountBrandsUpatedArgs,
+  SubscriptionAccountCountryAddedArgs,
+  SubscriptionAccountCurrencyDataChangedArgs,
+  SubscriptionAccountFeesModifiedArgs,
+  SubscriptionAccountInitializedArgs,
+  SubscriptionAccountReportingLabelModifiedArgs,
+  SubscriptionAccountRetailerConnectedArgs,
+  SubscriptionAccountRetailersUpdatedArgs,
+  SubscriptionAccountSalesforceDataModifiedArgs,
+  SubscriptionAccountSellerModifiedArgs,
+  SubscriptionAccountWhileLabelSettingsCreatedArgs,
+  SubscriptionAccountWhileLabelSettingsUpdatedArgs
+} from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
 
@@ -62,35 +80,66 @@ export const accountResolvers/*: Resolvers*/ = {
       }
     },
 
-    account(parent: any, args: QueryAccountArgs, context: DspContext) {
+    async account(parent: any, args: QueryAccountArgs, context: DspContext) {
 
       let accountId = args.accountId;
       if (parent && parent.accountId) {
         accountId = parent.accountId;
       }
-      context.logger.debug(`accountId ${accountId}`);
-      return context.prisma.account.findUnique(
-        {
+      context.logger.info(`accountId ${accountId}`);
+      let dbResult;
+      try {
+        dbResult = await context.prisma.account.findUnique(
+          {
+            where: {
+              id: accountId
+            },
+            // select: {
+            //   id: true,
+            //   accountExternalId: true,
+            //   name: true,
+            //   salesForceAccountId: true,
+            //   parentAccount: true,
+            //   parentAccountLabel: true,
+            //   type: true,
+            //   allowBrandedKeywords: true,
+            //   currency: true,
+            //   currencyCode: true,
+            //   countryIds: true,
+            //   retailerIds: true,
+            //   fee: true,
+            // }
+          }
+        );
+        console.log(`dbResult ${JSON.stringify(dbResult, undefined, 2)}`);
+      } catch (err) {
+        context.logger.error(`account error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+      const foundAccount: any = {
+        ...dbResult
+      };
+
+
+      if (dbResult !== null && dbResult.fee === null) {
+        console.log(`no fee, adding...`);
+        const emptyFee = {
+          supplySideFee: 0,
+          demandSideFee: 0,
+          isCommerceDisplayManagedServiceFee: false,
+          accountServicingFee: 0,
+        };
+        foundAccount.fee = emptyFee;
+        context.prisma.account.update({
           where: {
             id: accountId
           },
-          select: {
-            id: true,
-            accountExternalId: true,
-            name: true,
-            salesForceAccountId: true,
-            parentAccount: true,
-            parentAccountLabel: true,
-            type: true,
-            allowBrandedKeywords: true,
-            currency: true,
-            currencyCode: true,
-            countryIds: true,
-            retailerIds: true,
-            fee: true,
+          data: {
+            fee: emptyFee
           }
-        }
-      );
+        });
+      }
+      return foundAccount;
 
     },
   },
