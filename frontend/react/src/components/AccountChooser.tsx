@@ -3,6 +3,7 @@ import { ACCOUNTS_LIST, Account, AccountsQuery, AccountsQueryVariables } from 'n
 import React, { HTMLAttributes, useId, useMemo } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { Autocomplete, Box, LinearProgress, TextField } from '@mui/material';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function AccountChooser(props: {
   open?: boolean;
@@ -12,6 +13,7 @@ export function AccountChooser(props: {
   chosenAccounts?: (retailers: Account[]) => void;
 }) {
   const id = useId();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
     ACCOUNTS_LIST,
     {
@@ -28,9 +30,9 @@ export function AccountChooser(props: {
     () => props.selectedValues || [],
     [props.selectedValues],
   );
+  if (error) showBoundary(error);
   return (
     <>
-      {error && <ErrorNofification error={error} />}
       {loading && <LinearProgress variant="query" />}
       <Autocomplete
         id={id}
@@ -43,12 +45,12 @@ export function AccountChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[AccountChooser] onChange', newValue);
+          console.debug('[AccountChooser] onChange', newValue);
           props.chosenAccounts && props.chosenAccounts(newValue as Account[]);
         }}
         autoHighlight
         getOptionLabel={(option: Account) => {
-          console.log('[AccountChooser] getOptionLabel', option);
+          console.debug('[AccountChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Account, value: Account) => option.id === value.id}

@@ -7,6 +7,7 @@ import { BRANDS_LIST } from 'not-dsp-graphql';
 import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from 'not-dsp-graphql';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorBoundary, ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -36,6 +37,7 @@ const columns: GridColDef[] = [
 
 export function BrandList() {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [brandList, setBrandList] = useState<Brands>({ brands: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = useQuery<BrandsQuery, BrandsQueryVariables>(
     BRANDS_LIST,
@@ -84,15 +86,15 @@ export function BrandList() {
   }
 
 
-  console.log('[BrandList] result', data, error, loading);
-  console.log('[BrandList] pagination', brandList);
+  console.debug('[BrandList] result', data, error, loading);
+  console.debug('[BrandList] pagination', brandList);
+  if (error) showBoundary(error);
   return (
     <ErrorBoundary>
       <Card elevation={6}>
         <CardHeader title={'Brands'} />
         <CardHeader subheader={'Click on a Brand to see details'} />
         <CardContent>
-          {error && <ErrorNofification error={error} />}
           <DataGrid
             className='DataGrid'
             rows={(brandList && brandList.brands) ? brandList.brands : []}

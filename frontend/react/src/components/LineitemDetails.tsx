@@ -22,11 +22,12 @@ import {
 import { useMemo, useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
-import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function LineitemDetails() {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const accountId = params.accountId;
   const campaignId = params.campaignId;
   const [isNew] = useState(params.lineitemId === 'new');
@@ -57,7 +58,7 @@ export function LineitemDetails() {
 
   useEffect(() => {
     if (data && data.lineitem) {
-      console.log('[LineitemDetails] data', data);
+      console.debug('[LineitemDetails] data', data);
       setLineitem({
         ...data.lineitem,
         startDate: new Date(data.lineitem.startDate || ''),
@@ -181,13 +182,15 @@ export function LineitemDetails() {
     });
 
   }
+  if (error) showBoundary(error);
+
   const dates: DateRange<Dayjs> = [dayjs(lineitem.startDate || new Date()), dayjs(lineitem.endDate || new Date())];
 
-  console.log('[LineitemDetails] params data', params, data);
+  console.debug('[LineitemDetails] params data', params, data);
   return (
     <Card elevation={6}
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '50ch' },
+        '& .MuiTextField-root': { mt: 1, width: '50ch' },
       }}>
       <CardHeader
         title={`Lineitem: ${lineitemId}`}
@@ -208,7 +211,6 @@ export function LineitemDetails() {
         {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
         {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
         {loading && <LinearProgress variant="query" />}
-        {error && <ErrorNofification error={error} />}
 
         <Stack>
           <TextField
@@ -216,7 +218,8 @@ export function LineitemDetails() {
             name="name"
             id='name'
             value={lineitem.name}
-            onChange={handleInputChange} />
+            onChange={handleInputChange}
+            size='small' />
           <TextField
             name='status'
             id='status'
@@ -225,6 +228,7 @@ export function LineitemDetails() {
             InputProps={{
               readOnly: true,
             }}
+            size='small'
           />
           <DateRangePicker
             label="Start - End"
@@ -232,7 +236,7 @@ export function LineitemDetails() {
             localeText={{ start: 'start date', end: 'end date' }}
             value={dates}
             onChange={(newValue: DateRange<Dayjs>) => {
-              console.log('[LineitemDetails] new DateRange', newValue);
+              console.debug('[LineitemDetails] new DateRange', newValue);
               const startDate = newValue[0]?.toDate();
               const endDate = newValue[1]?.toDate();
               setLineitem({
@@ -246,7 +250,8 @@ export function LineitemDetails() {
           <TextField
             label="Budget"
             value={(lineitem.budget) ? lineitem.budget.amount : 0}
-            type='number' />
+            type='number'
+            size='small' />
         </Stack>
       </CardContent>
     </Card>
@@ -272,7 +277,7 @@ export function LineItemActivated(props: { lineitemId: string; }) {
     setState({ open: false, message: '' });
   }
 
-  console.log('[LineItemActivated] activated', activated);
+  console.debug('[LineItemActivated] activated', activated);
 
 
   return (
@@ -307,7 +312,7 @@ export function LineItemPaused(props: { lineitemId: string; }) {
   }
 
 
-  console.log('[LineItemPaused] paused', paused);
+  console.debug('[LineItemPaused] paused', paused);
 
   return (
     <Snackbar open={state.open}

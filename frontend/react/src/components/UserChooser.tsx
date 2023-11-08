@@ -4,6 +4,7 @@ import { Box } from '@mui/system';
 import { USER_LIST, User, UsersQuery, UsersQueryVariables } from 'not-dsp-graphql';
 import React, { HTMLAttributes, useId, useMemo } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function UserChooser(props: {
   open?: boolean;
@@ -13,12 +14,14 @@ export function UserChooser(props: {
   chosenUsers?: (users: User[]) => void;
 }) {
   const id = useId();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<UsersQuery, UsersQueryVariables>(
     USER_LIST,
     {
       fetchPolicy: 'cache-first',
     }
   );
+  if (error) showBoundary(error);
 
   const elements = useMemo(
     () => data?.users as User[] || [] as User[],
@@ -45,17 +48,17 @@ export function UserChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[ProductChooser] onChange', newValue);
+          console.debug('[ProductChooser] onChange', newValue);
           props.chosenUsers && props.chosenUsers(newValue as User[]);
         }}
         autoHighlight
         getOptionLabel={(option: User) => {
-          console.log('[ProductChooser] getOptionLabel', option);
+          console.debug('[ProductChooser] getOptionLabel', option);
           return option.firstName + ' ' + option.lastName as string;
         }}
         isOptionEqualToValue={(option: User, value: User) => option.id === value.id}
         renderOption={(props: HTMLAttributes<HTMLLIElement>, option: User) => (
-          <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+          <Box component="li" sx={{ '& > img': { flexShrink: 0 } }} {...props}>
             {option.firstName + ' ' + option.lastName}
           </Box>
         )}

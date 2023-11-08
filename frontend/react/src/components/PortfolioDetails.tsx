@@ -8,10 +8,12 @@ import { ApolloError, useMutation, useQuery } from '@apollo/client';
 import { UserChooser } from './UserChooser';
 import { AccountChooser } from './AccountChooser';
 import { BrandChooser } from './BrandChooser';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function PortfolioDetails() {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [isNew] = useState(params.portfolioId === 'new');
   const portfolioId = useMemo(() => {
     return params.portfolioId || 'new';
@@ -41,6 +43,7 @@ export function PortfolioDetails() {
       },
       skip: isNew,
     });
+  if (error) showBoundary(error);
 
   useEffect(() => {
     if (!isNew && data) {
@@ -58,7 +61,7 @@ export function PortfolioDetails() {
   }
 
   function createPortfolio() {
-    console.log('[PortfolioDetails.createPortfolio] args');
+    console.debug('[PortfolioDetails.createPortfolio] args');
     newPortfolio({
       variables: {
         portfolio: {
@@ -78,6 +81,7 @@ export function PortfolioDetails() {
       },
       onError: (error: ApolloError) => {
         console.error('[PortfolioDetails.createPortfolio] error', error);
+        if (error) showBoundary(error);
       }
     });
   }
@@ -98,7 +102,7 @@ export function PortfolioDetails() {
   }
 
   function chosenUsers(users: User[]) {
-    console.log('[PortfolioDetails.chosenUsers]', users);
+    console.debug('[PortfolioDetails.chosenUsers]', users);
 
     setPortfolio({
       ...portfolio,
@@ -121,13 +125,14 @@ export function PortfolioDetails() {
         },
         onError: (error: ApolloError) => {
           console.error('[PortfolioDetails.chosenUsers] error', error);
+          if (error) showBoundary(error);
         }
       });
     }
   }
 
   function chosenBrands(brands: Brand[]) {
-    console.log('[PortfolioDetails.chosenBrands]', brands);
+    console.debug('[PortfolioDetails.chosenBrands]', brands);
     setPortfolio({
       ...portfolio,
       brands: brands,
@@ -150,13 +155,14 @@ export function PortfolioDetails() {
         },
         onError: (error: ApolloError) => {
           console.error('[PortfolioDetails.chosenBrands] error', error);
+          if (error) showBoundary(error);
         }
       });
     }
   }
 
   function chosenAccounts(accounts: Account[]) {
-    console.log('[PortfolioDetails.chosenAccounts]', accounts);
+    console.debug('[PortfolioDetails.chosenAccounts]', accounts);
     setPortfolio({
       ...portfolio,
       accounts: accounts,
@@ -179,16 +185,17 @@ export function PortfolioDetails() {
         },
         onError: (error: ApolloError) => {
           console.error('[PortfolioDetails.chosenAccounts] error', error);
+          if (error) showBoundary(error);
         }
       });
     }
 
   }
-
+  console.debug('[PortfolioDetails] portfolio', portfolio);
   return (
     <Card elevation={6}
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '50ch' },
+        '& .MuiTextField-root': { mt: 1, width: '50ch' },
       }}>
       <CardHeader
         title={`Portfolio: ${portfolioId}`} />
@@ -201,9 +208,6 @@ export function PortfolioDetails() {
         autoComplete="off"
       >
         {(loading || createLoading || mapUsersLoading) && <LinearProgress variant="query" />}
-        {error && <ErrorNofification error={error} />}
-        {createError && <ErrorNofification error={createError} />}
-        {mapUsersError && <ErrorNofification error={mapUsersError} />}
         <Stack>
           <FormControl>
             <FormLabel>Name</FormLabel>
@@ -212,6 +216,7 @@ export function PortfolioDetails() {
               id='name'
               value={portfolio.name}
               onChange={handleInputChange}
+              size='small'
             />
           </FormControl>
           <FormControl>

@@ -8,6 +8,7 @@ import { CampaignsQuery, CampaignsQueryVariables, CampaignList as Campaigns } fr
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { useEffect, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 const columns: GridColDef[] = [
@@ -57,6 +58,7 @@ export interface CampaignListProps {
 export function CampaignList(props: CampaignListProps) {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [campaignList, setCampaignList] = useState<Campaigns>({ campaigns: [], page: OFFSET_DEFAULT, size: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = useQuery<CampaignsQuery, CampaignsQueryVariables>(CAMPAIGNS_LIST, {
     variables: {
@@ -103,10 +105,10 @@ export function CampaignList(props: CampaignListProps) {
     });
     return;
   }
+  if (error) showBoundary(error);
 
-
-  console.log('[CampaignList] result', data, error, loading);
-  console.log('[CampaignList] pagination', campaignList);
+  console.debug('[CampaignList] result', data, error, loading);
+  console.debug('[CampaignList] pagination', campaignList);
   return (
     <Card elevation={6}>
       <CardHeader title={'Campaigns'} />
@@ -116,7 +118,6 @@ export function CampaignList(props: CampaignListProps) {
           <Button variant='contained' onClick={() => navigate(`campaigns/new`)}>New Campaign</Button>
         </CardActions>}
       <CardContent >
-        {error && <ErrorNofification error={error} />}
 
         <DataGrid
           className='DataGrid'

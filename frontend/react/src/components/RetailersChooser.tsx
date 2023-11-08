@@ -8,6 +8,7 @@ import { RETAILER_LIST } from 'not-dsp-graphql';
 import { OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { LinearProgress } from '@mui/material';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function RetailersChooser(props: {
   id: string;
@@ -17,6 +18,7 @@ export function RetailersChooser(props: {
   selectedValues: Retailer[];
   retailersChange?: (retailers: Retailer[]) => void;
 }) {
+  const { showBoundary } = useErrorBoundary();
   // Retailers
   const { data, loading, error } = useQuery<RetailersQuery, RetailersQueryVariables>(RETAILER_LIST,
     {
@@ -28,7 +30,8 @@ export function RetailersChooser(props: {
     }
   );
 
-  console.log('[RetailersChooser] props', props);
+  console.debug('[RetailersChooser] props', props);
+  if (error) showBoundary(error);
 
   const elements = React.useMemo(
     () => data?.retailers.retailers as Retailer[] || [] as Retailer[],
@@ -40,7 +43,7 @@ export function RetailersChooser(props: {
     [props.selectedValues],
   );
 
-  console.log('[RetailersChooser] inputValues', inputValues);
+  console.debug('[RetailersChooser] inputValues', inputValues);
 
 
   if (error) return (<ErrorNofification error={error} />);
@@ -59,12 +62,12 @@ export function RetailersChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[RetailersChooser] onChange', newValue);
+          console.debug('[RetailersChooser] onChange', newValue);
           props.retailersChange && props.retailersChange(newValue as Retailer[]);
         }}
         autoHighlight
         getOptionLabel={(option: Retailer) => {
-          console.log('[RetailersChooser] getOptionLabel', option);
+          console.debug('[RetailersChooser] getOptionLabel', option);
           return option.name;
         }}
         isOptionEqualToValue={(option: Retailer, value: Retailer) => option.id === value.id}

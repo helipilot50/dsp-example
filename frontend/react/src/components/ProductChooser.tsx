@@ -4,6 +4,7 @@ import React, { HTMLAttributes, useId, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function ProductChooser(props: {
   open?: boolean;
@@ -13,6 +14,7 @@ export function ProductChooser(props: {
   retailersChange?: (retailers: Sku[]) => void;
 }) {
   const id = useId();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<SkusQuery, SkusQueryVariables>(
     PRODUCT_LIST,
     {
@@ -34,7 +36,7 @@ export function ProductChooser(props: {
     [props.selectedValues],
   );
 
-  if (error) return (<ErrorNofification error={error} />);
+  if (error) showBoundary(error);
 
   return (
     <>
@@ -50,12 +52,12 @@ export function ProductChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[ProductChooser] onChange', newValue);
+          console.debug('[ProductChooser] onChange', newValue);
           props.retailersChange && props.retailersChange(newValue as Sku[]);
         }}
         autoHighlight
         getOptionLabel={(option: Sku) => {
-          console.log('[ProductChooser] getOptionLabel', option);
+          console.debug('[ProductChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Sku, value: Sku) => option.skuKey === value.skuKey}

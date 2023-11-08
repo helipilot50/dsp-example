@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import { useErrorBoundary } from 'react-error-boundary';
 import { ErrorBoundary as EB } from 'react-error-boundary';
 
-interface ErrorNotificationProps {
+export interface ErrorNotificationProps {
   error: any;
   resetErrorBoundary?: () => void;
 }
@@ -11,6 +11,12 @@ interface ErrorNotificationProps {
 export function ErrorBoundary({ children }: { children: ReactNode; }) {
   return (
     <EB FallbackComponent={ErrorNofification}
+      onReset={() => {
+        // reset the state of your app so the error doesn't happen again
+      }}
+      onError={(error, info) => {
+        console.error(error, info);
+      }}
     >
       {children}
     </EB>
@@ -36,7 +42,10 @@ export function ErrorNofification({ error, resetErrorBoundary }: ErrorNotificati
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
       <Alert onClose={onClose}
         severity='error'>
-        <AlertTitle>Account {error.message} </AlertTitle>
+        <AlertTitle>{error.message}</AlertTitle>
+        <Collapse in={open}>
+          <pre>{error.stack}</pre>
+        </Collapse>
       </Alert>
     </Snackbar >
 

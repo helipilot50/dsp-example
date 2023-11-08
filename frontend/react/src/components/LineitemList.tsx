@@ -11,6 +11,7 @@ import { dateFormatter } from '../lib/utility';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 const columns: GridColDef[] = [
@@ -53,6 +54,7 @@ export interface LineitemListProps {
 export function LineitemList(props: LineitemListProps) {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
 
   // const accountId = params.accountId;
   // const campaignId = params.campaignId;
@@ -144,8 +146,8 @@ export function LineitemList(props: LineitemListProps) {
   function addLineitem() {
     navigate(`lineitems/new`);
   }
-
-  console.log('Lineitem list', params, data);
+  if (error) showBoundary(error);
+  console.debug('Lineitem list', params, data);
   return (
     <Card elevation={6}>
       <CardHeader title={'Lineitems'} />
@@ -158,7 +160,6 @@ export function LineitemList(props: LineitemListProps) {
         </ButtonGroup>
       </CardActionArea>
       <CardContent >
-        {error && <ErrorNofification error={error} />}
 
         <DataGrid
           className='DataGrid'

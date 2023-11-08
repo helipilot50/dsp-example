@@ -8,47 +8,44 @@ export interface AccountFeesProps {
 
 export function AccountFees({ fee, disabled }: AccountFeesProps) {
   return (
-    <Stack spacing={2}>
-      <FormControl>
-        <TextField
-          required
-          id="demandSideFee"
-          name="demandSideFee"
-          label="Demand Side Fee"
-          fullWidth
-          autoComplete="demandSideFee"
-          value={fee.demandSideFee || 0}
-          type='number'
-          variant='outlined'
-          disabled={disabled}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          id="supplySideFee"
-          name="supplySideFee"
-          label="Supply Side Fee"
-          fullWidth
-          value={fee?.supplySideFee || 0}
-          type='number'
-          variant='outlined'
-          disabled={disabled}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          required
-          id="accountServicingFee"
-          name="accountServicingFee"
-          label="Account Service Fee"
-          fullWidth
-          autoComplete="accountServicingFee"
-          value={fee?.accountServicingFee || 0}
-          type='number'
-          variant='outlined'
-          disabled={disabled}
-        />
-      </FormControl>
+    <Stack direction='row' sx={{ mt: 1 }}>
+      <TextField sx={{ width: '33%' }}
+        required
+        id="demandSideFee"
+        name="demandSideFee"
+        label="Demand Side Fee"
+        fullWidth
+        autoComplete="demandSideFee"
+        value={fee.demandSideFee || 0}
+        type='number'
+        variant='outlined'
+        disabled={disabled}
+        size='small'
+      />
+      <TextField sx={{ width: '33%', ml: 1 }}
+        id="supplySideFee"
+        name="supplySideFee"
+        label="Supply Side Fee"
+        fullWidth
+        value={fee?.supplySideFee || 0}
+        type='number'
+        variant='outlined'
+        disabled={disabled}
+        size='small'
+      />
+      <TextField sx={{ width: '33%', ml: 1 }}
+        required
+        id="accountServicingFee"
+        name="accountServicingFee"
+        label="Account Service Fee"
+        fullWidth
+        autoComplete="accountServicingFee"
+        value={fee?.accountServicingFee || 0}
+        type='number'
+        variant='outlined'
+        disabled={disabled}
+        size='small'
+      />
     </Stack>
   );
 }

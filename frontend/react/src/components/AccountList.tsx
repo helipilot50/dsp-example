@@ -45,6 +45,7 @@ export interface AccountListProps {
 
 export function AccountList(props: AccountListProps) {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
     ACCOUNTS_LIST,
     {
@@ -53,7 +54,7 @@ export function AccountList(props: AccountListProps) {
       },
     }
   );
-
+  if (error) showBoundary(error);
   return (
 
     <Card elevation={6}>
@@ -64,7 +65,6 @@ export function AccountList(props: AccountListProps) {
       </CardActions>}
       <CardContent>
         <AccountCreated />
-        {error && <ErrorNofification error={error} />}
         <DataGrid
           className='DataGrid'
           rows={(data && data.accounts) ? data.accounts : []}
@@ -98,7 +98,7 @@ export function AccountCreated() {
   useMemo(() => {
     if (created) {
       setState({ open: true, message: created?.accountCreated?.name + ' created at ' + new Date().toLocaleString() });
-      console.log('[AccountCreated] created', created);
+      console.debug('[AccountCreated] created', created);
     }
   }, [created]);
 

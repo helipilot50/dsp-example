@@ -4,6 +4,7 @@ import React, { HTMLAttributes, useId, useMemo } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { useQuery } from '@apollo/client';
 import { OFFSET_DEFAULT } from '../lib/ListDefaults';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function BrandChooser(props: {
   open?: boolean;
@@ -13,6 +14,7 @@ export function BrandChooser(props: {
   chosenBrands?: (retailers: Brand[]) => void;
 }) {
   const id = useId();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<BrandsQuery, BrandsQueryVariables>(
     BRANDS_LIST,
     {
@@ -33,10 +35,9 @@ export function BrandChooser(props: {
     () => props.selectedValues || [],
     [props.selectedValues],
   );
-
+  if (error) showBoundary(error);
   return (
     <>
-      {error && <ErrorNofification error={error} />}
       {loading && <LinearProgress variant="query" />}
       <Autocomplete
         id={id}
@@ -49,12 +50,12 @@ export function BrandChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[ProductChooser] onChange', newValue);
+          console.debug('[ProductChooser] onChange', newValue);
           props.chosenBrands && props.chosenBrands(newValue as Brand[]);
         }}
         autoHighlight
         getOptionLabel={(option: Brand) => {
-          console.log('[ProductChooser] getOptionLabel', option);
+          console.debug('[ProductChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Brand, value: Brand) => option.id === value.id}

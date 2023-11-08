@@ -11,6 +11,7 @@ import { RETAILER_LIST } from 'not-dsp-graphql';
 import { useEffect, useState } from 'react';
 import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -54,6 +55,7 @@ export function AllRetailerList() {
 
 export function RetailerList(props: { query: QueryResult<RetailersQuery, RetailersQueryVariables>; }) {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [retailerList, setRetailerList] = useState<Retailers>({ retailers: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = props.query;
 
@@ -91,15 +93,15 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
     });
     return;
   }
-  console.log('[RetailerList] result', data, error, loading);
-  console.log('[RetailerList] pagination', retailerList);
+  if (error) showBoundary(error);
+  console.debug('[RetailerList] result', data, error, loading);
+  console.debug('[RetailerList] pagination', retailerList);
 
   return (
     <Card elevation={6} >
       <CardHeader title={'Retailers'} />
       <CardHeader subheader={'Click on a Retailer to see details'} />
       <CardContent>
-        {error && <ErrorNofification error={error} />}
         <DataGrid
           sx={{ minHeight: '400px' }}
           className='DataGrid'

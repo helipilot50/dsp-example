@@ -9,6 +9,7 @@ import { PRODUCT_LIST } from 'not-dsp-graphql';
 import { OFFSET_DEFAULT, LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useSearchParams } from 'react-router-dom';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const columns: GridColDef[] = [
   {
@@ -49,6 +50,7 @@ const columns: GridColDef[] = [
 
 export function ProductsList() {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [searchParams, setSearchParams] = useSearchParams({ offset: OFFSET_DEFAULT.toString(), limit: LIMIT_DEFAULT.toString() });
   const [skuList, setSkuList] = useState<Skus>({ skus: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = useQuery<SkusQuery, SkusQueryVariables>(
@@ -101,19 +103,17 @@ export function ProductsList() {
     return;
   }
 
-
-  console.log('[SkuList] result', data, error, loading);
-  console.log('[SkuList] pagination', skuList);
-  console.log('[SkuList] searchParams', searchParams);
+  if (error) showBoundary(error);
+  console.debug('[SkuList] result', data, error, loading);
+  console.debug('[SkuList] pagination', skuList);
+  console.debug('[SkuList] searchParams', searchParams);
 
   return (
     <Card elevation={6}>
       <CardHeader title={'Products'} />
       <CardHeader subheader={'Click on a Product to see details'} />
       <CardContent>
-        {error && <ErrorNofification error={error} />}
         <DataGrid
-
           className='DataGrid'
           rows={(skuList.skus) ? skuList.skus.map(value => {
             return {

@@ -15,9 +15,11 @@ import { RETAILER_DETAILS } from 'not-dsp-graphql';
 import { CampaignList } from './CampaignList';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { AccountList } from './AccountList';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function RetailerDetails() {
   const params = useParams();
+  const { showBoundary } = useErrorBoundary();
 
   const { data, loading, error } = useQuery<RetailerQuery, RetailerQueryVariables>(RETAILER_DETAILS,
     {
@@ -25,13 +27,13 @@ export function RetailerDetails() {
         retailerId: params.retailerId || 'no-id',
       }
     });
-
-  console.log('params', params);
+  if (error) showBoundary(error);
+  console.debug('params', params);
   return (
     <Paper square={false}
       elevation={6}
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '55ch' },
+        '& .MuiTextField-root': { mt: 1, width: '55ch' },
       }}>
       <Card>
         <CardHeader
@@ -50,7 +52,7 @@ export function RetailerDetails() {
               value={(data && data.retailer) ? data?.retailer?.id : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Name"
               value={(data && data.retailer) ? data?.retailer?.name : ''} />
@@ -59,39 +61,39 @@ export function RetailerDetails() {
               value={(data && data.retailer) ? data?.retailer?.status : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Country of Origin"
               value={(data && data.retailer) ? data?.retailer?.countryOfOrigin : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Ranking"
               value={(data && data.retailer) ? data?.retailer?.rank : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Retail Revenue (m) USD"
               value={(data && data.retailer) ? data?.retailer?.retailRevenue : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Operational Format"
               value={(data && data.retailer) ? data?.retailer?.operationalFormat : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Number countries of operation"
               value={(data && data.retailer) ? data?.retailer?.countriesOfOperation : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
           </Stack>
-          <Divider sx={{ m: 1 }} />
+          <Divider sx={{ mt: 1 }} />
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
@@ -104,7 +106,7 @@ export function RetailerDetails() {
               <CampaignList retailerId={params.retailerId} />
             </AccordionDetails>
           </Accordion>
-          <Divider sx={{ m: 1 }} />
+          <Divider sx={{ mt: 1 }} />
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}

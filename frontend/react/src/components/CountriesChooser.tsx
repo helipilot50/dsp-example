@@ -5,6 +5,7 @@ import { AllCountriesQuery, AllCountriesQueryVariables, Country } from 'not-dsp-
 import Autocomplete from '@mui/material/Autocomplete';
 import { Box, TextField } from '@mui/material';
 import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 
@@ -27,6 +28,7 @@ function CountriesChooser({
   selectedValues,
   countryChange
 }: CountriesChooserProps) {
+  const { showBoundary } = useErrorBoundary();
   //countries
   const { data, loading, error } = useQuery<AllCountriesQuery, AllCountriesQueryVariables>(ALL_COUNTRIES, {
     fetchPolicy: 'cache-first',
@@ -44,18 +46,17 @@ function CountriesChooser({
 
   if (error) {
     console.error('[CountriesChooser] error', error);
-    return (<div>Failed to load countries with error: ${error.message}</div>);
+    showBoundary(error);
   }
   if (loading)
     return (<div>Loading countries...</div>);
 
 
-  console.log('[CountriesChooser] countries', elements);
-  console.log('[CountriesChooser] inputValues', inputValues);
+  console.debug('[CountriesChooser] countries', elements);
+  console.debug('[CountriesChooser] inputValues', inputValues);
 
   return (
     <>
-      {error && <ErrorNofification error={error} />}
       <Autocomplete
         id={id}
         disabled={disabled}
@@ -67,7 +68,7 @@ function CountriesChooser({
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.log('[CountriesChooser] onChange', newValue);
+          console.debug('[CountriesChooser] onChange', newValue);
           countryChange && countryChange(newValue as Country[]);
         }}
         autoHighlight
