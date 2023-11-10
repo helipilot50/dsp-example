@@ -1,0 +1,52 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Lineitem: {{lineitem.id}}</mat-card-title>
+    <mat-card-subtitle *ngIf="lineitem && lineitem.campaign">Campaign: {{lineitem.campaign.name}}</mat-card-subtitle>
+    <div *ngIf="loading">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+    <div *ngIf="error">
+      <p>Error: {{ error }}</p>
+    </div>
+  </mat-card-header>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="onFormSubmit()">{{(isNew)?'Create':'Save'}}</button>
+    <button mat-raised-button  (click)="activate()">Activate</button>
+    <button mat-raised-button (click)="deactivate()" >Pause</button>
+  </mat-card-actions>
+  <mat-card-content>
+    <p>
+      <mat-form-field appearance="fill"  >
+        <mat-label>Name:</mat-label>
+        <input matInput type="text" placeholder="name" matInput [(ngModel)]="lineitem.name">
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="fill" *ngIf="!isNew" >
+        <mat-label>Status:</mat-label>
+        <mat-select [(ngModel)]="lineitem.status">
+          <mat-option *ngFor="let status of statusValues" [value]="status">
+            {{status}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </p>
+
+    <p>
+      <mat-form-field appearance="fill"  >
+        <mat-label>Start - End:</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+          <input matStartDate placeholder="Start date" [(ngModel)]="lineitem.startDate">
+          <input matEndDate placeholder="End date" [(ngModel)]="lineitem.endDate">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+    </p>
+  </mat-card-content>
+</mat-card>
+
+
+

@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -20,6 +18,8 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import BrandingWatermarkIcon from '@mui/icons-material/BrandingWatermark';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import StoreIcon from '@mui/icons-material/Store';
+import LibraryBooks from '@mui/icons-material/LibraryBooks';
 import { useNavigate, useLocation, Link as RouterLink, Outlet } from 'react-router-dom';
 
 import BreadCrumbs from '@mui/material/Breadcrumbs';
@@ -165,7 +165,7 @@ export function Nav() {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            <MenuIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -195,20 +195,31 @@ export function Nav() {
                 <ListItemText primary='Brands' />
               </ListItemButton>
             </ListItem>
-            <ListItem key='menuSkus' disablePadding >
-              <ListItemButton onClick={() => { navigate(`/skus`); }}>
+            <ListItem key='menuProducts' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/products`); }}>
                 <ListItemIcon>
                   <InventoryIcon />
                 </ListItemIcon>
-                <ListItemText primary='SKUs' />
+                <ListItemText primary='Products' />
               </ListItemButton>
             </ListItem>
             <ListItem key='menuRetailers' disablePadding >
               <ListItemButton onClick={() => { navigate(`/retailers`); }}>
                 <ListItemIcon>
-                  <InventoryIcon />
+                  <StoreIcon />
                 </ListItemIcon>
                 <ListItemText primary='Retailers' />
+              </ListItemButton>
+            </ListItem>
+            <Divider component="li">
+              Administration
+            </Divider>
+            <ListItem key='menuPortfolios' disablePadding >
+              <ListItemButton onClick={() => { navigate(`/portfolios`); }}>
+                <ListItemIcon>
+                  <LibraryBooks />
+                </ListItemIcon>
+                <ListItemText primary='Portfolios' />
               </ListItemButton>
             </ListItem>
           </SignedIn >

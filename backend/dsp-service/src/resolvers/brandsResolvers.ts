@@ -19,17 +19,29 @@ export const brandResolvers/*: Resolvers*/ = {
         const limit = args.limit || 100;
         let rowCount: Number | undefined = undefined;
         let rows: any[] = [];
-        // select brands and take by offset and limit
-        if (topLevelFields?.includes('brands')) {
+        if (args.brandIds) {
+          // select brands by ids
           rows = await context.prisma.brand.findMany({
-            // select: {
-            //   id: true,
-            //   name: true,
-            // },
+            where: {
+              id: {
+                in: args.brandIds as string[]
+              }
+            },
             skip: offset,
             take: limit
           });
-        }
+        } else
+          // select brands and take by offset and limit
+          if (topLevelFields?.includes('brands')) {
+            rows = await context.prisma.brand.findMany({
+              // select: {
+              //   id: true,
+              //   name: true,
+              // },
+              skip: offset,
+              take: limit
+            });
+          }
 
         // row count
         if (topLevelFields?.includes('totalCount')) {
@@ -38,7 +50,7 @@ export const brandResolvers/*: Resolvers*/ = {
 
         context.logger.debug(`all ${JSON.stringify(rows, undefined, 2)} , ${rowCount}`);
         return {
-          brands: rows,
+          brands: rows || [],
           offset,
           limit,
           totalCount: rowCount

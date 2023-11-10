@@ -2,14 +2,16 @@ import {
   RetailersQuery,
   RetailersQueryVariables,
   RetailerList as Retailers,
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { Box, Paper, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { QueryResult, useQuery } from '@apollo/client';
-import { RETAILER_LIST } from '../graphql/retailer.graphql';
+import { RETAILER_LIST } from 'not-dsp-graphql';
 import { useEffect, useState } from 'react';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
+import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -53,6 +55,7 @@ export function AllRetailerList() {
 
 export function RetailerList(props: { query: QueryResult<RetailersQuery, RetailersQueryVariables>; }) {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [retailerList, setRetailerList] = useState<Retailers>({ retailers: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
   const { data, error, loading, fetchMore } = props.query;
 
@@ -90,17 +93,18 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
     });
     return;
   }
-  console.log('[RetailerList] result', data, error, loading);
-  console.log('[RetailerList] pagination', retailerList);
+  if (error) showBoundary(error);
+  console.debug('[RetailerList] result', data, error, loading);
+  console.debug('[RetailerList] pagination', retailerList);
 
   return (
-    <Paper square={false}
-      elevation={6}>
-      <Box sx={{ m: 2 }}>
-        {error && <p>Error: {error.message}</p>}
-        <Typography variant="h6" gutterBottom>Retailers</Typography>
+    <Card elevation={6} >
+      <CardHeader title={'Retailers'} />
+      <CardHeader subheader={'Click on a Retailer to see details'} />
+      <CardContent>
         <DataGrid
-          sx={{ minHeight: 400 }}
+          sx={{ minHeight: '400px' }}
+          className='DataGrid'
           rows={(retailerList.retailers) ? retailerList.retailers : []}
           columns={columns}
           loading={loading}
@@ -113,6 +117,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
             },
           }}
           rowCount={retailerList.totalCount || 0}
+          rowHeight={25}
           paginationMode='server'
           pageSizeOptions={[LIMIT_DEFAULT]}
           onPaginationModelChange={({ pageSize, page }) => {
@@ -121,7 +126,7 @@ export function RetailerList(props: { query: QueryResult<RetailersQuery, Retaile
           }}
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }

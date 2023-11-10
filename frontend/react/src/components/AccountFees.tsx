@@ -1,56 +1,51 @@
-import { AccountFee } from '../graphql/types';
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { AccountFee } from 'not-dsp-graphql';
+import { Box, Card, CardContent, CardHeader, FormControl, Stack, TextField, Typography } from '@mui/material';
 
 export interface AccountFeesProps {
-  fee?: AccountFee | undefined;
+  fee: AccountFee;
   disabled?: boolean;
 }
 
-export function AccountFees(props: AccountFeesProps) {
+export function AccountFees({ fee, disabled }: AccountFeesProps) {
   return (
-    <Box
-      sx={{
-        width: 200,
-        height: 200,
-      }}
-    >
-      <Typography variant="h6" gutterBottom>
-        Fees
-      </Typography>
-      <TextField
+    <Stack direction='row' sx={{ mt: 1 }}>
+      <TextField sx={{ width: '33%' }}
         required
         id="demandSideFee"
         name="demandSideFee"
         label="Demand Side Fee"
-        // fullWidth
+        fullWidth
         autoComplete="demandSideFee"
-        value={props.fee?.demandSideFee || 0}
+        value={fee.demandSideFee || 0}
         type='number'
         variant='outlined'
-        disabled={props.disabled}
+        disabled={disabled}
+        size='small'
       />
-      <TextField
+      <TextField sx={{ width: '33%', ml: 1 }}
         id="supplySideFee"
         name="supplySideFee"
         label="Supply Side Fee"
-        // fullWidth
-        value={props.fee?.supplySideFee || 0}
+        fullWidth
+        value={fee?.supplySideFee || 0}
         type='number'
         variant='outlined'
-        disabled={props.disabled}
+        disabled={disabled}
+        size='small'
       />
-      <TextField
+      <TextField sx={{ width: '33%', ml: 1 }}
         required
         id="accountServicingFee"
         name="accountServicingFee"
         label="Account Service Fee"
-        // fullWidth
+        fullWidth
         autoComplete="accountServicingFee"
-        value={props.fee?.accountServicingFee || 0}
+        value={fee?.accountServicingFee || 0}
         type='number'
         variant='outlined'
-        disabled={props.disabled}
+        disabled={disabled}
+        size='small'
       />
-    </Box>
+    </Stack>
   );
 }

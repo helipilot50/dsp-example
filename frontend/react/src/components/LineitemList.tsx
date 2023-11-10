@@ -1,15 +1,17 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router';
-import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from '../graphql/campaigns.graphql';
+import { LINEITEMS_ACTIVATE, LINEITEM_LIST, LINEITEMS_PAUSE } from 'not-dsp-graphql';
 import { DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams } from '@mui/x-data-grid';
-import { Box, Button, ButtonGroup, Paper, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CardActionArea, CardContent, CardHeader, Paper, Typography } from '@mui/material';
 import {
   MutationActivateLineitemsArgs, LineitemsQuery,
   LineitemsQueryVariables, Scalars, ActivateLineitemsMutation
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { dateFormatter } from '../lib/utility';
 import { useEffect, useState } from 'react';
-import { LIMIT_DEFAULT } from './ListDefaults';
+import { LIMIT_DEFAULT } from '../lib/ListDefaults';
+import { ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 
 const columns: GridColDef[] = [
@@ -49,20 +51,10 @@ export interface LineitemListProps {
   campaignId?: Scalars['ID'];
 }
 
-export function LineitemsMain(props: LineitemListProps) {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Lineitems
-      </Typography>
-      <LineitemList campaignId={props.campaignId} />
-    </div>
-  );
-}
-
 export function LineitemList(props: LineitemListProps) {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
 
   // const accountId = params.accountId;
   // const campaignId = params.campaignId;
@@ -154,24 +146,28 @@ export function LineitemList(props: LineitemListProps) {
   function addLineitem() {
     navigate(`lineitems/new`);
   }
-
-  console.log('Lineitem list', params, data);
+  if (error) showBoundary(error);
+  console.debug('Lineitem list', params, data);
   return (
-    <Paper square={false}
-      elevation={6}>
-      {error && <p>Error: {error.message}</p>}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Lineitem to see details</Typography>
+    <Card elevation={6}>
+      <CardHeader title={'Lineitems'} />
+      <CardHeader subheader={'Click on a Lineitem to see details'} />
+      <CardActionArea sx={{ ml: 2 }}>
         <ButtonGroup variant="contained" aria-label="activation-group">
           <Button onClick={addLineitem}>New</Button>
-          <Button onClick={activate}>Activate</Button>
-          <Button onClick={pause}>Pause</Button>
+          <Button onClick={activate} variant="outlined">Activate</Button>
+          <Button onClick={pause} variant="outlined">Pause</Button>
         </ButtonGroup>
+      </CardActionArea>
+      <CardContent >
+
         <DataGrid
+          className='DataGrid'
           rows={(data?.lineitems) ? data?.lineitems?.lineitems : [] as any}
           columns={columns}
           loading={loading}
           rowCount={rowCountState}
+          rowHeight={25}
           pageSizeOptions={[LIMIT_DEFAULT]}
           paginationMode="server"
           paginationModel={paginationModel}
@@ -183,8 +179,8 @@ export function LineitemList(props: LineitemListProps) {
           }
           onRowSelectionModelChange={selectionCanged}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 

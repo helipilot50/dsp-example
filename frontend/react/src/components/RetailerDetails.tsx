@@ -5,17 +5,21 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Card, CardContent, CardHeader, LinearProgress,
+  Card, CardContent, CardHeader, Divider, LinearProgress,
   Paper, Stack, TextField, Typography
 } from '@mui/material';
 // import FormControl from '@mui/material/FormControl';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { RetailerQuery, RetailerQueryVariables } from '../graphql/types';
-import { RETAILER_DETAILS } from '../graphql/retailer.graphql';
+import { RetailerQuery, RetailerQueryVariables } from 'not-dsp-graphql';
+import { RETAILER_DETAILS } from 'not-dsp-graphql';
 import { CampaignList } from './CampaignList';
+import { ErrorNofification } from './error/ErrorBoundary';
+import { AccountList } from './AccountList';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function RetailerDetails() {
   const params = useParams();
+  const { showBoundary } = useErrorBoundary();
 
   const { data, loading, error } = useQuery<RetailerQuery, RetailerQueryVariables>(RETAILER_DETAILS,
     {
@@ -23,13 +27,13 @@ export function RetailerDetails() {
         retailerId: params.retailerId || 'no-id',
       }
     });
-
-  console.log('params', params);
+  if (error) showBoundary(error);
+  console.debug('params', params);
   return (
     <Paper square={false}
       elevation={6}
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '55ch' },
+        '& .MuiTextField-root': { mt: 1, width: '55ch' },
       }}>
       <Card>
         <CardHeader
@@ -41,14 +45,14 @@ export function RetailerDetails() {
           autoComplete="off"
         >
           {loading && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
+          {error && <ErrorNofification error={error} />}
           <Stack >
             <TextField
               label="ID"
               value={(data && data.retailer) ? data?.retailer?.id : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Name"
               value={(data && data.retailer) ? data?.retailer?.name : ''} />
@@ -57,48 +61,62 @@ export function RetailerDetails() {
               value={(data && data.retailer) ? data?.retailer?.status : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Country of Origin"
               value={(data && data.retailer) ? data?.retailer?.countryOfOrigin : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Ranking"
               value={(data && data.retailer) ? data?.retailer?.rank : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Retail Revenue (m) USD"
               value={(data && data.retailer) ? data?.retailer?.retailRevenue : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Operational Format"
               value={(data && data.retailer) ? data?.retailer?.operationalFormat : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
             <TextField
               label="Number countries of operation"
               value={(data && data.retailer) ? data?.retailer?.countriesOfOperation : ''}
               InputProps={{
                 readOnly: true,
-              }} />
+              }} size='small' />
           </Stack>
+          <Divider sx={{ mt: 1 }} />
           <Accordion>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              aria-controls="campaigns-content"
+              id="campaigns-header"
             >
               <Typography>Campaigns</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <CampaignList retailerId={params.retailerId} />
+            </AccordionDetails>
+          </Accordion>
+          <Divider sx={{ mt: 1 }} />
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="accounts-content"
+              id="accounts-header"
+            >
+              <Typography>Accounts</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <AccountList retailerId={params.retailerId} />
             </AccordionDetails>
           </Accordion>
         </CardContent>

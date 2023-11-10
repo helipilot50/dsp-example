@@ -1,22 +1,28 @@
 #!/bin/bash
 echo "Building frontend..."
-mkdir -p publish
-echo "created publish folder"
+
+# not-dsp-graphql
+echo "building not-dsp-graphql"
+cd not-dsp-graphql
+yarn install
+yarn build
+cd ..
 
 # React
-mkdir -p publish/react
-cd react
-yarn build
-cd ..
-echo "built react"
-cp -r react/build/* publish/react
-echo "copied react to publish"
+if [[ $1 == React ]]; then
+  echo "*** building react *** "
+  cd react
+  yarn install
+  yarn build
+  cd ..
+fi
 
 # Angular
-mkdir -p publish/angular
-cd angular
-yarn build
-cd ..
-echo "built angular"
-cp -r angular/dist/not-dsp-angular/* publish/angular
-echo "copied angular to publish"
+if [[ $1 == Angular ]]; then
+  echo "*** building angular ***"
+  cd angular
+  yarn install
+  yarn build
+  cd ..
+fi
+

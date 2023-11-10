@@ -1,11 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { Box, Paper, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, Card, CardContent, CardHeader, Paper, Snackbar, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { BRANDS_LIST } from '../graphql/brands.graphql';
-import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from '../graphql/types';
-import { LIMIT_DEFAULT, OFFSET_DEFAULT } from './ListDefaults';
+import { BRANDS_LIST } from 'not-dsp-graphql';
+import { BrandsQuery, BrandsQueryVariables, BrandList as Brands } from 'not-dsp-graphql';
+import { LIMIT_DEFAULT, OFFSET_DEFAULT } from '../lib/ListDefaults';
+import { ErrorBoundary, ErrorNofification } from './error/ErrorBoundary';
+import { useErrorBoundary } from 'react-error-boundary';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 90 },
@@ -33,19 +35,10 @@ const columns: GridColDef[] = [
 
 ];
 
-export function BrandsMain() {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>Brands</Typography>
-      <BrandList />
-    </div>
-  );
-}
-
 export function BrandList() {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const [brandList, setBrandList] = useState<Brands>({ brands: [], offset: OFFSET_DEFAULT, limit: LIMIT_DEFAULT, totalCount: LIMIT_DEFAULT });
-
   const { data, error, loading, fetchMore } = useQuery<BrandsQuery, BrandsQueryVariables>(
     BRANDS_LIST,
     {
@@ -92,37 +85,41 @@ export function BrandList() {
     return;
   }
 
-  console.log('[BrandList] result', data, error, loading);
-  console.log('[BrandList] pagination', brandList);
+
+  console.debug('[BrandList] result', data, error, loading);
+  console.debug('[BrandList] pagination', brandList);
+  if (error) showBoundary(error);
   return (
-    <Paper square={false}
-      elevation={6}>
-      {error && <p>Error: {error.message}</p>}
-      <Box m={2}>
-        <Typography variant="h6" gutterBottom>Click on a Brand to see details</Typography>
-        <DataGrid
-          sx={{ minHeight: 400 }}
-          rows={(brandList && brandList.brands) ? brandList.brands : []}
-          columns={columns}
-          loading={loading}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: LIMIT_DEFAULT,
-                page: OFFSET_DEFAULT / LIMIT_DEFAULT,
+    <ErrorBoundary>
+      <Card elevation={6}>
+        <CardHeader title={'Brands'} />
+        <CardHeader subheader={'Click on a Brand to see details'} />
+        <CardContent>
+          <DataGrid
+            className='DataGrid'
+            rows={(brandList && brandList.brands) ? brandList.brands : []}
+            columns={columns}
+            loading={loading}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: LIMIT_DEFAULT,
+                  page: OFFSET_DEFAULT / LIMIT_DEFAULT,
+                },
               },
-            },
-          }}
-          rowCount={brandList.totalCount || LIMIT_DEFAULT}
-          pageSizeOptions={[LIMIT_DEFAULT]}
-          paginationMode="server"
-          onPaginationModelChange={({ pageSize, page }) => {
-            console.debug("[BrandList.onPaginationModelChange]", page, pageSize);
-            fetchNext(pageSize * page, pageSize);
-          }}
-          onRowClick={(row) => navigate(`${row.row.id}`)}
-        />
-      </Box>
-    </Paper>
+            }}
+            rowHeight={25}
+            rowCount={brandList.totalCount || LIMIT_DEFAULT}
+            pageSizeOptions={[LIMIT_DEFAULT]}
+            paginationMode="server"
+            onPaginationModelChange={({ pageSize, page }) => {
+              console.debug("[BrandList.onPaginationModelChange]", page, pageSize);
+              fetchNext(pageSize * page, pageSize);
+            }}
+            onRowClick={(row) => navigate(`${row.row.id}`)}
+          />
+        </CardContent>
+      </Card>
+    </ErrorBoundary>
   );
 }

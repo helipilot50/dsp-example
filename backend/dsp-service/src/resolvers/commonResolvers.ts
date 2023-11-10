@@ -1,8 +1,6 @@
 import { GraphQLResolveInfo } from "graphql";
-import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
-import { Country } from "@prisma/client";
-import { QueryCountriesArgs, CountryCode, CurrencyCode, QueryCountryArgs, QueryCurrenciesArgs, QueryCurrencyArgs } from "../resolver-types";
+import { QueryCountriesArgs, QueryCountryArgs, QueryCurrenciesArgs, QueryCurrencyArgs } from "../resolver-types";
 
 export const commonResolvers/*: Resolvers*/ = {
   Query: {

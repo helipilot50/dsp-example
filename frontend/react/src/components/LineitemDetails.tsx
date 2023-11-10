@@ -2,7 +2,7 @@ import {
   TextField, LinearProgress,
   Paper, Button, ButtonGroup, Stack, Alert, AlertTitle,
   Collapse, Card, CardContent, CardHeader,
-  CardActions
+  CardActions, Snackbar
 } from '@mui/material';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { DateRange, SingleInputDateRangeField } from '@mui/x-date-pickers-pro';
@@ -10,7 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   LINEITEMS_ACTIVATE, LINEITEMS_PAUSE, LINEITEM_DETAILS,
   LINEITEM_LIST, LINEITEM_ACTIVATED, LINEITEM_NEW, LINEITEM_PAUSED
-} from '../graphql/campaigns.graphql';
+} from 'not-dsp-graphql';
 import { useMutation, useQuery, useSubscription, ApolloError } from '@apollo/client';
 import {
   ActivateLineitemsMutation, BudgetType, Lineitem, LineitemActivatedSubscription,
@@ -18,13 +18,16 @@ import {
   LineitemQuery, LineitemQueryVariables, LineitemStatus, MutationActivateLineitemsArgs,
   MutationPauseLineitemsArgs,
   NewLineitem, NewLineitemMutation, NewLineitemMutationVariables, PauseLineitemsMutation
-} from '../graphql/types';
+} from 'not-dsp-graphql';
 import { useMemo, useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
+import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
+import { useErrorBoundary } from 'react-error-boundary';
 
 export function LineitemDetails() {
   const params = useParams();
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const accountId = params.accountId;
   const campaignId = params.campaignId;
   const [isNew] = useState(params.lineitemId === 'new');
@@ -55,7 +58,7 @@ export function LineitemDetails() {
 
   useEffect(() => {
     if (data && data.lineitem) {
-      console.log('[LineitemDetails] data', data);
+      console.debug('[LineitemDetails] data', data);
       setLineitem({
         ...data.lineitem,
         startDate: new Date(data.lineitem.startDate || ''),
@@ -160,7 +163,6 @@ export function LineitemDetails() {
     };
     console.debug('[LineitemDetails.createLineitem] newLineitem', newLineitem, campaignId, accountId);
     addLineitem({
-      mutation: LINEITEM_NEW,
       variables: {
         campaignId: campaignId as string,
         lineitem: newLineitem
@@ -180,79 +182,79 @@ export function LineitemDetails() {
     });
 
   }
+  if (error) showBoundary(error);
+
   const dates: DateRange<Dayjs> = [dayjs(lineitem.startDate || new Date()), dayjs(lineitem.endDate || new Date())];
 
-  console.log('[LineitemDetails] params data', params, data);
+  console.debug('[LineitemDetails] params data', params, data);
   return (
-    <Paper square={false}
-      elevation={6}
+    <Card elevation={6}
       sx={{
-        '& .MuiTextField-root': { m: 1, width: '50ch' },
-      }}
-    >
-      <Card >
-        <CardHeader
-          title={`Lineitem: ${lineitemId}`}
-          subheader={`for campaign: ${(data) ? data.lineitem?.campaign?.name : ''}`}
-        />
-        <CardActions>
-          <ButtonGroup variant="contained" aria-label="activation-group">
-            <Button type='submit'>{isNew ? 'Create' : 'Save'}</Button>
-            {!isNew && <Button onClick={activate}>Activate</Button>}
-            {!isNew && <Button onClick={pause} >Pause</Button>}
-          </ButtonGroup>
-        </CardActions>
-        <CardContent component="form"
-          onSubmit={onFormSubmit}
-          noValidate
-          autoComplete="off"
-        >
-          {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
-          {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
-          {loading && <LinearProgress variant="query" />}
-          {error && <p>Error: {error.message}</p>}
+        '& .MuiTextField-root': { mt: 1, width: '50ch' },
+      }}>
+      <CardHeader
+        title={`Lineitem: ${lineitemId}`}
+        subheader={`for campaign: ${(data) ? data.lineitem?.campaign?.name : ''}`}
+      />
+      <CardActions sx={{ ml: 2 }}>
+        <ButtonGroup variant="contained" aria-label="activation-group">
+          <Button type='submit'>{isNew ? 'Create' : 'Save'}</Button>
+          {!isNew && <Button onClick={activate} variant="outlined">Activate</Button>}
+          {!isNew && <Button onClick={pause} variant="outlined">Pause</Button>}
+        </ButtonGroup>
+      </CardActions>
+      <CardContent component="form"
+        onSubmit={onFormSubmit}
+        noValidate
+        autoComplete="off"
+      >
+        {!isNew && <LineItemActivated lineitemId={lineitem.id} />}
+        {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
+        {loading && <LinearProgress variant="query" />}
 
-          <Stack>
-            <TextField
-              label="Name"
-              name="name"
-              id='name'
-              value={lineitem.name}
-              onChange={handleInputChange} />
-            <TextField
-              name='status'
-              id='status'
-              label="Status"
-              value={lineitem.status}
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <DateRangePicker
-              label="Start - End"
-              slots={{ field: SingleInputDateRangeField }}
-              localeText={{ start: 'start date', end: 'end date' }}
-              value={dates}
-              onChange={(newValue: DateRange<Dayjs>) => {
-                console.log('[LineitemDetails] new DateRange', newValue);
-                const startDate = newValue[0]?.toDate();
-                const endDate = newValue[1]?.toDate();
-                setLineitem({
-                  ...lineitem,
-                  startDate: startDate,
-                  endDate: endDate
-                });
-              }}
-            />
+        <Stack>
+          <TextField
+            label="Name"
+            name="name"
+            id='name'
+            value={lineitem.name}
+            onChange={handleInputChange}
+            size='small' />
+          <TextField
+            name='status'
+            id='status'
+            label="Status"
+            value={lineitem.status}
+            InputProps={{
+              readOnly: true,
+            }}
+            size='small'
+          />
+          <DateRangePicker
+            label="Start - End"
+            slots={{ field: SingleInputDateRangeField }}
+            localeText={{ start: 'start date', end: 'end date' }}
+            value={dates}
+            onChange={(newValue: DateRange<Dayjs>) => {
+              console.debug('[LineitemDetails] new DateRange', newValue);
+              const startDate = newValue[0]?.toDate();
+              const endDate = newValue[1]?.toDate();
+              setLineitem({
+                ...lineitem,
+                startDate: startDate,
+                endDate: endDate
+              });
+            }}
+          />
 
-            <TextField
-              label="Budget"
-              value={(lineitem.budget) ? lineitem.budget.amount : 0}
-              type='number' />
-          </Stack>
-        </CardContent>
-      </Card>
-    </Paper >
+          <TextField
+            label="Budget"
+            value={(lineitem.budget) ? lineitem.budget.amount : 0}
+            type='number'
+            size='small' />
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -264,37 +266,29 @@ export function LineItemActivated(props: { lineitemId: string; }) {
         lineitemId: props.lineitemId
       }
     });
-  const [message, setMessage] = useState<string>('');
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (activated) {
-      setOpen(true);
-      setMessage(activated?.lineitemActivated.name + ' activated at ' + new Date().toLocaleString());
+      setState({ open: true, message: activated?.lineitemActivated.name + ' activated at ' + new Date().toLocaleString() });
     }
   }, [activated]);
 
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [activated]);
-
-  console.log('[LineItemActivated] activated', activated);
+  console.debug('[LineItemActivated] activated', activated);
 
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose} severity='success'>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 
@@ -307,59 +301,28 @@ export function LineItemPaused(props: { lineitemId: string; }) {
         lineitemId: props.lineitemId
       }
     });
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>('');
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (paused) {
-      setOpen(true);
-      setMessage(paused?.lineitemPaused.name + ' paused at ' + new Date().toLocaleString());
+      setState({ open: true, message: paused?.lineitemPaused.name + ' paused at ' + new Date().toLocaleString() });
     }
   }, [paused]);
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [paused]);
 
-  console.log('[LineItemPaused] paused', paused);
+  console.debug('[LineItemPaused] paused', paused);
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 
-export function LineItemNotify(props: { isOpen: boolean; message: string; }) {
-  // experimental and buggy
-
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>('');
-  useEffect(() => {
-    setOpen(props.isOpen);
-  }, [props.isOpen]);
-  useEffect(() => {
-    setMessage(`${props.message} at ${new Date().toLocaleString()}`);
-  }, [props.message]);
-
-  console.log('[LineItemNotify] message', props.message);
-
-  return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>{message}</AlertTitle>
-      </Alert>
-    </Collapse >
-  );
-}

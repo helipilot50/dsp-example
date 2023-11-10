@@ -10,6 +10,7 @@ scalar Money
 
 extend type Mutation {
   configureTOP: Boolean
+  addTaxonomyManually(skyKey: ID!, taxonomy: [String!]!): SKU
   updateSKUs(skuUpdates: [SKUUpdate]): [SKU]
 }
 
@@ -27,7 +28,7 @@ input SKUUpdate {
 
 extend type Subscription {
   skuInformationModified: [SKU]
-  taxonomyManuallyAdded: Taxonomy
+  taxonomyManuallyAdded: [Taxonomy]
 }
 
 # read model

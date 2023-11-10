@@ -1,0 +1,72 @@
+<h1>Brand details</h1>
+<div *ngIf="loading">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+</div>
+<div *ngIf="error">
+  <p>Error: {{ error }}</p>
+</div>
+<div *ngIf="brand" class="detailForm">
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>ID:</mat-label>
+      <input matInput value="{{brand.id}}" readonly>
+    </mat-form-field>
+  </p>
+
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Name:</mat-label>
+      <input matInput value="{{brand.name}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Country:</mat-label>
+      <input matInput value="{{brand.country}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Country:</mat-label>
+      <input matInput value="{{brand.country}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Industry:</mat-label>
+      <input matInput value="{{brand.industry}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Founded in:</mat-label>
+      <input matInput value="{{brand.foundedIn}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Founded by:</mat-label>
+      <input matInput value="{{brand.foundedBy}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Rank:</mat-label>
+      <input matInput value="{{brand.rank}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Rating:</mat-label>
+      <input matInput value="{{brand.rating}}">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field class="formField">
+      <mat-label>Brand Value USD(m):</mat-label>
+      <input matInput value="{{brand.brandValue}}">
+    </mat-form-field>
+  </p>
+
+</div>

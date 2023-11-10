@@ -1,0 +1,32 @@
+{
+  "name": "not-dsp-graphql",
+  "version": "1.0.4",
+  "description": "",
+  "main": "dist/not-dsp-graphql.js",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "yarn codegen && rimraf dist && tsc --build ./tsconfig.build.json && webpack --mode production",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.8.6",
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-apollo-angular": "^3.5.6",
+    "@graphql-codegen/typescript-operations": "^3.0.2",
+    "css-loader": "^6.8.1",
+    "sass": "^1.69.4",
+    "sass-loader": "^13.3.2",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

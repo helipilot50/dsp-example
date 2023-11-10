@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 
-import { ExpressContextFunctionArgument, expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { createServer } from 'http';
@@ -18,6 +18,11 @@ import { buildSubgraphSchema } from '@apollo/subgraph';
 import { schemaFromDirectory } from './fetchSchema';
 import gql from 'graphql-tag';
 
+import {
+  hasPermissions,
+  applyDirectivesToSchema
+} from '@profusion/apollo-validation-directives';
+
 // SSE
 // import { createHandler } from 'graphql-sse/lib/use/express';
 
@@ -26,6 +31,7 @@ import { resolvers } from './resolvers';
 import { DspContext, makeRequestContext, pubsub, prisma, makeWebSocketContext } from './context';
 
 import { corsOptions } from './cors';
+import { ClerkExpressWithAuth, LooseAuthProp, WithAuthProp } from '@clerk/clerk-sdk-node';
 
 const PORT = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 4000;
 
@@ -64,11 +70,17 @@ async function listen() {
 
     logger.info(`[server] building schema`);
 
+
     const graphSchema = buildSubgraphSchema({
       typeDefs: defs,
       resolvers: resolvers,
 
     });
+
+    const schemaWithPermissions = applyDirectivesToSchema(
+      [hasPermissions],
+      graphSchema
+    );
 
     //---------------------------------------------------------------------------------
     //   socket server for subscriptions
@@ -86,7 +98,7 @@ async function listen() {
     // WebSocketServer start listening.
     const serverCleanup = useServer({
       schema: graphSchema,
-      context: async (args: ExpressContextFunctionArgument) => {
+      context: async (args: any) => {
         return makeWebSocketContext(args);
       },
       onConnect: async (ctx: any) => {
@@ -125,7 +137,7 @@ async function listen() {
 
     const server = new ApolloServer<DspContext>(
       {
-        schema: graphSchema,
+        schema: schemaWithPermissions,//graphSchema,
         cache: new InMemoryLRUCache({
           // ~100MiB
           maxSize: Math.pow(2, 20) * 100,
@@ -166,11 +178,14 @@ async function listen() {
       '/graphql',
       cors(corsOptions),
       json(),
-      expressMiddleware(server, {
-        context: async (args: ExpressContextFunctionArgument) => {
-          return makeRequestContext(args);
-        },
-      }),
+      // ClerkExpressWithAuth(),
+      expressMiddleware(server,
+        {
+          context: async (args: any) => {
+            return await makeRequestContext(args);
+          },
+        }
+      ),
     );
 
 

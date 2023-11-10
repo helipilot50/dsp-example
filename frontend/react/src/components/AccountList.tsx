@@ -1,16 +1,19 @@
 
 import { useQuery, useSubscription } from '@apollo/client';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ACCOUNTS_LIST, ACCOUNT_CREATED } from '../graphql/accounts.graphql';
+import { ACCOUNTS_LIST, ACCOUNT_CREATED } from 'not-dsp-graphql';
 import { useNavigate } from 'react-router';
-import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from '../graphql/types';
-import { Typography, Paper, Box, Button, Alert, AlertTitle, Collapse } from '@mui/material';
-import { LIMIT_DEFAULT } from './ListDefaults';
+import { AccountCreatedSubscription, AccountCreatedSubscriptionVariables, AccountsQuery, AccountsQueryVariables } from 'not-dsp-graphql';
+import { Button, Alert, AlertTitle, Collapse, Snackbar, Card, CardContent, CardHeader, CardActions } from '@mui/material';
+import { LIMIT_DEFAULT } from '../lib/ListDefaults';
 import { useState, useMemo, useEffect } from 'react';
+import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useErrorBoundary } from 'react-error-boundary';
+import { ErrorNofification } from './error/ErrorBoundary';
 
 
 const columns: GridColDef[] = [
-  // { field: 'id', headerName: 'ID', width: 90 },
   {
     field: 'name',
     headerName: 'Name',
@@ -30,37 +33,40 @@ const columns: GridColDef[] = [
     type: 'number',
     width: 110,
     valueGetter: (params) => {
-      return params.row.currency?.code;
+      return `${params.row.currency?.symbol} ${params.row.currency?.code}`;
     },
   },
 ];
 
-export function AccountsMain() {
-  return (
-    <div>
-      <Typography variant="h4" gutterBottom>Accounts</Typography>
-      <AccountList />
-    </div>
-  );
+export interface AccountListProps {
+  retailerId?: string;
+  allowCreate?: boolean;
 }
 
-export function AccountList() {
+export function AccountList(props: AccountListProps) {
   const navigate = useNavigate();
+  const { showBoundary } = useErrorBoundary();
   const { data, error, loading } = useQuery<AccountsQuery, AccountsQueryVariables>(
-    ACCOUNTS_LIST
+    ACCOUNTS_LIST,
+    {
+      variables: {
+        retailerId: props.retailerId || null,
+      },
+    }
   );
-
-
+  if (error) showBoundary(error);
   return (
-    <Paper square={false}
-      elevation={6}>
-      <Box m={2}>
-        {error && <p>Error: {error.message}</p>}
-        <Typography variant="h6" gutterBottom>Click on an account to see details</Typography>
-        <AccountCreated />
+
+    <Card elevation={6}>
+      <CardHeader title={'Accounts'} />
+      <CardHeader subheader={'Click on a Account to see details'} />
+      {props.allowCreate && <CardActions sx={{ ml: 2 }}>
         <Button variant='contained' onClick={() => navigate('new')}>New Account</Button>
+      </CardActions>}
+      <CardContent>
+        <AccountCreated />
         <DataGrid
-          sx={{ minHeight: 400 }}
+          className='DataGrid'
           rows={(data && data.accounts) ? data.accounts : []}
           columns={columns}
           loading={loading}
@@ -71,47 +77,44 @@ export function AccountList() {
               },
             },
           }}
+          rowHeight={25}
           pageSizeOptions={[LIMIT_DEFAULT]}
-          // checkboxSelection
           onRowClick={(row) => navigate(`${row.row.id}`)}
         />
-      </Box>
-    </Paper>
+      </CardContent>
+    </Card>
   );
 }
 
 export function AccountCreated() {
-  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED);
-  console.log('[AccountCreated] created', created);
+  const { showBoundary } = useErrorBoundary();
+  const { data: created } = useSubscription<AccountCreatedSubscription, AccountCreatedSubscriptionVariables>(ACCOUNT_CREATED, {
+    onError(error) {
+      showBoundary(error);
+    },
+  });
 
-  const [message, setMessage] = useState<string>('');
-  const [open, setOpen] = useState(false);
+  const [state, setState] = useState({ open: false, message: '' });
   useMemo(() => {
     if (created) {
-      setOpen(true);
-      setMessage(created?.accountCreated?.name + ' activated at ' + new Date().toLocaleString());
+      setState({ open: true, message: created?.accountCreated?.name + ' created at ' + new Date().toLocaleString() });
+      console.debug('[AccountCreated] created', created);
     }
   }, [created]);
 
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      // After 3 seconds set the show value to false
-      setOpen(false);
-    }, 3000);
-
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [created]);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
 
   return (
-    <Collapse in={open}>
-      <Alert onClose={() => {
-        setOpen(false);
-      }}>
-        <AlertTitle>Lineitem {message} </AlertTitle>
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Account {state.message} </AlertTitle>
       </Alert>
-    </Collapse >
+    </Snackbar >
   );
 }
 

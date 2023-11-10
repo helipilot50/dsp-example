@@ -27,7 +27,7 @@ export async function userByToken(token: string): Promise<User> {
 }
 
 export async function userById(id: string): Promise<User> {
-  const user = await clerkClient.users.getUser(id as string);
+  const user = await clerkClient.users.getUser(id);
   return user;
 }
 

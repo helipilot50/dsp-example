@@ -12,6 +12,7 @@ const config: CodegenConfig = {
           Money: 'number',
           GTIN: 'string',
           URL: 'string',
+          ID: 'string',
         },
         allowParentTypeOverride: true,
         mapperTypeSuffix: "Model",
@@ -25,6 +26,7 @@ const config: CodegenConfig = {
           Retailer: "@prisma/client/index.d#Retailer",
           Brand: "@prisma/client/index.d#Brand",
           Currency: "@prisma/client/index.d#Currency",
+          Portfolio: "@prisma/client/index.d#Portfolio",
         }
       }
     }

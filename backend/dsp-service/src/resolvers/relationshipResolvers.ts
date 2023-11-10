@@ -1,13 +1,14 @@
 // import { Lineitem, Campaign, Account } from "@prisma/client";
 import { GraphQLResolveInfo } from "graphql";
-import { scalarMoney } from "../MoneyResolver";
+import { scalarMoney } from "./MoneyResolver";
 import { DspContext } from "../context";
 import { brandResolvers } from "./brandsResolvers";
 import { accountResolvers } from './accountsResolvers';
 import { campaignsResolvers } from './campaignsResolvers';
 import { commonResolvers } from './commonResolvers';
-import { Account, Campaign, Lineitem, QueryBrandArgs, QueryBrandsArgs, QueryCampaignsArgs, QueryCountriesArgs, QueryLineitemsArgs, QueryRetailerArgs, QueryRetailersArgs, Retailer } from "../resolver-types";
+import { Account, Campaign, Lineitem, QueryAccountsArgs, QueryBrandArgs, QueryBrandsArgs, QueryCampaignsArgs, QueryCountriesArgs, QueryLineitemsArgs, QueryRetailerArgs, QueryRetailersArgs, Retailer } from "../resolver-types";
 import { retailerResolvers } from "./retailerResolvers";
+import { userById } from "../clerk";
 
 export const relationshipResolvers/*: Resolvers*/ = {
   Money: scalarMoney,
@@ -41,9 +42,9 @@ export const relationshipResolvers/*: Resolvers*/ = {
       };
       return campaignsResolvers.Query.campaigns(parent, campaignArgs, context, info);
     },
-    brands(parent: Account, args: any, context: DspContext, info: GraphQLResolveInfo) {
+    brands(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
       const brandsArgs: QueryBrandsArgs = {
-
+        brandIds: parent.brandIds
       };
       return brandResolvers.Query.brands(parent, brandsArgs, context, info);
     },
@@ -79,5 +80,49 @@ export const relationshipResolvers/*: Resolvers*/ = {
       };
       return campaignsResolvers.Query.campaigns(parent, campaignArgs, context, info);
     },
-  }
+  },
+  Portfolio: {
+    async users(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.info(`[relationshipResolvers.Portfolio.userIds] args ${JSON.stringify(parent.userIds, undefined, 2)}`);
+
+        const users = await Promise.all(parent.userIds.map((userId: string) => userById(userId)));
+        context.logger.info(`[relationshipResolvers.Portfolio.users] found ${JSON.stringify(users, undefined, 2)}`);
+        return users;
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.users] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    },
+    async accounts(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.debug(`[relationshipResolvers.Portfolio.accounts] accountIds ${JSON.stringify(parent.accountIds, undefined, 2)}`);
+        const accountsArgs: QueryAccountsArgs = {
+          accountIds: parent.accountIds
+        };
+
+        return accountResolvers.Query.accounts(null, accountsArgs, context, info);
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.accounts] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    },
+    async brands(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
+      try {
+        context.logger.debug(`[relationshipResolvers.Portfolio.brands] brandIds ${JSON.stringify(parent.accountIds, undefined, 2)}`);
+        const brandsArgs: QueryBrandsArgs = {
+          brandIds: parent.brandIds,
+          offset: 0,
+          limit: 100
+        };
+
+        const brandsResult = await brandResolvers.Query.brands(null, brandsArgs, context, info);
+        context.logger.debug(`[relationshipResolvers.Portfolio.brands] brandsResult ${JSON.stringify(brandsResult, undefined, 2)}`);
+        return brandsResult.brands;
+      } catch (err) {
+        context.logger.error(`[relationshipResolvers.Portfolio.brands] error ${JSON.stringify(err, undefined, 2)}`);
+        throw err;
+      }
+    }
+  },
 };

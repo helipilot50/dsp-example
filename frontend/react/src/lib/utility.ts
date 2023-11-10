@@ -6,3 +6,4 @@ export function dateFormatter(value: string | Date | undefined | null) {
   return data.toLocaleDateString();
 }
 
+export const SNACKBAR_AUTOHIDE_DURATION = 3000;
