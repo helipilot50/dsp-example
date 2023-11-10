@@ -217,7 +217,7 @@ export function PortfolioDetails() {
             size='small'
           />
           <TextField
-            minRows={5}
+            rows={5}
             multiline
             label="Description"
             name='description'

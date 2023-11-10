@@ -10,7 +10,7 @@ import { RetailerDetails } from './RetailerDetails';
 import { BrandDetails } from './BrandDetails';
 import { BrandList } from './BrandList';
 import { ProductDetails } from './ProductDetails';
-import { ProductsList } from './PoductList';
+import { ProductsList } from './ProductList';
 import { AllRetailerList } from './RetailerList';
 
 import { Dashboard } from './Dashboard';
