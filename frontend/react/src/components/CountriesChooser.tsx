@@ -84,6 +84,7 @@ function CountriesChooser({
       )}
       renderInput={(params) => (
         <TextField
+          label='Countries'
           {...params}
           // label="Country"
           inputProps={{
