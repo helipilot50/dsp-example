@@ -30,97 +30,91 @@ export function RetailerDetails() {
   if (error) showBoundary(error);
   console.debug('params', params);
   return (
-    <Paper square={false}
-      elevation={6}
-      sx={{
-        '& .MuiTextField-root': { mt: 1, width: '55ch' },
-      }}>
-      <Card>
-        <CardHeader
-          title={'Retailer'}
-        />
-        <CardContent
-          component="form"
-          noValidate
-          autoComplete="off"
-        >
-          {loading && <LinearProgress variant="query" />}
-          {error && <ErrorNofification error={error} />}
-          <Stack >
-            <TextField
-              label="ID"
-              value={(data && data.retailer) ? data?.retailer?.id : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Name"
-              value={(data && data.retailer) ? data?.retailer?.name : ''} />
-            <TextField
-              label="Status"
-              value={(data && data.retailer) ? data?.retailer?.status : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Country of Origin"
-              value={(data && data.retailer) ? data?.retailer?.countryOfOrigin : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Ranking"
-              value={(data && data.retailer) ? data?.retailer?.rank : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Retail Revenue (m) USD"
-              value={(data && data.retailer) ? data?.retailer?.retailRevenue : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Operational Format"
-              value={(data && data.retailer) ? data?.retailer?.operationalFormat : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-            <TextField
-              label="Number countries of operation"
-              value={(data && data.retailer) ? data?.retailer?.countriesOfOperation : ''}
-              InputProps={{
-                readOnly: true,
-              }} size='small' />
-          </Stack>
-          <Divider sx={{ mt: 1 }} />
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="campaigns-content"
-              id="campaigns-header"
-            >
-              <Typography>Campaigns</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <CampaignList retailerId={params.retailerId} />
-            </AccordionDetails>
-          </Accordion>
-          <Divider sx={{ mt: 1 }} />
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="accounts-content"
-              id="accounts-header"
-            >
-              <Typography>Accounts</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <AccountList retailerId={params.retailerId} />
-            </AccordionDetails>
-          </Accordion>
-        </CardContent>
-      </Card>
-    </Paper >
+    <Card elevation={6}>
+      <CardHeader
+        title={'Retailer'}
+      />
+      <CardContent
+        component="form"
+        noValidate
+        autoComplete="off"
+      >
+        {loading && <LinearProgress variant="query" />}
+        {error && <ErrorNofification error={error} />}
+        <Stack spacing={2}>
+          <TextField
+            label="ID"
+            value={(data && data.retailer) ? data?.retailer?.id : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Name"
+            value={(data && data.retailer) ? data?.retailer?.name : ''} />
+          <TextField
+            label="Status"
+            value={(data && data.retailer) ? data?.retailer?.status : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Country of Origin"
+            value={(data && data.retailer) ? data?.retailer?.countryOfOrigin : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Ranking"
+            value={(data && data.retailer) ? data?.retailer?.rank : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Retail Revenue (m) USD"
+            value={(data && data.retailer) ? data?.retailer?.retailRevenue : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Operational Format"
+            value={(data && data.retailer) ? data?.retailer?.operationalFormat : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+          <TextField
+            label="Number countries of operation"
+            value={(data && data.retailer) ? data?.retailer?.countriesOfOperation : ''}
+            InputProps={{
+              readOnly: true,
+            }} size='small' />
+        </Stack>
+        <Divider sx={{ mt: 1 }} />
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="campaigns-content"
+            id="campaigns-header"
+          >
+            <Typography>Campaigns</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <CampaignList retailerId={params.retailerId} />
+          </AccordionDetails>
+        </Accordion>
+        <Divider sx={{ mt: 1 }} />
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="accounts-content"
+            id="accounts-header"
+          >
+            <Typography>Accounts</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <AccountList retailerId={params.retailerId} />
+          </AccordionDetails>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 }

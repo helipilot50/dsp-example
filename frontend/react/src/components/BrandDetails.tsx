@@ -25,10 +25,7 @@ export function BrandDetails() {
   if (error) showBoundary(error);
   return (
 
-    <Card elevation={6}
-      sx={{
-        '& .MuiTextField-root': { mt: 1, width: '55ch' },
-      }}>
+    <Card elevation={6}>
       <CardHeader
         title={'Brand'}
         subheader={<Link
@@ -40,7 +37,7 @@ export function BrandDetails() {
         noValidate
         autoComplete="off">
         {loading && <LinearProgress variant="query" />}
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <TextField
             label="ID"
             value={(data && data.brand) ? data?.brand?.id : ''}

@@ -194,52 +194,40 @@ export function PortfolioDetails() {
   console.debug('[PortfolioDetails] portfolio', portfolio);
   return (
     <Card elevation={6}
-      sx={{
-        '& .MuiTextField-root': { mt: 1, width: '50ch' },
-      }}>
+    >
       <CardHeader
         title={`Portfolio: ${portfolioId}`} />
-      <CardActions sx={{ ml: 2 }}>
+      <CardActions >
         {isNew && <Button type="submit" variant='contained' onClick={onFormSubmit}>Create</Button>}
       </CardActions>
       <CardContent
+
         component="form"
         noValidate
         autoComplete="off"
       >
         {(loading || createLoading || mapUsersLoading) && <LinearProgress variant="query" />}
-        <Stack>
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <TextField
-              name="name"
-              id='name'
-              value={portfolio.name}
-              onChange={handleInputChange}
-              size='small'
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Description</FormLabel>
-            <TextareaAutosize minRows={5}
-              name='description'
-              id='description'
-              defaultValue={portfolio.description as string}
-              onChange={handleInputChange}
-            />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Users</FormLabel>
-            <UserChooser selectedValues={portfolio.users as User[]} chosenUsers={chosenUsers} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Accounts</FormLabel>
-            <AccountChooser selectedValues={portfolio.accounts as Account[]} chosenAccounts={chosenAccounts} />
-          </FormControl>
-          <FormControl>
-            <FormLabel>Brands</FormLabel>
-            <BrandChooser selectedValues={portfolio.brands as Brand[]} chosenBrands={chosenBrands} />
-          </FormControl>
+        <Stack spacing={2}>
+          <TextField
+            label="Name"
+            name="name"
+            id='name'
+            value={portfolio.name}
+            onChange={handleInputChange}
+            size='small'
+          />
+          <TextField
+            minRows={5}
+            multiline
+            label="Description"
+            name='description'
+            id='description'
+            defaultValue={portfolio.description as string}
+            onChange={handleInputChange}
+          />
+          <UserChooser selectedValues={portfolio.users as User[]} chosenUsers={chosenUsers} />
+          <AccountChooser selectedValues={portfolio.accounts as Account[]} chosenAccounts={chosenAccounts} />
+          <BrandChooser selectedValues={portfolio.brands as Brand[]} chosenBrands={chosenBrands} />
         </Stack>
       </CardContent>
     </Card>

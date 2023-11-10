@@ -68,6 +68,7 @@ export function ProductChooser(props: {
         )}
         renderInput={(params) => (
           <TextField
+            label="Products"
             {...params}
             inputProps={{
               ...params.inputProps,

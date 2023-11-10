@@ -61,6 +61,7 @@ export function AccountChooser(props: {
         )}
         renderInput={(params) => (
           <TextField
+            label='Accounts'
             {...params}
             inputProps={{
               ...params.inputProps,

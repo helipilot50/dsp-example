@@ -147,7 +147,6 @@ export function AccountDetails() {
 
     <Card
       elevation={6}
-    // sx={{ width: '800px', minWidth: '400px' }}
     >
       <CardHeader
         title={`Account: ${account.id}`} />
@@ -161,99 +160,86 @@ export function AccountDetails() {
       >
         {(loading || createLoading) && <LinearProgress variant="query" />}
         <Stack spacing={2}>
-          <FormControl>
-            <FormLabel>Name</FormLabel>
-            <TextField
-              variant='outlined'
-              required
-              id="name"
-              name="name"
-              fullWidth
-              autoComplete="name"
-              value={account.name}
-              onChange={handleInputChange}
-              size='small'
-            />
-          </FormControl>
+          <TextField
+            variant='outlined'
+            required
+            id="name"
+            name="name"
+            label="Name"
+            fullWidth
+            autoComplete="name"
+            value={account.name}
+            onChange={handleInputChange}
+            size='small'
+          />
           <Stack direction="row" >
-            <FormControl sx={{ width: '50%' }}>
-              <FormLabel>Type</FormLabel>
-              <Select id="type" name="type" value={account.type} onChange={handleInputChange}
-                size='small'
-              >
-                <MenuItem key={AccountType.Demand} value={AccountType.Demand}>Demand</MenuItem>
-                <MenuItem key={AccountType.Supply} value={AccountType.Supply}>Supply</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl sx={{ width: '50%', ml: 1 }}>
-              <FormLabel>Currency</FormLabel>
-              <Select id="currency" name="currency"
-                value={account.currency?.code}
-                onChange={handleInputChange}
-                required
-                size='small'
-              >
-                {Object.values(CurrencyCode).map((currency: any) => {
-                  return <MenuItem key={currency} value={currency}>{currency}</MenuItem>;
-                })
-                }
-              </Select>
-            </FormControl>
+            <Select id="type" name="type" value={account.type} onChange={handleInputChange}
+              size='small'
+              label="Type"
+              sx={{ width: '50%' }}
+            >
+              <MenuItem key={AccountType.Demand} value={AccountType.Demand}>Demand</MenuItem>
+              <MenuItem key={AccountType.Supply} value={AccountType.Supply}>Supply</MenuItem>
+            </Select>
+            <Select id="currency" name="currency"
+              label="Currency"
+              value={account.currency?.code}
+              onChange={handleInputChange}
+              required
+              size='small'
+              sx={{ width: '50%', ml: 1 }}
+            >
+              {Object.values(CurrencyCode).map((currency: any) => {
+                return <MenuItem key={currency} value={currency}>{currency}</MenuItem>;
+              })
+              }
+            </Select>
           </Stack>
 
-          <FormControl>
-            <FormLabel>Fees</FormLabel>
-            {data && data.account && data.account.fee && <AccountFees fee={data.account.fee as AccountFee} />}
-          </FormControl>
-          <FormControl>
-            <FormLabel>Countries</FormLabel>
-            <CountriesChooser
-              id='account-countries'
-              selectedValues={countries}
-              countryChange={(countries: Country[]) => {
-                console.debug('[AccountDetails] selected countries', countries);
+          {data && data.account && data.account.fee && <AccountFees fee={data.account.fee as AccountFee} />}
+          <CountriesChooser
+            id='account-countries'
+            selectedValues={countries}
+            countryChange={(countries: Country[]) => {
+              console.debug('[AccountDetails] selected countries', countries);
 
-                setAccount({
-                  ...account,
-                  countries: countries,
-                });
-              }}
-            />
-          </FormControl>
-          {!isNew && <FormControl>
-            <FormLabel>Retailers</FormLabel>
-            <RetailersChooser id='account-retailers'
-              selectedValues={account.retailers as Retailer[]}
-              retailersChange={(retailers: Retailer[]) => {
-                console.debug('[AccountDetails] selected retailers', retailers);
+              setAccount({
+                ...account,
+                countries: countries,
+              });
+            }}
+          />
+          {!isNew && <RetailersChooser id='account-retailers'
+            selectedValues={account.retailers as Retailer[]}
+            retailersChange={(retailers: Retailer[]) => {
+              console.debug('[AccountDetails] selected retailers', retailers);
 
-                mapRetailers({
+              mapRetailers({
+                variables: {
+                  accountId: accountId,
+                  retailerIds: retailers.map((retailer: Retailer) => retailer.id),
+                },
+                refetchQueries: [{
+                  query: ACCOUNT_DETAILS,
                   variables: {
                     accountId: accountId,
-                    retailerIds: retailers.map((retailer: Retailer) => retailer.id),
-                  },
-                  refetchQueries: [{
-                    query: ACCOUNT_DETAILS,
-                    variables: {
-                      accountId: accountId,
-                    }
-                  }],
-                  onCompleted: (data: any) => {
-                    console.debug('[AccountDetails.mapRetailers]  completed', data);
-                    setAccount({
-                      ...account,
-                      retailers: retailers,
-                    });
-                  },
-                  onError: (error: ApolloError) => {
-                    alert(`[AccountDetails.mapRetailers] error: ${error} `);
-                    console.error('[AccountDetails.mapRetailers] error', error);
                   }
-                });
+                }],
+                onCompleted: (data: any) => {
+                  console.debug('[AccountDetails.mapRetailers]  completed', data);
+                  setAccount({
+                    ...account,
+                    retailers: retailers,
+                  });
+                },
+                onError: (error: ApolloError) => {
+                  alert(`[AccountDetails.mapRetailers] error: ${error} `);
+                  console.error('[AccountDetails.mapRetailers] error', error);
+                }
+              });
 
-              }}
-            />
-          </FormControl>}
+            }}
+          />}
 
         </Stack>
         <Divider sx={{ mt: 1 }} />

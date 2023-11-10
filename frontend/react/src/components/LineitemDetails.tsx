@@ -189,9 +189,7 @@ export function LineitemDetails() {
   console.debug('[LineitemDetails] params data', params, data);
   return (
     <Card elevation={6}
-      sx={{
-        '& .MuiTextField-root': { mt: 1, width: '50ch' },
-      }}>
+    >
       <CardHeader
         title={`Lineitem: ${lineitemId}`}
         subheader={`for campaign: ${(data) ? data.lineitem?.campaign?.name : ''}`}
@@ -212,7 +210,7 @@ export function LineitemDetails() {
         {!isNew && <LineItemPaused lineitemId={lineitem.id} />}
         {loading && <LinearProgress variant="query" />}
 
-        <Stack>
+        <Stack spacing={2}>
           <TextField
             label="Name"
             name="name"

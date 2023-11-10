@@ -78,6 +78,7 @@ export function RetailersChooser(props: {
         )}
         renderInput={(params) => (
           <TextField
+            label='Retailers'
             {...params}
             inputProps={{
               ...params.inputProps,

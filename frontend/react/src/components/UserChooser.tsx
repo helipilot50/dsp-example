@@ -64,6 +64,7 @@ export function UserChooser(props: {
         )}
         renderInput={(params) => (
           <TextField
+            label='Users'
             {...params}
             inputProps={{
               ...params.inputProps,

@@ -130,98 +130,95 @@ export function CampaignDetails() {
   console.debug('[CampaignDetails] campaign', campaign);
   const dates: DateRange<Dayjs> = [dayjs(campaign.startDate || new Date()), dayjs(campaign.endDate || new Date())];
   return (
-    <Paper square={false}
-      elevation={6}>
-      <Card>
-        <CardHeader
-          title={`Campaign: ${(data) ? data.campaign.id : ''}`}
-        />
-        <CardActions>
-          <Button type="submit" variant='contained'>{isNew ? 'Create' : 'Save'}</Button>
-        </CardActions>
-        <CardContent component="form"
-          onSubmit={onSubmit}
-          noValidate
-          autoComplete="off">
-          {loading && <LinearProgress variant="query" />}
+    <Card elevation={6}>
+      <CardHeader
+        title={`Campaign: ${(data) ? data.campaign.id : ''}`}
+      />
+      <CardActions>
+        <Button type="submit" variant='contained'>{isNew ? 'Create' : 'Save'}</Button>
+      </CardActions>
+      <CardContent component="form"
+        onSubmit={onSubmit}
+        noValidate
+        autoComplete="off">
+        {loading && <LinearProgress variant="query" />}
 
-          <Stack spacing={1} sx={{ mt: 1 }}>
-            <TextField
-              label="Name"
-              name='name'
-              id="name"
-              fullWidth
+        <Stack spacing={2} sx={{ mt: 1 }}>
+          <TextField
+            label="Name"
+            name='name'
+            id="name"
+            fullWidth
+            required
+            value={campaign.name}
+            onChange={handleInputChange}
+            size='small' />
+          <Stack direction="row"  >
+            <TextField id="type" name="type"
+              select
+              value={campaign.type}
+              onChange={handleInputChange}
+              label="Type"
               required
-              value={campaign.name}
-              onChange={handleInputChange}
-              size='small' />
-            <Stack direction="row"  >
-              <TextField id="type" name="type"
-                select
-                value={campaign.type}
-                onChange={handleInputChange}
-                label="Type"
-                required
-                size='small'
-                sx={{ width: '50%' }}
-              >
-                {Object.values(CampaignType).map((type: any) => {
-                  return <MenuItem key={type} value={type}>{type.toString()}</MenuItem>;
-                })
-                }
-              </TextField>
-              {!isNew && <TextField id="status" name="status"
-                select
-                value={campaign.status}
-                onChange={handleInputChange}
-                label="Status"
-                required
-                size='small'
-                sx={{ width: '50%', ml: 1 }}
-              >
-                {Object.values(CampaignStatus).map((status: any) => {
-                  return <MenuItem key={status} value={status}>{status.toString()}</MenuItem>;
-                })
-                }
-              </TextField>}
-            </Stack>
-            <DateRangePicker
-              slots={{ field: SingleInputDateRangeField }}
-              label="Start - End"
-              localeText={{ start: 'start date', end: 'end date' }}
-              value={dates}
-              onChange={(newValue: DateRange<Dayjs>) => {
-                console.debug('[LineitemDetails] new DateRange', newValue);
-                const startDate = newValue[0]?.toDate();
-                const endDate = newValue[1]?.toDate();
-                setCampaign({
-                  ...campaign,
-                  startDate: startDate,
-                  endDate: endDate
-                });
-              }}
-            />
-            {!isNew && <TextField
-              label="Budget"
-              value={campaign.budget?.amount || 0}
-              type='number'
-              onChange={handleInputChange}
-              size='small' />}
-          </Stack>
-          {!isNew && <Accordion sx={{ mt: 1 }}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
+              size='small'
+              sx={{ width: '50%' }}
             >
-              <Typography>Lineitems</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <LineitemList campaignId={params.campaignId} />
-            </AccordionDetails>
-          </Accordion>}
-        </CardContent>
-      </Card>
-    </Paper>
+              {Object.values(CampaignType).map((type: any) => {
+                return <MenuItem key={type} value={type}>{type.toString()}</MenuItem>;
+              })
+              }
+            </TextField>
+            {!isNew && <TextField id="status" name="status"
+              select
+              value={campaign.status}
+              onChange={handleInputChange}
+              label="Status"
+              required
+              size='small'
+              sx={{ width: '50%', ml: 1 }}
+            >
+              {Object.values(CampaignStatus).map((status: any) => {
+                return <MenuItem key={status} value={status}>{status.toString()}</MenuItem>;
+              })
+              }
+            </TextField>}
+          </Stack>
+          <DateRangePicker
+            slots={{ field: SingleInputDateRangeField }}
+            label="Start - End"
+            localeText={{ start: 'start date', end: 'end date' }}
+            value={dates}
+            onChange={(newValue: DateRange<Dayjs>) => {
+              console.debug('[LineitemDetails] new DateRange', newValue);
+              const startDate = newValue[0]?.toDate();
+              const endDate = newValue[1]?.toDate();
+              setCampaign({
+                ...campaign,
+                startDate: startDate,
+                endDate: endDate
+              });
+            }}
+          />
+          {!isNew && <TextField
+            label="Budget"
+            value={campaign.budget?.amount || 0}
+            type='number'
+            onChange={handleInputChange}
+            size='small' />}
+        </Stack>
+        {!isNew && <Accordion sx={{ mt: 1 }}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>Lineitems</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <LineitemList campaignId={params.campaignId} />
+          </AccordionDetails>
+        </Accordion>}
+      </CardContent>
+    </Card>
   );
 }

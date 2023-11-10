@@ -29,51 +29,47 @@ export function ProductDetails(props: ProductDetailsProps) {
 
   console.debug('params', params);
   return (
-    <Paper
-      square={false}
-      elevation={6} >
-      <Card>
-        <CardHeader
-          title={'PRODUCT'}
-        />
-        <CardContent >
-          {loading && <LinearProgress variant="query" />}
-          <Stack spacing={1}>
-            <TextField
-              label="Key"
-              value={(data && data.sku) ? data?.sku?.skuKey : ''}
-              InputProps={{
-                readOnly: true,
-              }}
+    <Card elevation={6}>
+      <CardHeader
+        title={'PRODUCT'}
+      />
+      <CardContent >
+        {loading && <LinearProgress variant="query" />}
+        <Stack spacing={2}>
+          <TextField
+            label="Key"
+            value={(data && data.sku) ? data?.sku?.skuKey : ''}
+            InputProps={{
+              readOnly: true,
+            }}
+            size='small' />
+          <TextField
+            label="Name"
+            value={(data && data.sku) ? data?.sku?.name : ''}
+            multiline={true}
+            rows={2}
+            size='small' />
+          <TextField
+            label="Description"
+            value={(data && data.sku) ? data?.sku?.description : ''}
+            multiline={true}
+            rows={5}
+            size='small' />
+          <Stack direction='row' sx={{ width: '100%' }}>
+            <TextField sx={{ width: '50%' }}
+              label="Price"
+              value={(data && data.sku) ? data?.sku?.price : 0}
+              type='number'
               size='small' />
-            <TextField
-              label="Name"
-              value={(data && data.sku) ? data?.sku?.name : ''}
-              multiline={true}
-              rows={2}
-              size='small' />
-            <TextField
-              label="Description"
-              value={(data && data.sku) ? data?.sku?.description : ''}
-              multiline={true}
-              rows={5}
-              size='small' />
-            <Stack direction='row' sx={{ width: '100%' }}>
-              <TextField sx={{ width: '50%' }}
-                label="Price"
-                value={(data && data.sku) ? data?.sku?.price : 0}
-                type='number'
-                size='small' />
-              <TextField sx={{ ml: 1, width: '50%' }}
-                label="Quantity"
-                value={(data && data.sku) ? data?.sku?.quantity : 0}
-                type='number'
-                size='small'
-              />
-            </Stack>
+            <TextField sx={{ ml: 1, width: '50%' }}
+              label="Quantity"
+              value={(data && data.sku) ? data?.sku?.quantity : 0}
+              type='number'
+              size='small'
+            />
           </Stack>
-        </CardContent>
-      </Card>
-    </Paper>
+        </Stack>
+      </CardContent>
+    </Card>
   );
 }
