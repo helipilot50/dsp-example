@@ -65,9 +65,10 @@ export const relationshipResolvers/*: Resolvers*/ = {
       return commonResolvers.Query.countries(null, countriesQueryArgs, context, info);
     },
     currency(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
-      if (parent.currency)
+      if (parent.currencyCode)
+
         return commonResolvers.Query.currency(parent, {
-          code: parent.currency
+          code: parent.currency.code
         }, context, info);
       return null;
     },
