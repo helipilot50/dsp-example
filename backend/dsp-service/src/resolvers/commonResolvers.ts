@@ -23,7 +23,6 @@ export const commonResolvers/*: Resolvers*/ = {
         const dbResult = await context.prisma.country.findMany({
           where,
           select: {
-
             code: true,
             currency: true,
             isActiveForAccount: true,
@@ -32,16 +31,6 @@ export const commonResolvers/*: Resolvers*/ = {
         });
         context.logger.debug(`[commonResolvers.countries] dbResult ${JSON.stringify(dbResult, undefined, 2)} `);
         return dbResult;
-        // return dbResult.map((row: any): CountryCode => {
-        //   let country: Country = {
-        //     name: row.name,
-        //     isActiveForAccount: row.isActiveForAccount,
-        //     code: row.countryCode as CountryCode,
-        //     currency: row.currency as CurrencyCode,
-        //   };
-        //   // context.logger.debug(`country ${country}`);
-        //   return country;
-        // });
       } catch (err) {
         context.logger.error(`[commonResolvers.countries] error ${JSON.stringify(err, undefined, 2)}`);
         // TODO retry
@@ -105,13 +94,9 @@ export const commonResolvers/*: Resolvers*/ = {
     },
     async currency(parent: any, args: QueryCurrencyArgs, context: DspContext, info: GraphQLResolveInfo) {
       try {
-        context.logger.debug(`[commonResolvers.currency] args ${JSON.stringify(args, undefined, 2)}`);
-        context.logger.debug(`[commonResolvers.currency] parent ${JSON.stringify(parent, undefined, 2)}`);
+        context.logger.info(`[commonResolvers.currency] args ${JSON.stringify(args, undefined, 2)}`);
         let currencyCode = args.code;
 
-        if (parent && parent.currencyCode) {
-          currencyCode = parent.currencyCode;
-        }
         const foundCurrency = await context.prisma.currency.findUnique(
           {
             where: {
@@ -124,11 +109,17 @@ export const commonResolvers/*: Resolvers*/ = {
             }
           }
         );
+        // const foundCurrency = {
+        //   code: currencyCode,
+        //   name: 'Euro',
+        //   symbol: '€',
+        // };
 
-        context.logger.debug(`[commonResolvers.currency] foundCurrency ${foundCurrency}`);
+
+        // context.logger.debug(`[commonResolvers.currency] foundCurrency ${foundCurrency}`);
         return (foundCurrency) ? foundCurrency : null;
       } catch (err) {
-        context.logger.error(`[commonResolvers.currency] currency error ${JSON.stringify(err, undefined, 2)}`);
+        context.logger.error(`[commonResolvers.currency] error ${JSON.stringify(err, undefined, 2)}`);;
         throw err;
       }
     },

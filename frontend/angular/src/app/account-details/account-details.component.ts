@@ -22,7 +22,6 @@ import {
   Retailer,
   RetailersQuery,
   RetailersQueryVariables,
-  RetailerPreferences
 } from 'not-dsp-graphql';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -36,7 +35,7 @@ import { RETAILER_LIST } from 'not-dsp-graphql';
 @Component({
   selector: 'app-account-details',
   templateUrl: './account-details.component.html',
-  styleUrls: ['./account-details.component.css']
+  styleUrls: ['./account-details.component.css'],
 })
 
 
@@ -135,6 +134,7 @@ export class AccountDetailsComponent implements OnInit {
       this.loading = false;
 
     } else {
+      // console.log('[AccountDetailsComponent] ACCOUNT_DETAILS', ACCOUNT_DETAILS);
       this.apollo.watchQuery<AccountQuery, AccountQueryVariables>({
         query: ACCOUNT_DETAILS,
         fetchPolicy: 'cache-first',
@@ -143,6 +143,7 @@ export class AccountDetailsComponent implements OnInit {
         }
       }).valueChanges.subscribe(result => {
         this.account = result.data.account as Account;
+        console.log('[AccountDetailsComponent] account', this.account);
 
         if (this.account && this.account.countries) {
           let countries = this.account.countries as Country[];

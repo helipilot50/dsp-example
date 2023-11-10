@@ -21,7 +21,6 @@ model Account {
   type                 AccountType  @default(DEMAND)
   allowBrandedKeywords Boolean      @default(false)
   currencyCode         String?
-  currency             Currency?    @relation(fields: [currencyCode], references: [code])
   createdAt            DateTime     @default(now())
   updatedAt            DateTime     @updatedAt
   countryIds           String[]
@@ -266,14 +265,13 @@ enum FinancialStatus {
 // Currency
 model Currency {
   // ISO 4217 currency code
-  code      String    @id @map("_id")
+  code      String   @id @map("_id")
   // Currency name
   name      String
   // Currency Symbol
   symbol    String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Account   Account[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // Country

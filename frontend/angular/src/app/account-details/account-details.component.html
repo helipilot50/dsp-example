@@ -4,22 +4,22 @@
   <p>Error: {{ error }}</p>
 </div>
 
-<mat-card class="detailForm">
+<mat-card >
   <mat-card-header>
       <mat-card-title>Account {{(account)?account.id:''}}</mat-card-title>
   </mat-card-header>
   <mat-card-actions>
     <button mat-raised-button *ngIf="isNew" color="primary" (click)="onFormSubmit()">Create</button>
   </mat-card-actions>
-  <mat-card-content>
+  <mat-card-content *ngIf="account">
     <p>
-        <mat-form-field *ngIf="account" class="formField">
-          <mat-label>Name:</mat-label>
-          <input matInput type="text" placeholder="name" matInput [(ngModel)]="account.name">
+        <mat-form-field class="formField">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" placeholder="name"  [(ngModel)]="account.name">
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field appearance="fill"  class="formField">
+        <mat-form-field class="formField">
           <mat-label>Type</mat-label>
           <mat-select [(ngModel)]="account.type" >
             <mat-option *ngFor="let type of types" [value]="type">
@@ -29,9 +29,9 @@
         </mat-form-field>
       </p>
       <p>
-        <mat-form-field appearance="fill" class="formField">
+        <mat-form-field class="formField" *ngIf="account.currency">
           <mat-label>Currency</mat-label >
-          <mat-select  [(ngModel)]="account.currency.code" *ngIf="account.currency">
+          <mat-select  [(ngModel)]="account.currency.code"  >
             <mat-option *ngFor="let currency of currencies" [value]="currency">
               {{currency}}
             </mat-option>
@@ -39,9 +39,10 @@
         </mat-form-field>
       </p>
 
-      <mat-form-field class="example-chip-list" class="formField">
+      <mat-form-field class="formField">
         <mat-label>Countries</mat-label>
-        <mat-chip-grid #chipGridC aria-label="Country selection">
+
+        <mat-chip-grid #chipGridC aria-label="Country selection" >
           <mat-chip-row *ngFor="let country of countries" (removed)="removeCountry(country)">
             {{country.name}}
             <button matChipRemove [attr.aria-label]="'remove ' + country">
@@ -49,7 +50,9 @@
             </button>
           </mat-chip-row>
         </mat-chip-grid>
-        <input placeholder="Add country..." #countryInput [formControl]="countryCtrl"
+        <input
+          matNativeControl
+          placeholder="Add country..." #countryInput [formControl]="countryCtrl"
           [matChipInputFor]="chipGridC" [matAutocomplete]="auto"
           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
           (matChipInputTokenEnd)="addCountry($event)"/>
@@ -61,7 +64,7 @@
       </mat-form-field>
 
 
-      <mat-form-field class="example-chip-list" class="formField">
+      <mat-form-field  class="formField">
         <mat-label>Retailers</mat-label>
         <mat-chip-grid #chipGridR aria-label="Retailer selection">
           <mat-chip-row *ngFor="let retailer of retailers" (removed)="removeRetailer(retailer)">

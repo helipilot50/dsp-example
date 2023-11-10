@@ -68,7 +68,6 @@ export const accountResolvers/*: Resolvers*/ = {
             parentAccountLabel: true,
             type: true,
             allowBrandedKeywords: true,
-            currency: true,
             currencyCode: true,
             countryIds: true,
             retailerIds: true,
@@ -86,7 +85,7 @@ export const accountResolvers/*: Resolvers*/ = {
       if (parent && parent.accountId) {
         accountId = parent.accountId;
       }
-      context.logger.info(`accountId ${accountId}`);
+      context.logger.debug(`accountId ${accountId}`);
       let dbResult;
       try {
         dbResult = await context.prisma.account.findUnique(
@@ -111,7 +110,7 @@ export const accountResolvers/*: Resolvers*/ = {
             // }
           }
         );
-        console.log(`dbResult ${JSON.stringify(dbResult, undefined, 2)}`);
+        console.info(`dbResult ${JSON.stringify(dbResult, undefined, 2)}`);
       } catch (err) {
         context.logger.error(`account error ${JSON.stringify(err, undefined, 2)}`);
         throw err;

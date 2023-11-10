@@ -64,6 +64,7 @@ function CountriesChooser({
         onOpen={onToggle}
         onClose={onToggle}
         multiple
+        placeholder='Add country...'
         size='medium'
         options={elements}
         value={inputValues}

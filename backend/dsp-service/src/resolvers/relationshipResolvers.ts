@@ -64,14 +64,24 @@ export const relationshipResolvers/*: Resolvers*/ = {
 
       return commonResolvers.Query.countries(null, countriesQueryArgs, context, info);
     },
-    currency(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
-      if (parent.currencyCode)
+    async currency(parent: any, args: any, context: DspContext, info: GraphQLResolveInfo) {
 
-        return commonResolvers.Query.currency(parent, {
-          code: parent.currency.code
+      let foundCurrency: any = {
+        code: 'EUR',
+        name: 'Euro',
+        symbol: '€',
+      };
+
+      if (parent.currencyCode) {
+        context.logger.debug(`[Account] parent currencyCode ${parent.currencyCode}`);
+        foundCurrency = await commonResolvers.Query.currency(null, {
+          code: parent.currencyCode
         }, context, info);
-      return null;
-    },
+      }
+
+      context.logger.debug(`[Account] foundCurrency ${JSON.stringify(foundCurrency, undefined, 2)}`);
+      return foundCurrency;
+    }
   },
   Retailer: {
     campaigns(parent: Retailer, args: any, context: DspContext, info: GraphQLResolveInfo) {
