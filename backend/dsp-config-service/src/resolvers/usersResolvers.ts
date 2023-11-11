@@ -5,6 +5,7 @@ import { topLevelFieldsFromQuery } from "./resolverTools";
 import { MutationMapAccountsToPortfolioArgs, MutationMapBrandsToPortfolioArgs, MutationMapUsersToPortfolioArgs, MutationNewPortfolioArgs, QueryPortfolioArgs, QueryUserArgs, QueryUsersArgs } from "../resolver-types";
 
 import { User, userById, userByToken, userList } from '../clerk';
+import { topicForSubscription } from "../kafka";
 
 function clerkUserToUser(clerkUser: User) {
   return {
@@ -14,10 +15,10 @@ function clerkUserToUser(clerkUser: User) {
   };
 }
 
-export const PORTFOLIO_USERS_UPDATED = 'PORTFOLIO_USERS_UPDATED';
-export const PORTFOLIO_CREATED = 'PORTFOLIO_CREATED';
-export const PORTFOLIO_ACCOUNTS_UPDATED = 'PORTFOLIO_ACCOUNTS_UPDATED';
-export const PORTFOLIO_BRANDS_UPDATED = 'PORTFOLIO_BRANDS_UPDATED';
+export const PORTFOLIO_USERS_UPDATED = topicForSubscription('PortfolioUsersUpdated');
+export const PORTFOLIO_CREATED = topicForSubscription('PortfolioCreated');
+export const PORTFOLIO_ACCOUNTS_UPDATED = topicForSubscription('PortfolioAccountsUpdated');
+export const PORTFOLIO_BRANDS_UPDATED = topicForSubscription('PortfolioBrandsUpdated');
 
 export const usersResolvers/*: Resolvers*/ = {
 

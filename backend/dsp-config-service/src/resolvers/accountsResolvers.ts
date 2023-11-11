@@ -20,22 +20,23 @@ import {
 } from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
+import { topicForSubscription } from "../kafka";
 
-const ACCOUNT_CREATED = 'ACCOUNT_CREATED';
-const ACCOUNT_BRANTED_KEYWORDS_DISABLED = 'ACCOUNT_BRANTED_KEYWORDS_DISABLED';
-const ACCOUNT_BRANTED_KEYWORDS_ENABLED = 'ACCOUNT_BRANTED_KEYWORDS_ENABLED';
-const ACCOUNT_BRANDS_UPATED = 'ACCOUNT_BRANDS_UPATED';
-const ACCOUNT_COUNTRY_ADDED = 'ACCOUNT_COUNTRY_ADDED';
-const ACCOUNT_CURRENCY_DATA_CHANGED = 'ACCOUNT_CURRENCY_DATA_CHANGED';
-const ACCOUNT_FEES_MODIFIED = 'ACCOUNT_FEES_MODIFIED';
-const ACCOUNT_INITIALIZED = 'ACCOUNT_INITIALIZED';
-const ACCOUNT_REPORTING_LABEL_MODIFIED = 'ACCOUNT_REPORTING_LABEL_MODIFIED';
-const ACCOUNT_RETAILER_CONNECTED = 'ACCOUNT_RETAILER_CONNECTED';
-const ACCOUNT_RETAILERS_UPDATED = 'ACCOUNT_RETAILERS_UPDATED';
-const ACCOUNT_SALESFORCE_DATA_MODIFIED = 'ACCOUNT_SALESFORCE_DATA_MODIFIED';
-const ACCOUNT_SELLER_MODIFIED = 'ACCOUNT_SELLER_MODIFIED';
-const ACCOUNT_WHITE_LABEL_SETTINGS_CREATED = 'ACCOUNT_WHITE_LABEL_SETTINGS_CREATED';
-const ACCOUNT_WHITE_LABEL_SETTINGS_UPDATED = 'ACCOUNT_WHITE_LABEL_SETTINGS_UPDATED';
+const ACCOUNT_CREATED = topicForSubscription('AccountCreated');
+const ACCOUNT_BRANDED_KEYWORDS_DISABLED = topicForSubscription('AccountBrandedKeywordsDisabled');
+const ACCOUNT_BRANDED_KEYWORDS_ENABLED = topicForSubscription('AccountBrandedKeywordsEnabled');
+const ACCOUNT_BRANDS_UPATED = topicForSubscription('AccountBrandsUpated');
+const ACCOUNT_COUNTRY_ADDED = topicForSubscription('AccountCountryAdded');
+const ACCOUNT_CURRENCY_DATA_CHANGED = topicForSubscription('AccountCurrencyDataChanged');
+const ACCOUNT_FEES_MODIFIED = topicForSubscription('AccountFeesModified');
+const ACCOUNT_INITIALIZED = topicForSubscription('AccountInitialized');
+const ACCOUNT_REPORTING_LABEL_MODIFIED = topicForSubscription('AccountReportingLabelModified');
+const ACCOUNT_RETAILER_CONNECTED = topicForSubscription('AccountRetailerConnected');
+const ACCOUNT_RETAILERS_UPDATED = topicForSubscription('AccountRetailersUpdated');
+const ACCOUNT_SALESFORCE_DATA_MODIFIED = topicForSubscription('AccountSalesforceDataModified');
+const ACCOUNT_SELLER_MODIFIED = topicForSubscription('AccountSellerModified');
+const ACCOUNT_WHITE_LABEL_SETTINGS_CREATED = topicForSubscription('AccountWhileLabelSettingsCreated');
+const ACCOUNT_WHITE_LABEL_SETTINGS_UPDATED = topicForSubscription('AccountWhileLabelSettingsUpdated');
 
 export const accountResolvers/*: Resolvers*/ = {
 
@@ -228,7 +229,7 @@ export const accountResolvers/*: Resolvers*/ = {
       subscribe: withFilter(
         (_: any, variables: SubscriptionAccountBrandedKeywordsDisabledArgs, context: DspContext, info: any) => {
           context.logger.debug(`[accountsResolvers.accountBrandedKeywordsDisabled] subscribe ${variables}`);
-          return context.pubsub.asyncIterator(ACCOUNT_BRANTED_KEYWORDS_DISABLED);
+          return context.pubsub.asyncIterator(ACCOUNT_BRANDED_KEYWORDS_DISABLED);
         },
         (payload: any, variables: SubscriptionAccountBrandedKeywordsDisabledArgs, context: DspContext, info: any) => {
           context.logger.debug(`[accountsResolvers.accountBrandedKeywordsDisabled] filter ${payload}, ${variables}`);
@@ -240,7 +241,7 @@ export const accountResolvers/*: Resolvers*/ = {
       subscribe: withFilter(
         (_: any, variables: SubscriptionAccountBrandedKeywordsEnabledArgs, context: DspContext, info: any) => {
           context.logger.debug(`[accountsResolvers.accountBrandedKeywordsEnabled] subscribe ${variables}`);
-          return context.pubsub.asyncIterator(ACCOUNT_BRANTED_KEYWORDS_ENABLED);
+          return context.pubsub.asyncIterator(ACCOUNT_BRANDED_KEYWORDS_ENABLED);
         },
         (payload: any, variables: SubscriptionAccountBrandedKeywordsEnabledArgs, context: DspContext, info: any) => {
           context.logger.debug(`[accountsResolvers.accountBrandedKeywordsEnabled] filter ${payload}, ${variables}`);

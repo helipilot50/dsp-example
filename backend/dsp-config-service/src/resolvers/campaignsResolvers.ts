@@ -8,12 +8,13 @@ import { withFilter } from "graphql-subscriptions";
 // TODO fix context for subscriptions
 import { pubsub } from "../context";
 import { logger } from "../logger";
+import { topicForSubscription } from "../kafka";
 
 
-const LINEITEM_ACTIVATED_EVENT = 'LINEITEM_ACTIVATED';
+const LINEITEM_ACTIVATED_EVENT = topicForSubscription('LineitemActivated');
 
-const LINEITEM_PAUSED_EVENT = 'LINEITEM_PAUSED';
-const LINEITEM_CREATED_EVENT = 'LINEITEM_CREATED';
+const LINEITEM_PAUSED_EVENT = topicForSubscription('LineitemPaused');
+const LINEITEM_CREATED_EVENT = topicForSubscription('LineitemCreated');
 export const campaignsResolvers/*: Resolvers*/ = {
   Query: {
     async lineitems(_: any, args: QueryLineitemsArgs, context: DspContext, info: GraphQLResolveInfo) {
