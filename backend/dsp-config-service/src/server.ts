@@ -28,7 +28,7 @@ import {
 
 // Resolvers
 import { resolvers } from './resolvers';
-import { DspContext, makeRequestContext, pubsub, prisma, makeWebSocketContext } from './context';
+import { DspContext, makeRequestContext, prisma, makeWebSocketContext } from './context';
 
 import { corsOptions } from './cors';
 import { ClerkExpressWithAuth, LooseAuthProp, WithAuthProp } from '@clerk/clerk-sdk-node';

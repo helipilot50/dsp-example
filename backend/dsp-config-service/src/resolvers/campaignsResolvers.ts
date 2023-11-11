@@ -6,15 +6,14 @@ import { topLevelFieldsFromQuery } from "./resolverTools";
 import { withFilter } from "graphql-subscriptions";
 
 // TODO fix context for subscriptions
-import { pubsub } from "../context";
-import { logger } from "../logger";
-import { topicForSubscription } from "../kafka";
+// import { pubsub } from "../context";
+// import { logger } from "../logger";
 
 
-const LINEITEM_ACTIVATED_EVENT = topicForSubscription('LineitemActivated');
+const LINEITEM_ACTIVATED_EVENT = 'LineitemActivated';
 
-const LINEITEM_PAUSED_EVENT = topicForSubscription('LineitemPaused');
-const LINEITEM_CREATED_EVENT = topicForSubscription('LineitemCreated');
+const LINEITEM_PAUSED_EVENT = 'LineitemPaused';
+const LINEITEM_CREATED_EVENT = 'LineitemCreated';
 export const campaignsResolvers/*: Resolvers*/ = {
   Query: {
     async lineitems(_: any, args: QueryLineitemsArgs, context: DspContext, info: GraphQLResolveInfo) {
@@ -183,7 +182,7 @@ export const campaignsResolvers/*: Resolvers*/ = {
           status: dbResult.status as CampaignStatus,
         };
 
-        pubsub.publish('CAMPAIGN_CREATED', newCampaign);
+        context.pubsub.publish('CAMPAIGN_CREATED', newCampaign);
 
         return newCampaign;
       } catch (err) {
@@ -215,7 +214,7 @@ export const campaignsResolvers/*: Resolvers*/ = {
           status: dbResult.status as LineitemStatus,
         };
 
-        pubsub.publish(LINEITEM_CREATED_EVENT, newLineitem);
+        context.pubsub.publish(LINEITEM_CREATED_EVENT, newLineitem);
 
         return newLineitem;
       } catch (err) {
@@ -254,7 +253,7 @@ export const campaignsResolvers/*: Resolvers*/ = {
 
         if (readOp) {
           readOp.forEach((li) => {
-            pubsub.publish(LINEITEM_ACTIVATED_EVENT, {
+            context.pubsub.publish(LINEITEM_ACTIVATED_EVENT, {
               lineitemActivated: li
             });
             context.logger.debug(`[campaignsResolvers.activateLineitems] published LINEITEM_ACTIVATED_EVENT ${LINEITEM_ACTIVATED_EVENT}, ${li}`);
@@ -299,7 +298,7 @@ export const campaignsResolvers/*: Resolvers*/ = {
         if (readOp) {
           readOp.forEach((li) => {
 
-            pubsub.publish(LINEITEM_PAUSED_EVENT, {
+            context.pubsub.publish(LINEITEM_PAUSED_EVENT, {
               lineitemPaused: li
             });
             context.logger.debug(`[campaignsResolvers.pauseLineitems] published LINEITEM_PAUSED_EVENT ${LINEITEM_PAUSED_EVENT}, ${li}`);
@@ -321,7 +320,7 @@ export const campaignsResolvers/*: Resolvers*/ = {
         // asyncIteratorFn
         (_: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {
           context.logger.debug(`[campaignsResolvers.lineitemActivated] subscribe ${variables}`);
-          return pubsub.asyncIterator(LINEITEM_ACTIVATED_EVENT);
+          return context.pubsub.asyncIterator(LINEITEM_ACTIVATED_EVENT);
         },
         // filterFn 
         (payload: any, variables: SubscriptionLineitemActivatedArgs, context: DspContext, info: any) => {

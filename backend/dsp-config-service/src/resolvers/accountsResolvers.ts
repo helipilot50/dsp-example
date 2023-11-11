@@ -20,23 +20,22 @@ import {
 } from "../resolver-types";
 import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
-import { topicForSubscription } from "../kafka";
 
-const ACCOUNT_CREATED = topicForSubscription('AccountCreated');
-const ACCOUNT_BRANDED_KEYWORDS_DISABLED = topicForSubscription('AccountBrandedKeywordsDisabled');
-const ACCOUNT_BRANDED_KEYWORDS_ENABLED = topicForSubscription('AccountBrandedKeywordsEnabled');
-const ACCOUNT_BRANDS_UPATED = topicForSubscription('AccountBrandsUpated');
-const ACCOUNT_COUNTRY_ADDED = topicForSubscription('AccountCountryAdded');
-const ACCOUNT_CURRENCY_DATA_CHANGED = topicForSubscription('AccountCurrencyDataChanged');
-const ACCOUNT_FEES_MODIFIED = topicForSubscription('AccountFeesModified');
-const ACCOUNT_INITIALIZED = topicForSubscription('AccountInitialized');
-const ACCOUNT_REPORTING_LABEL_MODIFIED = topicForSubscription('AccountReportingLabelModified');
-const ACCOUNT_RETAILER_CONNECTED = topicForSubscription('AccountRetailerConnected');
-const ACCOUNT_RETAILERS_UPDATED = topicForSubscription('AccountRetailersUpdated');
-const ACCOUNT_SALESFORCE_DATA_MODIFIED = topicForSubscription('AccountSalesforceDataModified');
-const ACCOUNT_SELLER_MODIFIED = topicForSubscription('AccountSellerModified');
-const ACCOUNT_WHITE_LABEL_SETTINGS_CREATED = topicForSubscription('AccountWhileLabelSettingsCreated');
-const ACCOUNT_WHITE_LABEL_SETTINGS_UPDATED = topicForSubscription('AccountWhileLabelSettingsUpdated');
+const ACCOUNT_CREATED = 'AccountCreated';
+const ACCOUNT_BRANDED_KEYWORDS_DISABLED = 'AccountBrandedKeywordsDisabled';
+const ACCOUNT_BRANDED_KEYWORDS_ENABLED = 'AccountBrandedKeywordsEnabled';
+const ACCOUNT_BRANDS_UPATED = 'AccountBrandsUpated';
+const ACCOUNT_COUNTRY_ADDED = 'AccountCountryAdded';
+const ACCOUNT_CURRENCY_DATA_CHANGED = 'AccountCurrencyDataChanged';
+const ACCOUNT_FEES_MODIFIED = 'AccountFeesModified';
+const ACCOUNT_INITIALIZED = 'AccountInitialized';
+const ACCOUNT_REPORTING_LABEL_MODIFIED = 'AccountReportingLabelModified';
+const ACCOUNT_RETAILER_CONNECTED = 'AccountRetailerConnected';
+const ACCOUNT_RETAILERS_UPDATED = 'AccountRetailersUpdated';
+const ACCOUNT_SALESFORCE_DATA_MODIFIED = 'AccountSalesforceDataModified';
+const ACCOUNT_SELLER_MODIFIED = 'AccountSellerModified';
+const ACCOUNT_WHITE_LABEL_SETTINGS_CREATED = 'AccountWhileLabelSettingsCreated';
+const ACCOUNT_WHITE_LABEL_SETTINGS_UPDATED = 'AccountWhileLabelSettingsUpdated';
 
 export const accountResolvers/*: Resolvers*/ = {
 
