@@ -3,6 +3,7 @@ import { consumer } from './client';
 import { logger } from '../logger';
 import { EachMessagePayload } from 'kafkajs';
 
+
 /** 
  * Consume lineitem-activated events
 */
@@ -11,6 +12,7 @@ export const consumeLineitemActivated = async () => {
 
   const topic = process.env.KAFKA_TOPIC_LINEITEM_ACTIVATED || 'LineitemActivated';
   logger.info(`[kafka] consuming topic ${topic}`);
+
   await consumer.connect();
   await consumer.subscribe({ topic });
   await consumer.run({
@@ -29,6 +31,7 @@ export const consumeLineitemPaused = async () => {
 
   const topic = process.env.KAFKA_TOPIC_LINEITEM_PAUSED || 'LineitemPaused';
   logger.info(`[kafka] consuming topic ${topic}`);
+
   await consumer.connect();
   await consumer.subscribe({ topic });
   await consumer.run({
