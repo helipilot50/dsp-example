@@ -53,6 +53,7 @@
     "graphql-ws": "^5.14.0",
     "inquirer": "^9.1.5",
     "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
     "lodash": "^4.17.21",
     "serve-favicon": "^2.5.0",
     "winston": "^3.11.0",
