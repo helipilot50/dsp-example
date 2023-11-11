@@ -29,9 +29,23 @@ const logCreator = (level: logLevel) => {
   };
 };
 
+const username = process.env.KAFKA_USER;
+const password = process.env.KAFKA_PASSWORD;
+
+if (!username || !password) {
+  throw new Error('KAFKA_USER and KAFKA_PASSWORD environment variables must be set');
+}
+
+
 export const kafka = new Kafka({
   clientId: groupId,
   brokers,
+  ssl: true,
+  sasl: {
+    mechanism: "scram-sha-512",
+    username: username,
+    password: password
+  },
   // TODO logCreator
 });
 
