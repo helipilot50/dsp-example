@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS, MAP_PORTFOLIO_BRANDS, MAP_PORTFOLIO_USERS, MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables, MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { ApolloError, useMutation, useQuery, useSubscription } from '@apollo/client';
 import { UserChooser } from './UserChooser';
 import { AccountChooser } from './AccountChooser';
 import { BrandChooser } from './BrandChooser';
@@ -222,7 +222,7 @@ export function PortfolioDetails() {
             label="Description"
             name='description'
             id='description'
-            defaultValue={portfolio.description as string}
+            value={portfolio.description as string}
             onChange={handleInputChange}
           />
           <UserChooser selectedValues={portfolio.users as User[]} chosenUsers={chosenUsers} />
@@ -233,3 +233,4 @@ export function PortfolioDetails() {
     </Card>
   );
 }
+

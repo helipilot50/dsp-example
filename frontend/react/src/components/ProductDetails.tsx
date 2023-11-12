@@ -33,11 +33,15 @@ export function ProductDetails(props: ProductDetailsProps) {
       <CardHeader
         title={'PRODUCT'}
       />
-      <CardContent >
+      <CardContent
+        component="form"
+        noValidate
+        autoComplete="off"
+      >
         {loading && <LinearProgress variant="query" />}
         <Stack spacing={2}>
           <TextField
-            label="Key"
+            label="SKU Key"
             value={(data && data.sku) ? data?.sku?.skuKey : ''}
             InputProps={{
               readOnly: true,
