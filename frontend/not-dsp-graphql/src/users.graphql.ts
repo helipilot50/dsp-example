@@ -95,3 +95,43 @@ mutation MapAccountsToPortfolio($portfolioId: ID!, $accountIds: [ID]!) {
   }
 }
 `;
+
+export const PORTFOLIO_USERS_MODIFIED = gql`
+subscription PortfolioUsersModified($portfolioId: ID!) {
+  portfolioUsersModified(portfolioId: $portfolioId) {
+    id
+    name
+    users {
+      id
+      firstName
+      lastName
+    }
+  }
+}
+`;
+
+export const PORTFOLIO_BRANDS_MODIFIED = gql`
+subscription PortfolioBrandsModified($portfolioId: ID!) {
+  portfolioBrandsModified(portfolioId: $portfolioId) {
+    id
+    name
+    brands {
+      id
+      name
+    }
+  }
+}
+`;
+
+export const PORTFOLIO_ACCOUNTS_MODIFIED = gql`
+subscription PortfolioAccountsModified($portfolioId: ID!) {
+  portfolioAccountsModified(portfolioId: $portfolioId) {
+    id
+    name
+    accounts {
+      id
+      name
+    }
+  }
+}
+`;

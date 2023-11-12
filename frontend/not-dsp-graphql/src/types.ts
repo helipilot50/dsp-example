@@ -2298,6 +2298,11 @@ export type SubscriptionPortfolioAccountsModifiedArgs = {
 };
 
 
+export type SubscriptionPortfolioBrandsModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
+
 export type SubscriptionPortfolioUsersModifiedArgs = {
   portfolioId: Scalars['ID'];
 };
@@ -2580,3 +2585,24 @@ export type MapAccountsToPortfolioMutationVariables = Exact<{
 
 
 export type MapAccountsToPortfolioMutation = { __typename?: 'Mutation', mapAccountsToPortfolio?: { __typename?: 'Portfolio', id: string, name?: string | null } | null };
+
+export type PortfolioUsersModifiedSubscriptionVariables = Exact<{
+  portfolioId: Scalars['ID'];
+}>;
+
+
+export type PortfolioUsersModifiedSubscription = { __typename?: 'Subscription', portfolioUsersModified?: { __typename?: 'Portfolio', id: string, name?: string | null, users?: Array<{ __typename?: 'User', id: string, firstName?: string | null, lastName?: string | null } | null> | null } | null };
+
+export type PortfolioBrandsModifiedSubscriptionVariables = Exact<{
+  portfolioId: Scalars['ID'];
+}>;
+
+
+export type PortfolioBrandsModifiedSubscription = { __typename?: 'Subscription', portfolioBrandsModified?: { __typename?: 'Portfolio', id: string, name?: string | null, brands?: Array<{ __typename?: 'Brand', id: string, name: string } | null> | null } | null };
+
+export type PortfolioAccountsModifiedSubscriptionVariables = Exact<{
+  portfolioId: Scalars['ID'];
+}>;
+
+
+export type PortfolioAccountsModifiedSubscription = { __typename?: 'Subscription', portfolioAccountsModified?: { __typename?: 'Portfolio', id: string, name?: string | null, accounts?: Array<{ __typename?: 'Account', id: string, name: string } | null> | null } | null };

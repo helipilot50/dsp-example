@@ -157,5 +157,5 @@ extend type Subscription {
   portfolioCreated: Portfolio
   portfolioUsersModified(portfolioId: ID!): Portfolio
   portfolioAccountsModified(portfolioId: ID!): Portfolio
-  portfolioBrandsModified: Portfolio
+  portfolioBrandsModified(portfolioId: ID!): Portfolio
 }
