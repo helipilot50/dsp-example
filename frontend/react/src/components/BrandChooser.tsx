@@ -50,12 +50,12 @@ export function BrandChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.debug('[ProductChooser] onChange', newValue);
+          // console.debug('[BrandChooser] onChange', newValue);
           props.chosenBrands && props.chosenBrands(newValue as Brand[]);
         }}
         autoHighlight
         getOptionLabel={(option: Brand) => {
-          console.debug('[ProductChooser] getOptionLabel', option);
+          // console.debug('[BrandChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Brand, value: Brand) => option.id === value.id}

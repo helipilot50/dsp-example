@@ -52,12 +52,12 @@ export function ProductChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.debug('[ProductChooser] onChange', newValue);
+          // console.debug('[ProductChooser] onChange', newValue);
           props.retailersChange && props.retailersChange(newValue as Sku[]);
         }}
         autoHighlight
         getOptionLabel={(option: Sku) => {
-          console.debug('[ProductChooser] getOptionLabel', option);
+          // console.debug('[ProductChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Sku, value: Sku) => option.skuKey === value.skuKey}

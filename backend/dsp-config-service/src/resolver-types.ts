@@ -1,9 +1,9 @@
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { Campaign as CampaignModel, Account as AccountModel, Country as CountryModel, Lineitem as LineitemModel, SKU as SKUModel, Retailer as RetailerModel, Brand as BrandModel, Currency as CurrencyModel, Portfolio as PortfolioModel } from '@prisma/client';
+import { Campaign as CampaignModel, Account as AccountModel, Country as CountryModel, Lineitem as LineitemModel, SKU as SKUModel, Retailer as RetailerModel, Brand as BrandModel, Currency as CurrencyModel, Portfolio as PortfolioModel } from '@prisma/client/index.d';
 import { DspContext } from './context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown; }> = { [K in keyof T]: T[K] };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
@@ -2303,6 +2303,11 @@ export type SubscriptionPortfolioAccountsModifiedArgs = {
 };
 
 
+export type SubscriptionPortfolioBrandsModifiedArgs = {
+  portfolioId: Scalars['ID'];
+};
+
+
 export type SubscriptionPortfolioUsersModifiedArgs = {
   portfolioId: Scalars['ID'];
 };
@@ -2445,49 +2450,49 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes = {
-  Attribute: (BooleanAttribute) | (DateTimeAttribute) | (NumberAttribute) | (StringAttribute);
+  Attribute: ( BooleanAttribute ) | ( DateTimeAttribute ) | ( NumberAttribute ) | ( StringAttribute );
 };
 
 /** Mapping of union parent types */
 export type ResolversUnionParentTypes = {
-  Attribute: (BooleanAttribute) | (DateTimeAttribute) | (NumberAttribute) | (StringAttribute);
+  Attribute: ( BooleanAttribute ) | ( DateTimeAttribute ) | ( NumberAttribute ) | ( StringAttribute );
 };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<AccountModel>;
-  AccountFee: ResolverTypeWrapper<Omit<AccountFee, 'account'> & { account?: Maybe<ResolversTypes['Account']>; }>;
+  AccountFee: ResolverTypeWrapper<Omit<AccountFee, 'account'> & { account?: Maybe<ResolversTypes['Account']> }>;
   AccountSettings: ResolverTypeWrapper<AccountSettings>;
   AccountType: AccountType;
   AccountWhiteLabelSettings: ResolverTypeWrapper<AccountWhiteLabelSettings>;
-  Advertiser: ResolverTypeWrapper<Omit<Advertiser, 'campaigns'> & { campaigns?: Maybe<ResolversTypes['CampaignList']>; }>;
-  AdvertiserList: ResolverTypeWrapper<Omit<AdvertiserList, 'advertisers'> & { advertisers?: Maybe<Array<Maybe<ResolversTypes['Advertiser']>>>; }>;
+  Advertiser: ResolverTypeWrapper<Omit<Advertiser, 'campaigns'> & { campaigns?: Maybe<ResolversTypes['CampaignList']> }>;
+  AdvertiserList: ResolverTypeWrapper<Omit<AdvertiserList, 'advertisers'> & { advertisers?: Maybe<Array<Maybe<ResolversTypes['Advertiser']>>> }>;
   Attribute: ResolverTypeWrapper<ResolversUnionTypes['Attribute']>;
   Audience: ResolversTypes['OffsiteAudience'] | ResolversTypes['OnsiteAudience'];
   AudienceList: ResolverTypeWrapper<AudienceList>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   BooleanAttribute: ResolverTypeWrapper<BooleanAttribute>;
   Brand: ResolverTypeWrapper<BrandModel>;
-  BrandList: ResolverTypeWrapper<Omit<BrandList, 'brands'> & { brands: Array<Maybe<ResolversTypes['Brand']>>; }>;
+  BrandList: ResolverTypeWrapper<Omit<BrandList, 'brands'> & { brands: Array<Maybe<ResolversTypes['Brand']>> }>;
   BudgetType: BudgetType;
   Campaign: ResolverTypeWrapper<CampaignModel>;
   CampaignBudget: ResolverTypeWrapper<CampaignBudget>;
-  CampaignCapping: ResolverTypeWrapper<Omit<CampaignCapping, 'campaign'> & { campaign?: Maybe<ResolversTypes['Campaign']>; }>;
+  CampaignCapping: ResolverTypeWrapper<Omit<CampaignCapping, 'campaign'> & { campaign?: Maybe<ResolversTypes['Campaign']> }>;
   CampaignEligibility: CampaignEligibility;
-  CampaignList: ResolverTypeWrapper<Omit<CampaignList, 'campaigns'> & { campaigns?: Maybe<Array<Maybe<ResolversTypes['Campaign']>>>; }>;
+  CampaignList: ResolverTypeWrapper<Omit<CampaignList, 'campaigns'> & { campaigns?: Maybe<Array<Maybe<ResolversTypes['Campaign']>>> }>;
   CampaignStatus: CampaignStatus;
   CampaignType: CampaignType;
   Country: ResolverTypeWrapper<CountryModel>;
   CountryCode: CountryCode;
   CountrySettings: ResolverTypeWrapper<CountrySettings>;
-  Creative: ResolverTypeWrapper<Omit<Creative, 'campaign'> & { campaign?: Maybe<ResolversTypes['Campaign']>; }>;
+  Creative: ResolverTypeWrapper<Omit<Creative, 'campaign'> & { campaign?: Maybe<ResolversTypes['Campaign']> }>;
   Currency: ResolverTypeWrapper<CurrencyModel>;
   CurrencyCode: CurrencyCode;
   CurrencySettings: ResolverTypeWrapper<CurrencySettings>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   DateTimeAttribute: ResolverTypeWrapper<DateTimeAttribute>;
   EmailAddress: ResolverTypeWrapper<EmailAddress>;
-  ExternalAccount: ResolverTypeWrapper<Omit<ExternalAccount, 'publicMetadata'> & { publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>; }>;
+  ExternalAccount: ResolverTypeWrapper<Omit<ExternalAccount, 'publicMetadata'> & { publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>> }>;
   FinancialStatus: FinancialStatus;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
@@ -2495,7 +2500,7 @@ export type ResolversTypes = {
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Lineitem: ResolverTypeWrapper<LineitemModel>;
   LineitemBudget: ResolverTypeWrapper<LineitemBudget>;
-  LineitemList: ResolverTypeWrapper<Omit<LineitemList, 'lineitems'> & { lineitems?: Maybe<Array<Maybe<ResolversTypes['Lineitem']>>>; }>;
+  LineitemList: ResolverTypeWrapper<Omit<LineitemList, 'lineitems'> & { lineitems?: Maybe<Array<Maybe<ResolversTypes['Lineitem']>>> }>;
   LineitemPage: ResolverTypeWrapper<LineitemPage>;
   LineitemStatus: LineitemStatus;
   ListCursor: never;
@@ -2531,25 +2536,25 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   ReportingLabel: ResolverTypeWrapper<ReportingLabel>;
   Retailer: ResolverTypeWrapper<RetailerModel>;
-  RetailerExpermentalConfig: ResolverTypeWrapper<Omit<RetailerExpermentalConfig, 'retailer'> & { retailer?: Maybe<ResolversTypes['Retailer']>; }>;
-  RetailerList: ResolverTypeWrapper<Omit<RetailerList, 'retailers'> & { retailers: Array<Maybe<ResolversTypes['Retailer']>>; }>;
-  RetailerPreferenceDefaultValue: ResolverTypeWrapper<Omit<RetailerPreferenceDefaultValue, 'retailerPreferences'> & { retailerPreferences?: Maybe<ResolversTypes['RetailerPreferences']>; }>;
-  RetailerPreferences: ResolverTypeWrapper<Omit<RetailerPreferences, 'defaultValues' | 'retailer'> & { defaultValues?: Maybe<Array<Maybe<ResolversTypes['RetailerPreferenceDefaultValue']>>>, retailer?: Maybe<ResolversTypes['Retailer']>; }>;
+  RetailerExpermentalConfig: ResolverTypeWrapper<Omit<RetailerExpermentalConfig, 'retailer'> & { retailer?: Maybe<ResolversTypes['Retailer']> }>;
+  RetailerList: ResolverTypeWrapper<Omit<RetailerList, 'retailers'> & { retailers: Array<Maybe<ResolversTypes['Retailer']>> }>;
+  RetailerPreferenceDefaultValue: ResolverTypeWrapper<Omit<RetailerPreferenceDefaultValue, 'retailerPreferences'> & { retailerPreferences?: Maybe<ResolversTypes['RetailerPreferences']> }>;
+  RetailerPreferences: ResolverTypeWrapper<Omit<RetailerPreferences, 'defaultValues' | 'retailer'> & { defaultValues?: Maybe<Array<Maybe<ResolversTypes['RetailerPreferenceDefaultValue']>>>, retailer?: Maybe<ResolversTypes['Retailer']> }>;
   RetailerStatus: RetailerStatus;
   SKU: ResolverTypeWrapper<SKUModel>;
   SKUUpdate: SkuUpdate;
   SalesForceAccount: ResolverTypeWrapper<SalesForceAccount>;
   Segment: ResolverTypeWrapper<Segment>;
   Seller: ResolverTypeWrapper<Seller>;
-  SkuList: ResolverTypeWrapper<Omit<SkuList, 'skus'> & { skus: Array<Maybe<ResolversTypes['SKU']>>; }>;
+  SkuList: ResolverTypeWrapper<Omit<SkuList, 'skus'> & { skus: Array<Maybe<ResolversTypes['SKU']>> }>;
   String: ResolverTypeWrapper<Scalars['String']>;
   StringAttribute: ResolverTypeWrapper<StringAttribute>;
   Subscription: ResolverTypeWrapper<{}>;
-  Taxonomy: ResolverTypeWrapper<Omit<Taxonomy, 'skus'> & { skus?: Maybe<ResolversTypes['SkuList']>; }>;
+  Taxonomy: ResolverTypeWrapper<Omit<Taxonomy, 'skus'> & { skus?: Maybe<ResolversTypes['SkuList']> }>;
   URL: ResolverTypeWrapper<Scalars['URL']>;
   UpdateAccountSettings: UpdateAccountSettings;
   UpdateWhiteLabelSettings: UpdateWhiteLabelSettings;
-  User: ResolverTypeWrapper<Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>; }>;
+  User: ResolverTypeWrapper<Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversTypes['Attribute']>>> }>;
   Verification: ResolverTypeWrapper<Verification>;
   Web3Wallet: ResolverTypeWrapper<Web3Wallet>;
 };
@@ -2557,38 +2562,38 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Account: AccountModel;
-  AccountFee: Omit<AccountFee, 'account'> & { account?: Maybe<ResolversParentTypes['Account']>; };
+  AccountFee: Omit<AccountFee, 'account'> & { account?: Maybe<ResolversParentTypes['Account']> };
   AccountSettings: AccountSettings;
   AccountWhiteLabelSettings: AccountWhiteLabelSettings;
-  Advertiser: Omit<Advertiser, 'campaigns'> & { campaigns?: Maybe<ResolversParentTypes['CampaignList']>; };
-  AdvertiserList: Omit<AdvertiserList, 'advertisers'> & { advertisers?: Maybe<Array<Maybe<ResolversParentTypes['Advertiser']>>>; };
+  Advertiser: Omit<Advertiser, 'campaigns'> & { campaigns?: Maybe<ResolversParentTypes['CampaignList']> };
+  AdvertiserList: Omit<AdvertiserList, 'advertisers'> & { advertisers?: Maybe<Array<Maybe<ResolversParentTypes['Advertiser']>>> };
   Attribute: ResolversUnionParentTypes['Attribute'];
   Audience: ResolversParentTypes['OffsiteAudience'] | ResolversParentTypes['OnsiteAudience'];
   AudienceList: AudienceList;
   Boolean: Scalars['Boolean'];
   BooleanAttribute: BooleanAttribute;
   Brand: BrandModel;
-  BrandList: Omit<BrandList, 'brands'> & { brands: Array<Maybe<ResolversParentTypes['Brand']>>; };
+  BrandList: Omit<BrandList, 'brands'> & { brands: Array<Maybe<ResolversParentTypes['Brand']>> };
   Campaign: CampaignModel;
   CampaignBudget: CampaignBudget;
-  CampaignCapping: Omit<CampaignCapping, 'campaign'> & { campaign?: Maybe<ResolversParentTypes['Campaign']>; };
-  CampaignList: Omit<CampaignList, 'campaigns'> & { campaigns?: Maybe<Array<Maybe<ResolversParentTypes['Campaign']>>>; };
+  CampaignCapping: Omit<CampaignCapping, 'campaign'> & { campaign?: Maybe<ResolversParentTypes['Campaign']> };
+  CampaignList: Omit<CampaignList, 'campaigns'> & { campaigns?: Maybe<Array<Maybe<ResolversParentTypes['Campaign']>>> };
   Country: CountryModel;
   CountrySettings: CountrySettings;
-  Creative: Omit<Creative, 'campaign'> & { campaign?: Maybe<ResolversParentTypes['Campaign']>; };
+  Creative: Omit<Creative, 'campaign'> & { campaign?: Maybe<ResolversParentTypes['Campaign']> };
   Currency: CurrencyModel;
   CurrencySettings: CurrencySettings;
   DateTime: Scalars['DateTime'];
   DateTimeAttribute: DateTimeAttribute;
   EmailAddress: EmailAddress;
-  ExternalAccount: Omit<ExternalAccount, 'publicMetadata'> & { publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>; };
+  ExternalAccount: Omit<ExternalAccount, 'publicMetadata'> & { publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>> };
   Float: Scalars['Float'];
   ID: Scalars['ID'];
   IdentificationLink: IdentificationLink;
   Int: Scalars['Int'];
   Lineitem: LineitemModel;
   LineitemBudget: LineitemBudget;
-  LineitemList: Omit<LineitemList, 'lineitems'> & { lineitems?: Maybe<Array<Maybe<ResolversParentTypes['Lineitem']>>>; };
+  LineitemList: Omit<LineitemList, 'lineitems'> & { lineitems?: Maybe<Array<Maybe<ResolversParentTypes['Lineitem']>>> };
   LineitemPage: LineitemPage;
   ListCursor: never;
   ListOffsetLimit: ResolversParentTypes['LineitemList'] | ResolversParentTypes['RetailerList'];
@@ -2619,24 +2624,24 @@ export type ResolversParentTypes = {
   Query: {};
   ReportingLabel: ReportingLabel;
   Retailer: RetailerModel;
-  RetailerExpermentalConfig: Omit<RetailerExpermentalConfig, 'retailer'> & { retailer?: Maybe<ResolversParentTypes['Retailer']>; };
-  RetailerList: Omit<RetailerList, 'retailers'> & { retailers: Array<Maybe<ResolversParentTypes['Retailer']>>; };
-  RetailerPreferenceDefaultValue: Omit<RetailerPreferenceDefaultValue, 'retailerPreferences'> & { retailerPreferences?: Maybe<ResolversParentTypes['RetailerPreferences']>; };
-  RetailerPreferences: Omit<RetailerPreferences, 'defaultValues' | 'retailer'> & { defaultValues?: Maybe<Array<Maybe<ResolversParentTypes['RetailerPreferenceDefaultValue']>>>, retailer?: Maybe<ResolversParentTypes['Retailer']>; };
+  RetailerExpermentalConfig: Omit<RetailerExpermentalConfig, 'retailer'> & { retailer?: Maybe<ResolversParentTypes['Retailer']> };
+  RetailerList: Omit<RetailerList, 'retailers'> & { retailers: Array<Maybe<ResolversParentTypes['Retailer']>> };
+  RetailerPreferenceDefaultValue: Omit<RetailerPreferenceDefaultValue, 'retailerPreferences'> & { retailerPreferences?: Maybe<ResolversParentTypes['RetailerPreferences']> };
+  RetailerPreferences: Omit<RetailerPreferences, 'defaultValues' | 'retailer'> & { defaultValues?: Maybe<Array<Maybe<ResolversParentTypes['RetailerPreferenceDefaultValue']>>>, retailer?: Maybe<ResolversParentTypes['Retailer']> };
   SKU: SKUModel;
   SKUUpdate: SkuUpdate;
   SalesForceAccount: SalesForceAccount;
   Segment: Segment;
   Seller: Seller;
-  SkuList: Omit<SkuList, 'skus'> & { skus: Array<Maybe<ResolversParentTypes['SKU']>>; };
+  SkuList: Omit<SkuList, 'skus'> & { skus: Array<Maybe<ResolversParentTypes['SKU']>> };
   String: Scalars['String'];
   StringAttribute: StringAttribute;
   Subscription: {};
-  Taxonomy: Omit<Taxonomy, 'skus'> & { skus?: Maybe<ResolversParentTypes['SkuList']>; };
+  Taxonomy: Omit<Taxonomy, 'skus'> & { skus?: Maybe<ResolversParentTypes['SkuList']> };
   URL: Scalars['URL'];
   UpdateAccountSettings: UpdateAccountSettings;
   UpdateWhiteLabelSettings: UpdateWhiteLabelSettings;
-  User: Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversParentTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>; };
+  User: Omit<User, 'portfolio' | 'privateMetadata' | 'publicMetadata' | 'unsafeMetadata'> & { portfolio?: Maybe<ResolversParentTypes['Portfolio']>, privateMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, publicMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>>, unsafeMetadata?: Maybe<Array<Maybe<ResolversParentTypes['Attribute']>>> };
   Verification: Verification;
   Web3Wallet: Web3Wallet;
 };
@@ -3203,7 +3208,7 @@ export type SubscriptionResolvers<ContextType = DspContext, ParentType = Resolve
   lineitemCreated?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemCreated", ParentType, ContextType>;
   lineitemPaused?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemPaused", ParentType, ContextType, RequireFields<SubscriptionLineitemPausedArgs, 'lineitemId'>>;
   portfolioAccountsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioAccountsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioAccountsModifiedArgs, 'portfolioId'>>;
-  portfolioBrandsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioBrandsModified", ParentType, ContextType>;
+  portfolioBrandsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioBrandsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioBrandsModifiedArgs, 'portfolioId'>>;
   portfolioCreated?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioCreated", ParentType, ContextType>;
   portfolioUsersModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioUsersModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioUsersModifiedArgs, 'portfolioId'>>;
   privateMarketAccountCrated?: SubscriptionResolver<Maybe<ResolversTypes['PrivateMarketAccount']>, "privateMarketAccountCrated", ParentType, ContextType>;

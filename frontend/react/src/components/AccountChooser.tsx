@@ -45,12 +45,12 @@ export function AccountChooser(props: {
         options={elements}
         value={inputValues}
         onChange={(event: any, newValue: any) => {
-          console.debug('[AccountChooser] onChange', newValue);
+          // console.debug('[AccountChooser] onChange', newValue);
           props.chosenAccounts && props.chosenAccounts(newValue as Account[]);
         }}
         autoHighlight
         getOptionLabel={(option: Account) => {
-          console.debug('[AccountChooser] getOptionLabel', option);
+          // console.debug('[AccountChooser] getOptionLabel', option);
           return option.name as string;
         }}
         isOptionEqualToValue={(option: Account, value: Account) => option.id === value.id}

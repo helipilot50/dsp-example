@@ -2,7 +2,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { withFilter } from "graphql-subscriptions";
 import { DspContext } from "../context";
 import { topLevelFieldsFromQuery } from "./resolverTools";
-import { MutationMapAccountsToPortfolioArgs, MutationMapBrandsToPortfolioArgs, MutationMapUsersToPortfolioArgs, MutationNewPortfolioArgs, QueryPortfolioArgs, QueryUserArgs, QueryUsersArgs } from "../resolver-types";
+import { MutationMapAccountsToPortfolioArgs, MutationMapBrandsToPortfolioArgs, MutationMapUsersToPortfolioArgs, MutationNewPortfolioArgs, QueryPortfolioArgs, QueryUserArgs, QueryUsersArgs, SubscriptionPortfolioAccountsModifiedArgs, SubscriptionPortfolioBrandsModifiedArgs, SubscriptionPortfolioUsersModifiedArgs } from "../resolver-types";
 
 import { User, userById, userByToken, userList } from '../clerk';
 
@@ -200,5 +200,49 @@ export const usersResolvers/*: Resolvers*/ = {
       }
     }
 
+  },
+  Subscription: {
+    portfolioUsersModified: {
+      subscribe: withFilter(
+        // asyncIteratorFn
+        (_: any, variables: SubscriptionPortfolioUsersModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioUsersModified] subscribe ${variables}`);
+          return context.pubsub.asyncIterator(PORTFOLIO_USERS_UPDATED);
+        },
+        // filterFn 
+        (payload: any, variables: SubscriptionPortfolioUsersModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioUsersModified] filter ${payload}, ${variables}`);
+          return (payload.portfolioUpdated.id === variables.portfolioId);
+        }
+      ),
+    },
+    portfolioAccountsModified: {
+      subscribe: withFilter(
+        // asyncIteratorFn
+        (_: any, variables: SubscriptionPortfolioAccountsModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioAccountsModified] subscribe ${variables}`);
+          return context.pubsub.asyncIterator(PORTFOLIO_ACCOUNTS_UPDATED);
+        },
+        // filterFn 
+        (payload: any, variables: SubscriptionPortfolioAccountsModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioAccountsModified] filter ${payload}, ${variables}`);
+          return (payload.portfolioUpdated.id === variables.portfolioId);
+        }
+      ),
+    },
+    portfolioBrandsModified: {
+      subscribe: withFilter(
+        // asyncIteratorFn
+        (_: any, variables: SubscriptionPortfolioBrandsModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioBrandsModified] subscribe ${variables}`);
+          return context.pubsub.asyncIterator(PORTFOLIO_BRANDS_UPDATED);
+        },
+        // filterFn 
+        (payload: any, variables: SubscriptionPortfolioBrandsModifiedArgs, context: DspContext, info: any) => {
+          context.logger.debug(`[usersResolvers.portfolioBrandsModified] filter ${payload}, ${variables}`);
+          return (payload.portfolioUpdated.id === variables.portfolioId);
+        }
+      ),
+    }
   }
 };

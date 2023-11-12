@@ -1,14 +1,15 @@
-import { Button, Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, LinearProgress, Stack, TextField } from '@mui/material';
+import { Alert, AlertTitle, Button, Card, CardActions, CardContent, CardHeader, FormControl, FormLabel, LinearProgress, Snackbar, Stack, TextField } from '@mui/material';
 import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ErrorNofification } from './error/ErrorBoundary';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS, MAP_PORTFOLIO_BRANDS, MAP_PORTFOLIO_USERS, MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables, MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_DETAILS, Portfolio, PortfolioQuery, PortfolioQueryVariables, User } from 'not-dsp-graphql';
+import { Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS, MAP_PORTFOLIO_BRANDS, MAP_PORTFOLIO_USERS, MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables, MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables, MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables, NEW_PORTFOLIO, NewPortfolioMutation, NewPortfolioMutationVariables, PORTFOLIO_ACCOUNTS_MODIFIED, PORTFOLIO_BRANDS_MODIFIED, PORTFOLIO_DETAILS, PORTFOLIO_USERS_MODIFIED, Portfolio, PortfolioAccountsModifiedSubscription, PortfolioAccountsModifiedSubscriptionVariables, PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables, PortfolioQuery, PortfolioQueryVariables, PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables, User } from 'not-dsp-graphql';
 import { ApolloError, useMutation, useQuery, useSubscription } from '@apollo/client';
 import { UserChooser } from './UserChooser';
 import { AccountChooser } from './AccountChooser';
 import { BrandChooser } from './BrandChooser';
 import { useErrorBoundary } from 'react-error-boundary';
+import { SNACKBAR_AUTOHIDE_DURATION } from '../lib/utility';
 
 export function PortfolioDetails() {
   const params = useParams();
@@ -206,6 +207,9 @@ export function PortfolioDetails() {
         noValidate
         autoComplete="off"
       >
+        {!isNew && <UsersModified portfolioId={portfolio.id as string} />}
+        {!isNew && <BrandsModified portfolioId={portfolio.id as string} />}
+        {!isNew && <AccountsModified portfolioId={portfolio.id as string} />}
         {(loading || createLoading || mapUsersLoading) && <LinearProgress variant="query" />}
         <Stack spacing={2}>
           <TextField
@@ -234,3 +238,92 @@ export function PortfolioDetails() {
   );
 }
 
+export function UsersModified(props: { portfolioId: string; }) {
+  const { data } = useSubscription<PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables>(PORTFOLIO_USERS_MODIFIED,
+    {
+      variables: {
+        portfolioId: props.portfolioId
+      }
+    });
+  const [state, setState] = useState({ open: false, message: '' });
+  useMemo(() => {
+    if (data) {
+      console.log('***', data);
+      setState({ open: true, message: `Users for ${data?.portfolioUsersModified?.name} modified at ${new Date().toLocaleString()}` });
+    }
+  }, [data]);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
+  console.debug('[UsersModified] data props', data, props);
+  return (
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
+      </Alert>
+    </Snackbar >
+  );
+}
+
+export function BrandsModified(props: { portfolioId: string; }) {
+  const { data } = useSubscription<PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables>(PORTFOLIO_BRANDS_MODIFIED,
+    {
+      variables: {
+        portfolioId: props.portfolioId
+      }
+    });
+  const [state, setState] = useState({ open: false, message: '' });
+  useMemo(() => {
+    if (data) {
+      console.log('***', data);
+      setState({ open: true, message: `Brands for ${data?.portfolioBrandsModified?.name} modified at ${new Date().toLocaleString()}` });
+    }
+  }, [data]);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
+  console.debug('[BrandsModified] data props', data, props);
+  return (
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
+      </Alert>
+    </Snackbar >
+  );
+}
+
+export function AccountsModified(props: { portfolioId: string; }) {
+  const { data } = useSubscription<PortfolioAccountsModifiedSubscription, PortfolioAccountsModifiedSubscriptionVariables>(PORTFOLIO_ACCOUNTS_MODIFIED,
+    {
+      variables: {
+        portfolioId: props.portfolioId
+      }
+    });
+  const [state, setState] = useState({ open: false, message: '' });
+  useMemo(() => {
+    if (data) {
+      console.log('***', data);
+      setState({ open: true, message: `Brands for ${data?.portfolioAccountsModified?.name} modified at ${new Date().toLocaleString()}` });
+    }
+  }, [data]);
+  function onClose() {
+    setState({ open: false, message: '' });
+  }
+  console.debug('[AccountsModified] data props', data, props);
+  return (
+    <Snackbar open={state.open}
+      autoHideDuration={SNACKBAR_AUTOHIDE_DURATION}
+      onClose={onClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+      <Alert onClose={onClose}>
+        <AlertTitle>Lineitem {state.message} </AlertTitle>
+      </Alert>
+    </Snackbar >
+  );
+}
