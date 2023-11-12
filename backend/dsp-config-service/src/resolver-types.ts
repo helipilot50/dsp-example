@@ -2205,10 +2205,10 @@ export type Subscription = {
   lineitemActivated: Lineitem;
   lineitemCreated: Lineitem;
   lineitemPaused: Lineitem;
-  portfolioAccountsModified?: Maybe<Portfolio>;
-  portfolioBrandsModified?: Maybe<Portfolio>;
+  portfolioAccountsModified?: Maybe<Array<Maybe<Account>>>;
+  portfolioBrandsModified?: Maybe<Array<Maybe<Brand>>>;
   portfolioCreated?: Maybe<Portfolio>;
-  portfolioUsersModified?: Maybe<Portfolio>;
+  portfolioUsersModified?: Maybe<Array<Maybe<User>>>;
   privateMarketAccountCrated?: Maybe<PrivateMarketAccount>;
   retailerInitialized?: Maybe<Retailer>;
   retailerUpdated?: Maybe<Retailer>;
@@ -3207,10 +3207,10 @@ export type SubscriptionResolvers<ContextType = DspContext, ParentType = Resolve
   lineitemActivated?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemActivated", ParentType, ContextType, RequireFields<SubscriptionLineitemActivatedArgs, 'lineitemId'>>;
   lineitemCreated?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemCreated", ParentType, ContextType>;
   lineitemPaused?: SubscriptionResolver<ResolversTypes['Lineitem'], "lineitemPaused", ParentType, ContextType, RequireFields<SubscriptionLineitemPausedArgs, 'lineitemId'>>;
-  portfolioAccountsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioAccountsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioAccountsModifiedArgs, 'portfolioId'>>;
-  portfolioBrandsModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioBrandsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioBrandsModifiedArgs, 'portfolioId'>>;
+  portfolioAccountsModified?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['Account']>>>, "portfolioAccountsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioAccountsModifiedArgs, 'portfolioId'>>;
+  portfolioBrandsModified?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['Brand']>>>, "portfolioBrandsModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioBrandsModifiedArgs, 'portfolioId'>>;
   portfolioCreated?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioCreated", ParentType, ContextType>;
-  portfolioUsersModified?: SubscriptionResolver<Maybe<ResolversTypes['Portfolio']>, "portfolioUsersModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioUsersModifiedArgs, 'portfolioId'>>;
+  portfolioUsersModified?: SubscriptionResolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, "portfolioUsersModified", ParentType, ContextType, RequireFields<SubscriptionPortfolioUsersModifiedArgs, 'portfolioId'>>;
   privateMarketAccountCrated?: SubscriptionResolver<Maybe<ResolversTypes['PrivateMarketAccount']>, "privateMarketAccountCrated", ParentType, ContextType>;
   retailerInitialized?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerInitialized", ParentType, ContextType>;
   retailerUpdated?: SubscriptionResolver<Maybe<ResolversTypes['Retailer']>, "retailerUpdated", ParentType, ContextType>;

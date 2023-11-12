@@ -150,7 +150,7 @@ export const usersResolvers/*: Resolvers*/ = {
             }
           }
         });
-        context.pubsub.publish(PORTFOLIO_USERS_UPDATED, { portfolioUpdated: dbResult });
+        context.pubsub.publish(PORTFOLIO_USERS_UPDATED, { portfolioUsersModified: dbResult });
         return dbResult;
 
       } catch (err) {
@@ -173,7 +173,7 @@ export const usersResolvers/*: Resolvers*/ = {
             }
           }
         });
-        context.pubsub.publish(PORTFOLIO_ACCOUNTS_UPDATED, { portfolioUpdated: dbResult });
+        context.pubsub.publish(PORTFOLIO_ACCOUNTS_UPDATED, { portfolioAccountsModified: dbResult });
       } catch (err) {
         context.logger.error(`[usersResolvers.mapAccountsToPortfolio] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
@@ -193,7 +193,8 @@ export const usersResolvers/*: Resolvers*/ = {
             }
           }
         });
-        context.pubsub.publish(PORTFOLIO_BRANDS_UPDATED, { portfolioUpdated: dbResult });
+        console.log(`[usersResolvers.mapBrandsToPortfolio] dbResult ${JSON.stringify(dbResult, undefined, 2)}`);
+        context.pubsub.publish(PORTFOLIO_BRANDS_UPDATED, { portfolioBrandsModified: dbResult });
       } catch (err) {
         context.logger.error(`[usersResolvers.mapBrandsToPortfolio] error ${JSON.stringify(err, undefined, 2)}`);
         throw err;
@@ -212,7 +213,7 @@ export const usersResolvers/*: Resolvers*/ = {
         // filterFn 
         (payload: any, variables: SubscriptionPortfolioUsersModifiedArgs, context: DspContext, info: any) => {
           context.logger.debug(`[usersResolvers.portfolioUsersModified] filter ${payload}, ${variables}`);
-          return (payload.portfolioUpdated.id === variables.portfolioId);
+          return (payload.portfolioUsersModified.id === variables.portfolioId);
         }
       ),
     },
@@ -226,7 +227,7 @@ export const usersResolvers/*: Resolvers*/ = {
         // filterFn 
         (payload: any, variables: SubscriptionPortfolioAccountsModifiedArgs, context: DspContext, info: any) => {
           context.logger.debug(`[usersResolvers.portfolioAccountsModified] filter ${payload}, ${variables}`);
-          return (payload.portfolioUpdated.id === variables.portfolioId);
+          return (payload.portfolioAccountsModified.id === variables.portfolioId);
         }
       ),
     },
@@ -240,7 +241,7 @@ export const usersResolvers/*: Resolvers*/ = {
         // filterFn 
         (payload: any, variables: SubscriptionPortfolioBrandsModifiedArgs, context: DspContext, info: any) => {
           context.logger.debug(`[usersResolvers.portfolioBrandsModified] filter ${payload}, ${variables}`);
-          return (payload.portfolioUpdated.id === variables.portfolioId);
+          return (payload.portfolioBrandsModified.id === variables.portfolioId);
         }
       ),
     }

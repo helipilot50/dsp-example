@@ -262,7 +262,7 @@ export function UsersModified(props: { portfolioId: string; }) {
       onClose={onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
       <Alert onClose={onClose}>
-        <AlertTitle>Lineitem {state.message} </AlertTitle>
+        <AlertTitle>{state.message} </AlertTitle>
       </Alert>
     </Snackbar >
   );
@@ -292,7 +292,7 @@ export function BrandsModified(props: { portfolioId: string; }) {
       onClose={onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
       <Alert onClose={onClose}>
-        <AlertTitle>Lineitem {state.message} </AlertTitle>
+        <AlertTitle>{state.message} </AlertTitle>
       </Alert>
     </Snackbar >
   );
@@ -309,7 +309,7 @@ export function AccountsModified(props: { portfolioId: string; }) {
   useMemo(() => {
     if (data) {
       console.log('***', data);
-      setState({ open: true, message: `Brands for ${data?.portfolioAccountsModified?.name} modified at ${new Date().toLocaleString()}` });
+      setState({ open: true, message: `Accounts for ${data?.portfolioAccountsModified?.name} modified at ${new Date().toLocaleString()}` });
     }
   }, [data]);
   function onClose() {
@@ -322,7 +322,7 @@ export function AccountsModified(props: { portfolioId: string; }) {
       onClose={onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
       <Alert onClose={onClose}>
-        <AlertTitle>Lineitem {state.message} </AlertTitle>
+        <AlertTitle>{state.message} </AlertTitle>
       </Alert>
     </Snackbar >
   );
