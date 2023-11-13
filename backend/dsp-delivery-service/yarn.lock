@@ -952,7 +952,7 @@ negotiator@0.6.3:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.3.tgz#58e323a72fedc0d6f9cd4d31fe49f51479590ccd"
   integrity sha512-+EUsqGPLsM+j/zdChZjsnX51g4XrHFOIXwfnCVPGlQk/k5giakcKsuxCObBRu6DSm9opw/O6slWbJdghQM4bBg==
 
-node-rdkafka@^2.8.1:
+node-rdkafka@^2.18.0, node-rdkafka@^2.8.1:
   version "2.18.0"
   resolved "https://registry.yarnpkg.com/node-rdkafka/-/node-rdkafka-2.18.0.tgz#116950e49dfe804932c8bc6dbc68949793e72ee2"
   integrity sha512-jYkmO0sPvjesmzhv1WFOO4z7IMiAFpThR6/lcnFDWgSPkYL95CtcuVNo/R5PpjujmqSgS22GMkL1qvU4DTAvEQ==
