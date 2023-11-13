@@ -1,0 +1,53 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@shareable"]
+  )
+
+"""
+Brands are marketing and identity forms of business entities.
+"""
+type Brand @key(fields: "id") @shareable {
+  id: ID!
+  name: String!
+  foundedBy: String
+  foundedIn: String
+  country: String
+  keyPeople: String
+  industry: String
+  website: String
+  rank: Int
+  # in millions USD
+  brandValue: Int
+  rating: String
+}
+
+type BrandList {
+  brands: [Brand]!
+  totalCount: Int
+  cursor: String
+  hasMore: Boolean
+  offset: Int
+  limit: Int
+}
+
+extend type Account @key(fields: "id") {
+  id: ID! @external
+  """
+  A list of Brands related to the Account
+  """
+  brands: BrandList
+}
+
+type Query {
+  brand(brandId: ID!): Brand
+  brands(brandIds: [ID], offset: Int = 0, limit: Int = 100): BrandList
+}
+
+input NewBrand {
+  name: String!
+}
+
+type Mutation {
+  newBrand(brand: NewBrand!): Brand
+}

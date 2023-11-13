@@ -1,0 +1,28 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@provides", "@requires", "@shareable"]
+  )
+
+type Advertiser @key(fields: "id") {
+  id: ID!
+  name: String!
+}
+
+extend type Campaign @key(fields: "id") {
+  id: ID! @external
+  advertise: Advertiser @shareable
+}
+
+extend type Query {
+  advertiser(id: ID!): Advertiser
+}
+
+type AdvertiserList {
+  advertisers: [Advertiser]
+  totalCount: Int
+  cursor: String
+  hasMore: Boolean
+  offset: Int
+  limit: Int
+}

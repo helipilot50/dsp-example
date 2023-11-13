@@ -1,0 +1,82 @@
+extend schema
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@external", "@shareable", "@interfaceObject"]
+  )
+
+scalar Money
+
+# write model
+
+extend type Mutation {
+  configureTOP: Boolean
+  addTaxonomyManually(skyKey: ID!, taxonomy: [String!]!): SKU
+  updateSKUs(skuUpdates: [SKUUpdate]): [SKU]
+}
+
+input SKUUpdate {
+  skuKey: ID!
+  name: String
+  image: String
+  description: String
+  matchingSearchPhrases: [String]
+  price: Money
+  quantity: Int
+}
+
+# event model
+
+extend type Subscription {
+  skuInformationModified: [SKU]
+  taxonomyManuallyAdded: [Taxonomy]
+}
+
+# read model
+
+extend type Query {
+  sku(skuKey: ID!): SKU
+  """
+  List of SKUs by search phrase
+  """
+  skus(
+    """
+    Search phrase
+    """
+    search: String
+    """
+    starting offset, default of 0
+    """
+    offset: Int = 0
+    """
+    result size with a default of 100
+    """
+    limit: Int = 100
+  ): SkuList
+}
+
+"""
+Stock Keeping Unit
+"""
+type SKU @key(fields: "skuKey") {
+  skuKey: ID!
+  name: String
+  image: String
+  description: String
+  matchingSearchPhrases: [String]
+  price: Money
+  quantity: Int
+}
+"""
+List of SKUs pagable by offset and limit
+"""
+type SkuList {
+  skus: [SKU]!
+  totalCount: Int
+  offset: Int
+  limit: Int
+}
+
+extend type Taxonomy @key(fields: "key") {
+  key: ID @external
+  skus(offset: Int = 0, limit: Int = 100): SkuList
+}
