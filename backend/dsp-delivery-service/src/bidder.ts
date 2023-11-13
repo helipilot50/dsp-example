@@ -11,9 +11,6 @@ import { pubsubEngine } from './kafka';
 logger.level = process.env.LOG_LEVEL || 'debug';
 const servicePort = (process.env.PORT) ? Number.parseInt(process.env.PORT) : 5000;
 
-let lineitemPaused: unknown;
-let lineitemActivated: unknown;
-
 const app = express();
 const httpServer = createServer(app);
 
@@ -28,13 +25,8 @@ function onMessage(payload: any) {
 }
 const server = app.listen(servicePort, async () => {
   logger.info(`[bidder] listening on port ${servicePort}`);
+  dummy();
 
-
-  lineitemActivated = await pubsubEngine.subscribe('LineitemActivated', onMessage);
-  logger.info(`[bidder] subscribed to LineitemActivated`);
-
-  lineitemPaused = await pubsubEngine.subscribe('LineitemPaused', onMessage);
-  logger.info(`[bidder] subscribed to LineitemPaused: ${lineitemActivated}`);
 });
 
 function gracefulshutdown() {
@@ -48,25 +40,28 @@ function gracefulshutdown() {
 
 async function dummy() {
   logger.info(`[bidder] dummy`);
-  const iter = pubsubEngine.asyncIterator('LineitemActivated');
+  const LINEITEM_ACTIVATED_EVENT = 'LineitemActivated';
+  // const iter = pubsubEngine.asyncIterator(LINEITEM_ACTIVATED_EVENT);
   var i: number;
   const rep = 10;
 
+  const cats = await pubsubEngine.subscribe(LINEITEM_ACTIVATED_EVENT, onMessage);
+  console.log(`[bidder] sunscribed with ${cats}`);
   for (i = 0; i < rep; i++) {
     const inputPayload = { id: "iter-" + i };
-    const promise = iter.next();
-    await pubsubEngine.publish('LineitemActivated', inputPayload);
-    await promise.then((payload: any) => {
-      logger.info(`[bidder] dummy payload: ${JSON.stringify(payload)}`);
-    },
-      (error: any) => {
-        logger.error(`[bidder] dummy error: ${JSON.stringify(error)}`);
-      }
-    );
+    logger.info(`[bidder] dummy inputPayload: ${JSON.stringify(inputPayload)}`);
+
+    try {
+      await pubsubEngine.publish(LINEITEM_ACTIVATED_EVENT, inputPayload);
+      logger.info(`[bidder] dummy published: ${JSON.stringify(inputPayload)}`);
+    } catch (error) {
+      logger.error(`[bidder] dummy error: ${JSON.stringify(error)}`);
+    }
+
   }
 }
 
-dummy();
+
 
 process.on("SIGTERM", gracefulshutdown);
 process.on("SIGINT", gracefulshutdown);
