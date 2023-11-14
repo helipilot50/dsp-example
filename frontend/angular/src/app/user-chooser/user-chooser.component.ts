@@ -30,7 +30,6 @@ export class UserChooserComponent {
   constructor(private apollo: Apollo,
     private snackBar: MatSnackBar) {
 
-    //---------------------------------------------------
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
       map((countryName: string | null) => (countryName ? this._filterUser(countryName) : this.allUsers.slice())),
@@ -53,21 +52,8 @@ export class UserChooserComponent {
     });
   }
 
-  addUser(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-
-    if (value) {
-      this.users.push(this.allUsers.find(user => this.userToChipString(user) === value) as User);
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.usersCtrl.setValue(null);
-  }
-
   removeUser(user: User): void {
+
     const index = this.users.indexOf(user);
 
     if (index >= 0) {
