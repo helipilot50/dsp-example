@@ -13,6 +13,8 @@ import { RetailerDetailsComponent } from './retailer-details/retailer-details.co
 import { LineitemListComponent } from './lineitem-list/lineitem-list.component';
 import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PortfolioListComponent } from './portfolio-list/portfolio-list.component';
+import { PortfolioDetailsComponent } from './portfolio-details/portfolio-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -79,6 +81,14 @@ const routes: Routes = [
   {
     path: 'products/:skuKey',
     component: ProductDetailsComponent
+  },
+  {
+    path: 'portfolios',
+    component: PortfolioListComponent
+  },
+  {
+    path: 'portfolios/:portfolioId',
+    component: PortfolioDetailsComponent
   }];
 
 @NgModule({

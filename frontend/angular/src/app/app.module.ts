@@ -11,6 +11,8 @@ import { CampaignListComponent } from './campaign-list/campaign-list.component';
 import { CampaignDetailsComponent } from './campaign-details/campaign-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { PortfolioListComponent } from './portfolio-list/portfolio-list.component';
+import { PortfolioDetailsComponent } from './portfolio-details/portfolio-details.component';
 
 
 import { A11yModule } from '@angular/cdk/a11y';
@@ -84,7 +86,9 @@ import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.compo
     BrandListComponent,
     LineitemListComponent,
     LineitemDetailComponent,
-    DashboardComponent
+    DashboardComponent,
+    PortfolioListComponent,
+    PortfolioDetailsComponent
   ],
   imports: [
     BrowserModule,
