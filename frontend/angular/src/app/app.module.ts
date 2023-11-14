@@ -69,6 +69,9 @@ import { BrandDetailsComponent } from './brand-details/brand-details.component';
 import { BrandListComponent } from './brand-list/brand-list.component';
 import { LineitemListComponent } from './lineitem-list/lineitem-list.component';
 import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.component';
+import { AccountChooserComponent } from './account-chooser/account-chooser.component';
+import { BrandChooserComponent } from './brand-chooser/brand-chooser.component';
+import { UserChooserComponent } from './user-chooser/user-chooser.component';
 
 
 @NgModule({
@@ -88,7 +91,10 @@ import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.compo
     LineitemDetailComponent,
     DashboardComponent,
     PortfolioListComponent,
-    PortfolioDetailsComponent
+    PortfolioDetailsComponent,
+    AccountChooserComponent,
+    BrandChooserComponent,
+    UserChooserComponent
   ],
   imports: [
     BrowserModule,
