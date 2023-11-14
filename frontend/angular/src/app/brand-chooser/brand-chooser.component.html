@@ -1,1 +1,22 @@
-<p>brand-chooser works!</p>
+<mat-form-field class="formField">
+  <mat-label>Brands</mat-label>
+  <mat-chip-grid #chipGridB aria-label="Brand selection" >
+    <mat-chip-row *ngFor="let brand of brands" (removed)="removeBrand(brand)">
+      {{brandToChipString(brand)}}
+      <button matChipRemove [attr.aria-label]="'remove ' + brand">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+  </mat-chip-grid>
+  <input
+    matNativeControl
+    placeholder="Add brand..." #brandInput [formControl]="brandsCtrl"
+    [matChipInputFor]="chipGridB" [matAutocomplete]="auto"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="brandSelected($event)">
+    <mat-option *ngFor="let brand of filteredBrands | async" [value]="brand">
+      {{brandToChipString(brand)}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

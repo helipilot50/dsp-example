@@ -2,7 +2,6 @@ import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
 import { User, UsersQuery, UsersQueryVariables, USER_LIST } from 'not-dsp-graphql';
@@ -32,7 +31,7 @@ export class UserChooserComponent {
 
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
-      map((countryName: string | null) => (countryName ? this._filterUser(countryName) : this.allUsers.slice())),
+      map((userName: string | null) => (userName ? this._filterUser(userName) : this.allUsers.slice())),
     );
 
   }
