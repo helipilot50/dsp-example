@@ -18,11 +18,12 @@ import { Apollo } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
+import { UserChooserComponent } from '../user-chooser/user-chooser.component';
 
 @Component({
   selector: 'app-portfolio-details',
   templateUrl: './portfolio-details.component.html',
-  styleUrls: ['./portfolio-details.component.css']
+  styleUrls: ['./portfolio-details.component.css'],
 })
 export class PortfolioDetailsComponent {
   portfolio: Portfolio | undefined = undefined;

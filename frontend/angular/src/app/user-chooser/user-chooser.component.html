@@ -1,1 +1,22 @@
-<p>user-chooser works!</p>
+<mat-form-field class="formField">
+  <mat-label>Users</mat-label>
+  <mat-chip-grid #chipGridC aria-label="User selection" >
+    <mat-chip-row *ngFor="let user of users" (removed)="removeUser(user)">
+      {{userToChipString(user)}}
+      <button matChipRemove [attr.aria-label]="'remove ' + user">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+  </mat-chip-grid>
+  <input
+    matNativeControl
+    placeholder="Add user..." #userInput [formControl]="usersCtrl"
+    [matChipInputFor]="chipGridC" [matAutocomplete]="auto"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    (matChipInputTokenEnd)="addUser($event)"/>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="userSelected($event)">
+    <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+      {{userToChipString(user)}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
