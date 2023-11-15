@@ -33,7 +33,8 @@
         </mat-form-field>
       </p>
       <p>
-        <user-chooser></user-chooser>
+        {{portfolio.users}}
+        <user-chooser *ngIf="portfolio && portfolio.users" [users]="portfolio.users"></user-chooser>
         <account-chooser></account-chooser>
         <brand-chooser></brand-chooser>
       </p>

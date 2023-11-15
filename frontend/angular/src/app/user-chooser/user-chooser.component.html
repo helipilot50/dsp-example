@@ -1,7 +1,7 @@
 <mat-form-field class="formField">
   <mat-label>Users</mat-label>
   <mat-chip-grid #chipGridU aria-label="User selection" >
-    <mat-chip-row *ngFor="let user of users" (removed)="removeUser(user)">
+    <mat-chip-row  *ngFor="let user of users" (removed)="removeUser(user)">
       {{userToChipString(user)}}
       <button matChipRemove [attr.aria-label]="'remove ' + user">
         <mat-icon>cancel</mat-icon>
