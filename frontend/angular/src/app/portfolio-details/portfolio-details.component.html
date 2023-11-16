@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Portfolio details</mat-card-title>
+    <mat-card-title>Portfolio: {{(portfolio?.id)?portfolio?.id:''}}</mat-card-title>
     <div *ngIf="loading">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
@@ -11,12 +11,6 @@
 
   <mat-card-content>
     <div *ngIf="portfolio">
-      <p>
-        <mat-form-field class="formField">
-          <mat-label>Id:</mat-label>
-          <input matInput value="{{(portfolio.id)?portfolio.id:''}}" readonly>
-        </mat-form-field>
-      </p>
 
       <p>
         <mat-form-field class="formField">

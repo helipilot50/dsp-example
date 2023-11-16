@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {
-  Account, Brand, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS,
+  Account, Brand, Exact, LIST_PORTFOLIOS, MAP_PORTFOLIO_ACCOUNTS,
   MAP_PORTFOLIO_BRANDS, MAP_PORTFOLIO_USERS,
   MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables,
   MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables,
@@ -14,7 +14,7 @@ import {
   PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables, User
 } from 'not-dsp-graphql';
 import { Location } from '@angular/common';
-import { Apollo } from 'apollo-angular';
+import { Apollo, QueryRef } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
@@ -31,6 +31,8 @@ export class PortfolioDetailsComponent {
   loading: boolean = true;
   error: any;
   isNew: boolean = false;
+
+  private portfolioQuery: QueryRef<PortfolioQuery, Exact<{ portfolioId: string; }>> | undefined;
 
   constructor(private apollo: Apollo,
     private route: ActivatedRoute,
@@ -56,12 +58,14 @@ export class PortfolioDetailsComponent {
       };
 
     } else {
-      this.apollo.watchQuery<PortfolioQuery, PortfolioQueryVariables>({
+      this.portfolioQuery = this.apollo.watchQuery<PortfolioQuery, PortfolioQueryVariables>({
         query: PORTFOLIO_DETAILS,
         variables: {
-          portfolioId: id
+          portfolioId: id,
+
         }
-      }).valueChanges.subscribe((result) => {
+      });
+      this.portfolioQuery.valueChanges.subscribe((result) => {
         if (this.error) {
           console.error('[PortfolioDetailsComponent] portfolio error', this.error);
           this.snackBar.open(`[PortfolioDetailsComponent.onInit] error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
@@ -73,40 +77,46 @@ export class PortfolioDetailsComponent {
         this.error = result.errors;
 
         // brands subscription
-        this.apollo.subscribe<PortfolioBrandsModifiedSubscription>({
+        this.apollo.subscribe<PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables>({
           query: PORTFOLIO_BRANDS_MODIFIED,
           variables: {
-            portfolioId: this.portfolio?.id
+            portfolioId: this.portfolio?.id as string
           }
         }).subscribe((result: FetchResult<PortfolioBrandsModifiedSubscription>) => {
           console.debug('[PortfolioDetailsComponent] brands updated subscription result', result);
+          this.portfolioQuery?.refetch();
           this.snackBar.open(`Portfolio brands updated`, 'OK', notifyConfig);
         });
 
         // accounts subscription
-        this.apollo.subscribe<PortfolioAccountsModifiedSubscription>({
+        this.apollo.subscribe<PortfolioAccountsModifiedSubscription, PortfolioAccountsModifiedSubscriptionVariables>({
           query: PORTFOLIO_ACCOUNTS_MODIFIED,
           variables: {
-            portfolioId: this.portfolio?.id
+            portfolioId: this.portfolio?.id as string
           }
         }).subscribe((result: FetchResult<PortfolioAccountsModifiedSubscription>) => {
           console.debug('[PortfolioDetailsComponent] accounts updated result', result);
+          this.portfolioQuery?.refetch();
           this.snackBar.open(`Portfolio accounts updated`, 'OK', notifyConfig);
         });
 
         // users subscription
-        this.apollo.subscribe<PortfolioUsersModifiedSubscription>({
+        this.apollo.subscribe<PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables>({
           query: PORTFOLIO_USERS_MODIFIED,
           variables: {
-            portfolioId: this.portfolio?.id
+            portfolioId: this.portfolio?.id as string
           }
         }).subscribe((result: FetchResult<PortfolioUsersModifiedSubscription>) => {
           console.debug('[PortfolioDetailsComponent] users updated result', result);
+          if (this.portfolio) {
+            this.portfolio.users = result.data?.portfolioUsersModified?.users as User[];
+          }
           this.snackBar.open(`Portfolio users updated`, 'OK', notifyConfig);
         });
       });
     }
   }
+
 
   onFormSubmit() {
     console.debug('[PortfolioDetailsComponent.onFormSubmit', this.portfolio);
