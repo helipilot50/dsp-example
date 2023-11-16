@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -15,8 +15,9 @@ import { startWith, map, Observable } from 'rxjs';
 export class BrandChooserComponent {
   @Input()
   existingBrands: Maybe<Brand>[] = [];
-
   @Output()
+  currentBrands = new EventEmitter<Brand[]>();
+
   selectedBrands: Brand[] = [];
 
   allBrands: Brand[] = [];
@@ -67,16 +68,18 @@ export class BrandChooserComponent {
     const index = this.existingBrands.indexOf(brand);
 
     if (index >= 0) {
-      this.existingBrands.splice(index, 1);
+      this.selectedBrands.splice(index, 1);
     }
+    this.currentBrands.emit(this.selectedBrands as Brand[]);
   }
 
   brandSelected(event: MatAutocompleteSelectedEvent): void {
     const viewValue = event.option.viewValue as string;
     console.log('[BrandChooserComponent.selected] viewValue', viewValue);
-    this.existingBrands.push(this.allBrands.find(brand => this.brandToChipString(brand) === viewValue) as Brand);
+    this.selectedBrands.push(this.allBrands.find(brand => this.brandToChipString(brand) === viewValue) as Brand);
     this.brandInput.nativeElement.value = '';
     this.brandsCtrl.setValue(null);
+    this.currentBrands.emit(this.selectedBrands as Brand[]);
   }
 
   private _filterBrand(value: any): Brand[] {

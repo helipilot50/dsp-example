@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -17,6 +17,8 @@ export class AccountChooserComponent {
   existingAccounts: Maybe<Account>[] = [];
 
   @Output()
+  currentAccounts = new EventEmitter<Account[]>();
+
   selectedAccounts: Account[] = [];
 
   allAccounts: Account[] = [];
@@ -64,17 +66,19 @@ export class AccountChooserComponent {
     const index = this.existingAccounts.indexOf(account);
 
     if (index >= 0) {
-      this.existingAccounts.splice(index, 1);
+      this.selectedAccounts.splice(index, 1);
     }
+    this.currentAccounts.emit(this.selectedAccounts as Account[]);
   }
 
 
   accountSelected(event: MatAutocompleteSelectedEvent): void {
     const viewValue = event.option.viewValue as string;
     console.log('[AccountChooserComponent.selected] viewValue', viewValue);
-    this.existingAccounts.push(this.allAccounts.find(account => this.accountToChipString(account) === viewValue) as Account);
+    this.selectedAccounts.push(this.allAccounts.find(account => this.accountToChipString(account) === viewValue) as Account);
     this.accountInput.nativeElement.value = '';
     this.accountsCtrl.setValue(null);
+    this.currentAccounts.emit(this.selectedAccounts as Account[]);
   }
 
   private _filterAccount(value: any): Account[] {
