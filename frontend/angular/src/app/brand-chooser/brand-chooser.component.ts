@@ -56,11 +56,11 @@ export class BrandChooserComponent {
       this.loading = result.loading;
       this.error = result.errors;
       if (this.error) {
-        this.snackBar.open(`Brands error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
+        this.snackBar.open(`[BrandChooserComponent.ngOnInit] error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
       }
-      console.log("[BrandChooserComponent.ngOnInit] all Brands", result.data.brands);
     });
     this.selectedBrands = this.existingBrands.filter(brand => brand !== null) as Brand[];
+    console.log('[BrandChooserComponent.ngOnInit] selectedBrands', this.selectedBrands);
   }
 
   removeBrand(brand: Brand): void {

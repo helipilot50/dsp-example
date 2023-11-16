@@ -55,10 +55,11 @@ export class UserChooserComponent {
       this.loading = result.loading;
       this.error = result.errors;
       if (this.error) {
-        this.snackBar.open(`Portfolio error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
+        this.snackBar.open(`[UserChooserComponent.ngOnInit] error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
       }
     });
     this.selectedUsers = this.existingUsers.filter(user => user !== null) as User[];
+    console.log('[UserChooserComponent.ngOnInit] selectedUsers', this.selectedUsers);
   }
 
   removeUser(user: User): void {

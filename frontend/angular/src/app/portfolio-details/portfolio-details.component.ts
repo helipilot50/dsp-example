@@ -27,7 +27,7 @@ import { FetchResult } from '@apollo/client/core';
   styleUrls: ['./portfolio-details.component.css'],
 })
 export class PortfolioDetailsComponent {
-  portfolio: Portfolio;
+  portfolio: Portfolio | undefined;
   loading: boolean = true;
   error: any;
   isNew: boolean = false;
@@ -37,14 +37,7 @@ export class PortfolioDetailsComponent {
     private snackBar: MatSnackBar,
     private location: Location
   ) {
-    this.portfolio = {
-      id: '',
-      name: '',
-      description: '',
-      accounts: [],
-      brands: [],
-      users: []
-    };
+
   }
 
   ngOnInit(): void {
@@ -53,6 +46,14 @@ export class PortfolioDetailsComponent {
     if (this.isNew) {
       console.debug('[PortfolioDetailsComponent.onInit] new portfolio');
       this.loading = false;
+      this.portfolio = {
+        id: '',
+        name: '',
+        description: '',
+        accounts: [],
+        brands: [],
+        users: []
+      };
 
     } else {
       this.apollo.watchQuery<PortfolioQuery, PortfolioQueryVariables>({
