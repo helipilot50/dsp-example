@@ -1,10 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
-import { BRANDS_LIST, Brand, BrandsQuery, BrandsQueryVariables, USER_LIST } from 'not-dsp-graphql';
+import { BRANDS_LIST, Brand, BrandsQuery, BrandsQueryVariables, Maybe, USER_LIST } from 'not-dsp-graphql';
 import { startWith, map, Observable } from 'rxjs';
 
 @Component({
@@ -13,7 +13,12 @@ import { startWith, map, Observable } from 'rxjs';
   styleUrls: ['./brand-chooser.component.css']
 })
 export class BrandChooserComponent {
-  brands: Brand[] = [];
+  @Input()
+  existingBrands: Maybe<Brand>[] = [];
+
+  @Output()
+  selectedBrands: Brand[] = [];
+
   allBrands: Brand[] = [];
 
   loading: boolean = false;
@@ -54,21 +59,22 @@ export class BrandChooserComponent {
       }
       console.log("[BrandChooserComponent.ngOnInit] all Brands", result.data.brands);
     });
+    this.selectedBrands = this.existingBrands.filter(brand => brand !== null) as Brand[];
   }
 
   removeBrand(brand: Brand): void {
 
-    const index = this.brands.indexOf(brand);
+    const index = this.existingBrands.indexOf(brand);
 
     if (index >= 0) {
-      this.brands.splice(index, 1);
+      this.existingBrands.splice(index, 1);
     }
   }
 
   brandSelected(event: MatAutocompleteSelectedEvent): void {
     const viewValue = event.option.viewValue as string;
     console.log('[BrandChooserComponent.selected] viewValue', viewValue);
-    this.brands.push(this.allBrands.find(brand => this.brandToChipString(brand) === viewValue) as Brand);
+    this.existingBrands.push(this.allBrands.find(brand => this.brandToChipString(brand) === viewValue) as Brand);
     this.brandInput.nativeElement.value = '';
     this.brandsCtrl.setValue(null);
   }

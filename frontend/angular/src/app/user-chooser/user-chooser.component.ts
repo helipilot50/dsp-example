@@ -1,10 +1,10 @@
 import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Apollo } from 'apollo-angular';
-import { User, UsersQuery, UsersQueryVariables, USER_LIST } from 'not-dsp-graphql';
+import { User, UsersQuery, UsersQueryVariables, USER_LIST, Maybe } from 'not-dsp-graphql';
 import { startWith, map, Observable } from 'rxjs';
 
 @Component({
@@ -13,7 +13,13 @@ import { startWith, map, Observable } from 'rxjs';
   styleUrls: ['./user-chooser.component.css']
 })
 export class UserChooserComponent {
-  users: User[] = [];
+
+  @Input()
+  existingUsers: Maybe<User>[] = [];
+  @Output()
+  selectedUsers: User[] = [];
+
+
   allUsers: User[] = [];
 
   loading: boolean = false;
@@ -26,8 +32,11 @@ export class UserChooserComponent {
   @ViewChild('userInput')
   userInput!: ElementRef<HTMLInputElement>;
 
+
   constructor(private apollo: Apollo,
     private snackBar: MatSnackBar) {
+
+
 
     this.filteredUsers = this.usersCtrl.valueChanges.pipe(
       startWith(null),
@@ -49,21 +58,22 @@ export class UserChooserComponent {
         this.snackBar.open(`Portfolio error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
       }
     });
+    this.selectedUsers = this.existingUsers.filter(user => user !== null) as User[];
   }
 
   removeUser(user: User): void {
 
-    const index = this.users.indexOf(user);
+    const index = this.existingUsers.indexOf(user);
 
     if (index >= 0) {
-      this.users.splice(index, 1);
+      this.existingUsers.splice(index, 1);
     }
   }
 
   userSelected(event: MatAutocompleteSelectedEvent): void {
     const viewValue = event.option.viewValue as string;
     console.log('[UserChooserComponent.selected] viewValue', viewValue);
-    this.users.push(this.allUsers.find(user => this.userToChipString(user) === viewValue) as User);
+    this.existingUsers.push(this.allUsers.find(user => this.userToChipString(user) === viewValue) as User);
     this.userInput.nativeElement.value = '';
     this.usersCtrl.setValue(null);
   }
@@ -79,7 +89,10 @@ export class UserChooserComponent {
     return found;
   }
 
-  userToChipString(user: User): string {
+  userToChipString(user: User | Maybe<User>): string {
+    if (!user) {
+      return '';
+    }
     return `${user.firstName} ${user.lastName}`;
   }
 }
