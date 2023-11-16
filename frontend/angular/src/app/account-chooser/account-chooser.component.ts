@@ -59,6 +59,7 @@ export class AccountChooserComponent {
       console.log("[AccountChooserComponent.ngOnInit] all Accounts", result.data.accounts);
     });
     this.selectedAccounts = this.existingAccounts.filter(account => account !== null) as Account[];
+    console.log('[AccountChooserComponent.ngOnInit] selectedAccounts', this.selectedAccounts);
   }
 
   removeAccount(account: Account): void {

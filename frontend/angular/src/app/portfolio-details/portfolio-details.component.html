@@ -33,13 +33,13 @@
         </mat-form-field>
       </p>
       <p>
-        <user-chooser *ngIf="portfolio && portfolio.users" [existingUsers]="portfolio.users"></user-chooser>
-        </p>
-      <p>
-        <account-chooser *ngIf="portfolio && portfolio.accounts" [existingAccounts]="portfolio.accounts"></account-chooser>
+        <user-chooser *ngIf="portfolio && portfolio.users" [existingUsers]="portfolio.users" (currentUsers)="portfolioUsers($event)"></user-chooser>
       </p>
       <p>
-        <brand-chooser *ngIf="portfolio && portfolio.brands" [existingBrands]="portfolio.brands"></brand-chooser>
+        <account-chooser *ngIf="portfolio && portfolio.accounts" [existingAccounts]="portfolio.accounts" (currentAccounts)="portfolioAccounts($event)"></account-chooser>
+      </p>
+      <p>
+        <brand-chooser *ngIf="portfolio && portfolio.brands" [existingBrands]="portfolio.brands" (currentBrands)="portfolioBrands($event)"></brand-chooser>
       </p>
     </div>
   </mat-card-content>

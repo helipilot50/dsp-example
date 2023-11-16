@@ -19,6 +19,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
 import { UserChooserComponent } from '../user-chooser/user-chooser.component';
+import { FetchResult } from '@apollo/client/core';
 
 @Component({
   selector: 'app-portfolio-details',
@@ -26,7 +27,7 @@ import { UserChooserComponent } from '../user-chooser/user-chooser.component';
   styleUrls: ['./portfolio-details.component.css'],
 })
 export class PortfolioDetailsComponent {
-  portfolio: Portfolio | undefined = undefined;
+  portfolio: Portfolio;
   loading: boolean = true;
   error: any;
   isNew: boolean = false;
@@ -35,22 +36,24 @@ export class PortfolioDetailsComponent {
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private location: Location
-  ) { }
+  ) {
+    this.portfolio = {
+      id: '',
+      name: '',
+      description: '',
+      accounts: [],
+      brands: [],
+      users: []
+    };
+  }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['portfolioId'];
     this.isNew = id === 'new';
     if (this.isNew) {
-      console.debug('new portfolio');
+      console.debug('[PortfolioDetailsComponent.onInit] new portfolio');
       this.loading = false;
-      this.portfolio = {
-        id: '',
-        name: '',
-        description: '',
-        accounts: [],
-        brands: [],
-        users: []
-      };
+
     } else {
       this.apollo.watchQuery<PortfolioQuery, PortfolioQueryVariables>({
         query: PORTFOLIO_DETAILS,
@@ -58,19 +61,54 @@ export class PortfolioDetailsComponent {
           portfolioId: id
         }
       }).valueChanges.subscribe((result) => {
-        console.log(result);
-        this.portfolio = result.data.portfolio ? result.data.portfolio as Portfolio : undefined;
+        if (this.error) {
+          console.error('[PortfolioDetailsComponent] portfolio error', this.error);
+          this.snackBar.open(`[PortfolioDetailsComponent.onInit] error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
+          return;
+        }
+        console.debug('[PortfolioDetailsComponent] portfolio', result);
+        if (result.data.portfolio) this.portfolio = result.data.portfolio as Portfolio;
         this.loading = result.loading;
         this.error = result.errors;
-        if (this.error) {
-          this.snackBar.open(`Portfolio error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
-        }
+
+        // brands subscription
+        this.apollo.subscribe<PortfolioBrandsModifiedSubscription>({
+          query: PORTFOLIO_BRANDS_MODIFIED,
+          variables: {
+            portfolioId: this.portfolio?.id
+          }
+        }).subscribe((result: FetchResult<PortfolioBrandsModifiedSubscription>) => {
+          console.debug('[PortfolioDetailsComponent] brands updated subscription result', result);
+          this.snackBar.open(`Portfolio brands updated`, 'OK', notifyConfig);
+        });
+
+        // accounts subscription
+        this.apollo.subscribe<PortfolioAccountsModifiedSubscription>({
+          query: PORTFOLIO_ACCOUNTS_MODIFIED,
+          variables: {
+            portfolioId: this.portfolio?.id
+          }
+        }).subscribe((result: FetchResult<PortfolioAccountsModifiedSubscription>) => {
+          console.debug('[PortfolioDetailsComponent] accounts updated result', result);
+          this.snackBar.open(`Portfolio accounts updated`, 'OK', notifyConfig);
+        });
+
+        // users subscription
+        this.apollo.subscribe<PortfolioUsersModifiedSubscription>({
+          query: PORTFOLIO_USERS_MODIFIED,
+          variables: {
+            portfolioId: this.portfolio?.id
+          }
+        }).subscribe((result: FetchResult<PortfolioUsersModifiedSubscription>) => {
+          console.debug('[PortfolioDetailsComponent] users updated result', result);
+          this.snackBar.open(`Portfolio users updated`, 'OK', notifyConfig);
+        });
       });
     }
   }
 
   onFormSubmit() {
-    console.debug('form submit', this.portfolio);
+    console.debug('[PortfolioDetailsComponent.onFormSubmit', this.portfolio);
     if (this.isNew) {
       this.createPortfolio(this.portfolio);
     } else {
@@ -105,12 +143,12 @@ export class PortfolioDetailsComponent {
 
     }).subscribe(({ data, errors, loading }) => {
       if (errors) {
-        console.error('Error creating portfolio', errors);
+        console.error('[PortfolioDetailsComponent.createPortfolio] Error creating portfolio', errors);
         this.snackBar.open(`Error creating portfolio: ${errors[0].message} `, 'OK');
         this.location.back();
       }
       if (data) {
-        console.debug('New portfolio created', JSON.stringify(data, null, 2));
+        console.debug('[PortfolioDetailsComponent.createPortfolio] New portfolio created', JSON.stringify(data, null, 2));
         const newPortfolioId = (data as any).newPortfolio.id;
         this.snackBar.open(`New portfolio created, id: ${newPortfolioId} `, 'OK', notifyConfig);
         this.location.back();
@@ -119,9 +157,88 @@ export class PortfolioDetailsComponent {
 
   }
 
+  portfolioUsers(users: User[]) {
+    console.debug("[PortfolioDetailsComponent.portfolioAccounts] portfolio: ", this.portfolio);
+    console.debug("[PortfolioDetailsComponent.portfolioUsers] users: ", users);
+    this.apollo.mutate<MapUsersToPortfolioMutation, MapUsersToPortfolioMutationVariables>({
+      mutation: MAP_PORTFOLIO_USERS,
+      variables: {
+        portfolioId: this.portfolio?.id as string,
+        userIds: users.map(b => b.id),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: this.portfolio?.id
+        }
+      }]
+    }).subscribe(({ data, errors, loading }) => {
+      if (errors) {
+        console.error('[PortfolioDetailsComponent.portfolioUsers] Error mapping portfolio users', errors);
+        this.snackBar.open(`Error mapping portfolio users: ${errors[0].message} `, 'OK');
+      }
+      if (data) {
+        console.debug('[PortfolioDetailsComponent.portfolioUsers] portfolio users mapped', JSON.stringify(data, null, 2));
+      }
+    });
+  }
+
+  portfolioAccounts(accounts: Account[]) {
+    console.debug("[PortfolioDetailsComponent.portfolioAccounts] portfolio: ", this.portfolio);
+    console.debug("[PortfolioDetailsComponent.portfolioAccounts] accounts: ", accounts);
+    this.apollo.mutate<MapAccountsToPortfolioMutation, MapAccountsToPortfolioMutationVariables>({
+      mutation: MAP_PORTFOLIO_ACCOUNTS,
+      variables: {
+        portfolioId: this.portfolio?.id as string,
+        accountIds: accounts.map(b => b.id as string),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: this.portfolio?.id as string
+        }
+      }]
+    }).subscribe(({ data, errors, loading }) => {
+      if (errors) {
+        console.error('[PortfolioDetailsComponent.portfolioAccounts] Error mapping portfolio accounts', errors);
+        this.snackBar.open(`Error mapping portfolio accounts: ${errors[0].message} `, 'OK');
+      }
+      if (data) {
+        console.debug('[PortfolioDetailsComponent.portfolioAccounts] portfolio accounts mapped', JSON.stringify(data, null, 2));
+      }
+    });
+  }
+
+
+  portfolioBrands(brands: Brand[]) {
+    console.debug("[PortfolioDetailsComponent.portfolioAccounts] portfolio: ", this.portfolio);
+    console.debug("[PortfolioDetailsComponent.portfolioBrands] brands: ", brands);
+    this.apollo.mutate<MapBrandsToPortfolioMutation, MapBrandsToPortfolioMutationVariables>({
+      mutation: MAP_PORTFOLIO_BRANDS,
+      variables: {
+        portfolioId: this.portfolio?.id as string,
+        brandIds: brands.map(b => b.id),
+      },
+      refetchQueries: [{
+        query: PORTFOLIO_DETAILS,
+        variables: {
+          portfolioId: this.portfolio?.id
+        }
+      }]
+    }).subscribe(({ data, errors, loading }) => {
+      if (errors) {
+        console.error('[PortfolioDetailsComponent.portfolioBrands] Error mapping portfolio brands', errors);
+        this.snackBar.open(`Error mapping portfolio brands: ${errors[0].message} `, 'OK');
+      }
+      if (data) {
+        console.debug('[PortfolioDetailsComponent.portfolioBrands] portfolio brands mapped', JSON.stringify(data, null, 2));
+      }
+    });
+  }
+
   saveDetails(form: any) {
     console.debug("[PortfolioDetailsComponent.saveDetails] clicked");
-    alert('Product Form Validated)' + JSON.stringify(form.value, null, 4));
+    alert('update portfolio not implemented yet' + JSON.stringify(form.value, null, 4));
   }
 
 }
