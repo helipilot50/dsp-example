@@ -1,1 +1,23 @@
-<p>account-chooser works!</p>
+<mat-form-field class="formField">
+  <mat-label>Accounts</mat-label>
+  <mat-chip-grid #chipGridB aria-label="Account selection" >
+    <mat-chip-row *ngFor="let account of selectedAccounts" (removed)="removeAccount(account)">
+      {{accountToChipString(account)}}
+      <button matChipRemove [attr.aria-label]="'remove ' + account">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+  </mat-chip-grid>
+  <input
+    matNativeControl
+    placeholder="Add account..." #accountInput [formControl]="accountsCtrl"
+    [matChipInputFor]="chipGridB" [matAutocomplete]="auto"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    />
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="accountSelected($event)">
+    <mat-option *ngFor="let account of filteredAccounts | async" [value]="account">
+      {{accountToChipString(account)}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+

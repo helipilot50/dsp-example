@@ -1,7 +1,7 @@
 <mat-form-field class="formField">
   <mat-label>Brands</mat-label>
   <mat-chip-grid #chipGridB aria-label="Brand selection" >
-    <mat-chip-row *ngFor="let brand of brands" (removed)="removeBrand(brand)">
+    <mat-chip-row *ngFor="let brand of selectedBrands" (removed)="removeBrand(brand)">
       {{brandToChipString(brand)}}
       <button matChipRemove [attr.aria-label]="'remove ' + brand">
         <mat-icon>cancel</mat-icon>

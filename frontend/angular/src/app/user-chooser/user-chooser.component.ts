@@ -1,5 +1,5 @@
 import { ENTER, COMMA, U } from '@angular/cdk/keycodes';
-import { Component, ElementRef, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,8 +13,13 @@ import { startWith, map, Observable } from 'rxjs';
   styleUrls: ['./user-chooser.component.css']
 })
 export class UserChooserComponent {
+
   @Input()
-  users: User[] | Maybe<User>[] = [];
+  existingUsers: Maybe<User>[] = [];
+  @Output()
+  selectedUsers: User[] = [];
+
+
   allUsers: User[] = [];
 
   loading: boolean = false;
@@ -53,21 +58,22 @@ export class UserChooserComponent {
         this.snackBar.open(`Portfolio error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
       }
     });
+    this.selectedUsers = this.existingUsers.filter(user => user !== null) as User[];
   }
 
   removeUser(user: User): void {
 
-    const index = this.users.indexOf(user);
+    const index = this.existingUsers.indexOf(user);
 
     if (index >= 0) {
-      this.users.splice(index, 1);
+      this.existingUsers.splice(index, 1);
     }
   }
 
   userSelected(event: MatAutocompleteSelectedEvent): void {
     const viewValue = event.option.viewValue as string;
     console.log('[UserChooserComponent.selected] viewValue', viewValue);
-    this.users.push(this.allUsers.find(user => this.userToChipString(user) === viewValue) as User);
+    this.existingUsers.push(this.allUsers.find(user => this.userToChipString(user) === viewValue) as User);
     this.userInput.nativeElement.value = '';
     this.usersCtrl.setValue(null);
   }
