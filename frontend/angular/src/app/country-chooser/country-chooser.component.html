@@ -1,0 +1,34 @@
+<mat-form-field>
+  <mat-label>Countries</mat-label>
+  <mat-chip-grid #chipGridB aria-label="Country selection">
+    <mat-chip-row
+      *ngFor="let country of selectedCountries"
+      (removed)="removeCountry(country)"
+    >
+      {{ countryToChipString(country) }}
+      <button matChipRemove [attr.aria-label]="'remove ' + country">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip-row>
+  </mat-chip-grid>
+  <input
+    matNativeControl
+    placeholder="Add country..."
+    #countryInput
+    [formControl]="countriesCtrl"
+    [matChipInputFor]="chipGridB"
+    [matAutocomplete]="auto"
+    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+  />
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    (optionSelected)="countrySelected($event)"
+  >
+    <mat-option
+      *ngFor="let country of filteredCountries | async"
+      [value]="country"
+    >
+      {{ countryToChipString(country) }}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

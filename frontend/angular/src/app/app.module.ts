@@ -72,7 +72,7 @@ import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.compo
 import { AccountChooserComponent } from './account-chooser/account-chooser.component';
 import { BrandChooserComponent } from './brand-chooser/brand-chooser.component';
 import { UserChooserComponent } from './user-chooser/user-chooser.component';
-
+import { CountryChooserComponent } from './country-chooser/country-chooser.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +94,8 @@ import { UserChooserComponent } from './user-chooser/user-chooser.component';
     PortfolioDetailsComponent,
     AccountChooserComponent,
     BrandChooserComponent,
-    UserChooserComponent
+    UserChooserComponent,
+    CountryChooserComponent
   ],
   imports: [
     BrowserModule,

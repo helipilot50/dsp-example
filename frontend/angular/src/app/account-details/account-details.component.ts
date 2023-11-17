@@ -57,7 +57,6 @@ export class AccountDetailsComponent extends DetailsComponent implements OnInit 
     retailers: [],
   };
   loading: boolean = true;
-  error: any;
 
   isNew = false;
 
@@ -158,7 +157,7 @@ export class AccountDetailsComponent extends DetailsComponent implements OnInit 
           console.log('[AccountDetailsComponent] account retailers', this.account.retailers);
         }
         this.loading = result.loading;
-        this.error = result.errors;
+        this.displayError(result.error);
       });
     }
   }
@@ -270,6 +269,10 @@ export class AccountDetailsComponent extends DetailsComponent implements OnInit 
 
       this.announcer.announce(`Removed ${retailer.name}`);
     }
+  }
+
+  countriesChanged(event: any) {
+    console.log('[AccountDetailsComponent] countries changed', event);
   }
 
   countrySelected(event: MatAutocompleteSelectedEvent): void {
