@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -73,6 +73,13 @@ import { AccountChooserComponent } from './account-chooser/account-chooser.compo
 import { BrandChooserComponent } from './brand-chooser/brand-chooser.component';
 import { UserChooserComponent } from './user-chooser/user-chooser.component';
 import { CountryChooserComponent } from './country-chooser/country-chooser.component';
+import { ClerkService } from './service/clerk-service/clerk';
+
+let clerkService: any;
+async function clerk() {
+  clerkService = new ClerkService();
+  return clerkService.initClerk();
+}
 
 @NgModule({
   declarations: [
@@ -155,7 +162,11 @@ import { CountryChooserComponent } from './country-chooser/country-chooser.compo
     LayoutModule,
 
   ],
-  providers: [],
+  providers: [{
+    provide: APP_INITIALIZER,
+    useFactory: () => clerk,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

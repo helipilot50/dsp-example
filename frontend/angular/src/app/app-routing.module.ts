@@ -15,6 +15,7 @@ import { LineitemDetailComponent } from './lineitem-detail/lineitem-detail.compo
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { PortfolioListComponent } from './portfolio-list/portfolio-list.component';
 import { PortfolioDetailsComponent } from './portfolio-details/portfolio-details.component';
+import { ClerkAuthGuardGuard } from './guards/clerk-auth-guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -93,6 +94,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { useHash: true })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [ClerkAuthGuardGuard]
 })
 export class AppRoutingModule { }
