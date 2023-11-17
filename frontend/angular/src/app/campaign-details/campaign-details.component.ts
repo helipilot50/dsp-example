@@ -12,13 +12,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CAMPAIGNS_LIST, CAMPAIGN_DETAILS, CAMPAIGN_NEW } from 'not-dsp-graphql';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
+import { DetailsComponent } from '../detail-component';
 
 @Component({
   selector: 'app-campaign-details',
   templateUrl: './campaign-details.component.html',
   styleUrls: ['./campaign-details.component.css']
 })
-export class CampaignDetailsComponent {
+export class CampaignDetailsComponent extends DetailsComponent {
 
   campaign: Campaign = {
     id: '',
@@ -29,7 +30,6 @@ export class CampaignDetailsComponent {
     endDate: new Date(),
   };
   loading: boolean = true;
-  error: any;
   isNew: boolean = false;
 
   types: string[] = Object.values(CampaignType);
@@ -40,11 +40,6 @@ export class CampaignDetailsComponent {
 
   lineitemDisplayedColumns: string[] = ['id', 'name', 'status'];
 
-  constructor(private apollo: Apollo,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private location: Location) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['campaignId'];
@@ -64,10 +59,7 @@ export class CampaignDetailsComponent {
         console.debug(result);
         this.campaign = result.data.campaign as Campaign;
         this.loading = result.loading;
-        this.error = result.errors;
-        if (this.error) {
-          this.snackBar.open(`Campaign error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
-        }
+        this.displayError(result.error);
       });
     }
   }

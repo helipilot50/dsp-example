@@ -2,12 +2,7 @@
 .example-chip-list {
   width: 100%;
 }
-.detailForm
-{
-    min-width:500px;
-}
-.formField
-{
+mat-form-field {
   min-width: 150px;
   width: 100%;
 }

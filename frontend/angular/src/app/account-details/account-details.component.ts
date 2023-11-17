@@ -29,6 +29,8 @@ import { ALL_COUNTRIES } from 'not-dsp-graphql';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { RETAILER_LIST } from 'not-dsp-graphql';
+import { DetailsComponent } from '../detail-component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 
@@ -40,7 +42,7 @@ import { RETAILER_LIST } from 'not-dsp-graphql';
 
 
 
-export class AccountDetailsComponent implements OnInit {
+export class AccountDetailsComponent extends DetailsComponent implements OnInit {
 
   account: Account = {
     id: '',
@@ -87,12 +89,15 @@ export class AccountDetailsComponent implements OnInit {
 
   //---------------------------------------------------
 
-  constructor(private apollo: Apollo,
-    private route: ActivatedRoute,
-    private router: Router,
-    private location: Location,
-    private formBuilder: FormBuilder) {
+  constructor(protected override apollo: Apollo,
+    protected override router: Router,
+    protected override route: ActivatedRoute,
+    protected override snackBar: MatSnackBar,
+    protected override location: Location,
+    protected override formBuilder: FormBuilder
+  ) {
 
+    super(apollo, router, route, snackBar, location, formBuilder);
     //---------------------------------------------------
     this.filteredCountries = this.countryCtrl.valueChanges.pipe(
       startWith(null),

@@ -1,64 +1,70 @@
-
-
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Campaign: {{campaign.id||''}}</mat-card-title>
+    <mat-card-title>Campaign: {{ campaign.id || "" }}</mat-card-title>
     <div *ngIf="loading">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
-    <div *ngIf="error">
-      <p>Error: {{ error }}</p>
-    </div>
   </mat-card-header>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="onFormSubmit()">{{(isNew)?'Create':'Sacccve'}}</button>
+    <button mat-raised-button color="primary" (click)="onFormSubmit()">
+      {{ isNew ? "Create" : "Sacccve" }}
+    </button>
   </mat-card-actions>
   <mat-card-content>
     <p>
-      <mat-form-field >
+      <mat-form-field>
         <mat-label>Name:</mat-label>
-        <input matInput type="text" [(ngModel)]="campaign.name" >
+        <input matInput type="text" [(ngModel)]="campaign.name" />
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field  *ngIf="!isNew" >
+      <mat-form-field *ngIf="!isNew">
         <mat-label>Status:</mat-label>
-        <mat-select [(ngModel)]="campaign.status" >
+        <mat-select [(ngModel)]="campaign.status">
           <mat-option *ngFor="let status of statusValues" [value]="status">
-            {{status}}
+            {{ status }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field  >
+      <mat-form-field>
         <mat-label>Type:</mat-label>
-        <mat-select [(ngModel)]="campaign.type" >
+        <mat-select [(ngModel)]="campaign.type">
           <mat-option *ngFor="let type of types" [value]="type">
-            {{type}}
+            {{ type }}
           </mat-option>
         </mat-select>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field   >
+      <mat-form-field>
         <mat-label>Campaign date range:</mat-label>
         <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate placeholder="Start date" [(ngModel)]="campaign.startDate">
-          <input matEndDate placeholder="End date" [(ngModel)]="campaign.endDate">
+          <input
+            matStartDate
+            placeholder="Start date"
+            [(ngModel)]="campaign.startDate"
+          />
+          <input
+            matEndDate
+            placeholder="End date"
+            [(ngModel)]="campaign.endDate"
+          />
         </mat-date-range-input>
         <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
     </p>
   </mat-card-content>
 
   <div *ngIf="!isNew">
-    <app-lineitem-list/>
+    <app-lineitem-list />
   </div>
 </mat-card>
-
-

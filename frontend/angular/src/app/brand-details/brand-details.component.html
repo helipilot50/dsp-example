@@ -1,66 +1,45 @@
-<h1>Brand details {{(brand)?brand.id:''}}</h1>
-<div *ngIf="loading">
-  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Brand details {{ brand ? brand.id : "" }}</mat-card-title>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  </mat-card-header>
 
-</div>
-<div *ngIf="error">
-  <p>Error: {{ error }}</p>
-</div>
-<div *ngIf="brand" class="detailForm">
-
-  <p>
-    <mat-form-field class="formField">
+  <mat-card-content *ngIf="brand">
+    <mat-form-field>
       <mat-label>Name:</mat-label>
-      <input matInput value="{{brand.name}}">
+      <input matInput value="{{ brand.name }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Country:</mat-label>
-      <input matInput value="{{brand.country}}">
+      <input matInput value="{{ brand.country }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Country:</mat-label>
-      <input matInput value="{{brand.country}}">
+      <input matInput value="{{ brand.country }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Industry:</mat-label>
-      <input matInput value="{{brand.industry}}">
+      <input matInput value="{{ brand.industry }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Founded in:</mat-label>
-      <input matInput value="{{brand.foundedIn}}">
+      <input matInput value="{{ brand.foundedIn }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Founded by:</mat-label>
-      <input matInput value="{{brand.foundedBy}}">
+      <input matInput value="{{ brand.foundedBy }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Rank:</mat-label>
-      <input matInput value="{{brand.rank}}">
+      <input matInput value="{{ brand.rank }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Rating:</mat-label>
-      <input matInput value="{{brand.rating}}">
+      <input matInput value="{{ brand.rating }}" />
     </mat-form-field>
-  </p>
-  <p>
-    <mat-form-field class="formField">
+    <mat-form-field>
       <mat-label>Brand Value USD(m):</mat-label>
-      <input matInput value="{{brand.brandValue}}">
+      <input matInput value="{{ brand.brandValue }}" />
     </mat-form-field>
-  </p>
-
-</div>
+  </mat-card-content>
+</mat-card>

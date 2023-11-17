@@ -3,20 +3,20 @@ import { Sku, SkuQuery, SkuQueryVariables } from 'not-dsp-graphql';
 import { Apollo } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 import { PRODUCT_DETAILS } from 'not-dsp-graphql';
+import { DetailsComponent } from '../detail-component';
 
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
   styleUrls: ['./product-details.component.css']
 })
-export class ProductDetailsComponent {
+export class ProductDetailsComponent extends DetailsComponent {
 
   sku: Sku | undefined = undefined;
   loading: boolean = true;
-  error: any;
 
 
-  constructor(private apollo: Apollo, private route: ActivatedRoute) { }
+  // constructor(private apollo: Apollo, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['skuKey'];
@@ -29,7 +29,7 @@ export class ProductDetailsComponent {
       console.log(result);
       this.sku = result.data.sku ? result.data.sku as Sku : undefined;
       this.loading = result.loading;
-      this.error = result.errors;
+      this.displayError(result.error);
     });
   }
   saveDetails(form: any) {

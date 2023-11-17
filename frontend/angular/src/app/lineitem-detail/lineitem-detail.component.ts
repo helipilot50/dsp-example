@@ -12,6 +12,7 @@ import { Apollo } from 'apollo-angular';
 import { FetchResult } from '@apollo/client/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
+import { DetailsComponent } from '../detail-component';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { notifyConfig } from '../snackBarDefaults';
   templateUrl: './lineitem-detail.component.html',
   styleUrls: ['./lineitem-detail.component.css'],
 })
-export class LineitemDetailComponent {
+export class LineitemDetailComponent extends DetailsComponent {
 
   cats = { startDate: Date, endDate: Date };
 
@@ -32,17 +33,11 @@ export class LineitemDetailComponent {
   };
 
   loading: boolean = true;
-  error: any;
   isNew: boolean = false;
 
   statusValues: string[] = Object.values(LineitemStatus);
 
 
-  constructor(private apollo: Apollo,
-    private route: ActivatedRoute,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private location: Location) { }
 
   ngOnInit(): void {
     console.debug('[LineitemDetailComponent.ngOnInit] statusValues', this.statusValues);
@@ -64,7 +59,7 @@ export class LineitemDetailComponent {
         console.debug('[LineitemDetailComponent.ngOnInit] query result', result);
         this.lineitem = result.data.lineitem as Lineitem;
         this.loading = result.loading;
-        this.error = result.errors;
+        this.displayError(result.error);
       });
     }
 

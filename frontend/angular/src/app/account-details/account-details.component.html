@@ -1,97 +1,119 @@
-
-
-<div *ngIf="error">
-  <p>Error: {{ error }}</p>
-</div>
-
-<mat-card >
+<mat-card>
   <mat-card-header>
-      <mat-card-title>Account {{(account)?account.id:''}}</mat-card-title>
+    <mat-card-title>Account {{ account ? account.id : "" }}</mat-card-title>
+    <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
   </mat-card-header>
   <mat-card-actions>
-    <button mat-raised-button *ngIf="isNew" color="primary" (click)="onFormSubmit()">Create</button>
+    <button
+      mat-raised-button
+      *ngIf="isNew"
+      color="primary"
+      (click)="onFormSubmit()"
+    >
+      Create
+    </button>
   </mat-card-actions>
   <mat-card-content *ngIf="account">
-    <p>
-        <mat-form-field class="formField">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" placeholder="name"  [(ngModel)]="account.name">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="formField">
-          <mat-label>Type</mat-label>
-          <mat-select [(ngModel)]="account.type" >
-            <mat-option *ngFor="let type of types" [value]="type">
-              {{type}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field class="formField" *ngIf="account.currency">
-          <mat-label>Currency</mat-label >
-          <mat-select  [(ngModel)]="account.currency.code"  >
-            <mat-option *ngFor="let currency of currencies" [value]="currency">
-              {{currency}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </p>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="name"
+        [(ngModel)]="account.name"
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Type</mat-label>
+      <mat-select [(ngModel)]="account.type">
+        <mat-option *ngFor="let type of types" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="account.currency">
+      <mat-label>Currency</mat-label>
+      <mat-select [(ngModel)]="account.currency.code">
+        <mat-option *ngFor="let currency of currencies" [value]="currency">
+          {{ currency }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-      <mat-form-field class="formField">
-        <mat-label>Countries</mat-label>
+    <mat-form-field>
+      <mat-label>Countries</mat-label>
 
-        <mat-chip-grid #chipGridC aria-label="Country selection" >
-          <mat-chip-row *ngFor="let country of countries" (removed)="removeCountry(country)">
-            {{country.name}}
-            <button matChipRemove [attr.aria-label]="'remove ' + country">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-        </mat-chip-grid>
-        <input
-          matNativeControl
-          placeholder="Add country..." #countryInput [formControl]="countryCtrl"
-          [matChipInputFor]="chipGridC" [matAutocomplete]="auto"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="addCountry($event)"/>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="countrySelected($event)">
-          <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
-            {{country.name}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+      <mat-chip-grid #chipGridC aria-label="Country selection">
+        <mat-chip-row
+          *ngFor="let country of countries"
+          (removed)="removeCountry(country)"
+        >
+          {{ country.name }}
+          <button matChipRemove [attr.aria-label]="'remove ' + country">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input
+        matNativeControl
+        placeholder="Add country..."
+        #countryInput
+        [formControl]="countryCtrl"
+        [matChipInputFor]="chipGridC"
+        [matAutocomplete]="auto"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addCountry($event)"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="countrySelected($event)"
+      >
+        <mat-option
+          *ngFor="let country of filteredCountries | async"
+          [value]="country"
+        >
+          {{ country.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
 
-
-      <mat-form-field  class="formField">
-        <mat-label>Retailers</mat-label>
-        <mat-chip-grid #chipGridR aria-label="Retailer selection">
-          <mat-chip-row *ngFor="let retailer of retailers" (removed)="removeRetailer(retailer)">
-            {{retailer.name}}
-            <button matChipRemove [attr.aria-label]="'remove ' + retailer">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip-row>
-        </mat-chip-grid>
-        <input placeholder="Add retailer..." #retailerInput [formControl]="retailersCtrl"
-          [matChipInputFor]="chipGridR"
-          [matAutocomplete]="auto"
-          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          (matChipInputTokenEnd)="addRetailer($event)"/>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="retailerSelected($event)">
-          <mat-option *ngFor="let retailer of filteredRetailers | async" [value]="retailer">
-            {{retailer.name}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-
+    <mat-form-field>
+      <mat-label>Retailers</mat-label>
+      <mat-chip-grid #chipGridR aria-label="Retailer selection">
+        <mat-chip-row
+          *ngFor="let retailer of retailers"
+          (removed)="removeRetailer(retailer)"
+        >
+          {{ retailer.name }}
+          <button matChipRemove [attr.aria-label]="'remove ' + retailer">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+      </mat-chip-grid>
+      <input
+        placeholder="Add retailer..."
+        #retailerInput
+        [formControl]="retailersCtrl"
+        [matChipInputFor]="chipGridR"
+        [matAutocomplete]="auto"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addRetailer($event)"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="retailerSelected($event)"
+      >
+        <mat-option
+          *ngFor="let retailer of filteredRetailers | async"
+          [value]="retailer"
+        >
+          {{ retailer.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
   </mat-card-content>
 
   <div *ngIf="!isNew">
     <app-campaign-list></app-campaign-list>
   </div>
 </mat-card>
-
-
-

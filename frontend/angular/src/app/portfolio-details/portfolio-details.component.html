@@ -1,40 +1,39 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Portfolio: {{(portfolio?.id)?portfolio?.id:''}}</mat-card-title>
+    <mat-card-title
+      >Portfolio: {{ portfolio?.id ? portfolio?.id : "" }}</mat-card-title
+    >
     <div *ngIf="loading">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     </div>
-    <div *ngIf="error">
-      <p>Error: {{ error }}</p>
-    </div>
   </mat-card-header>
 
-  <mat-card-content>
-    <div *ngIf="portfolio">
-
-      <p>
-        <mat-form-field >
-          <mat-label>Name:</mat-label>
-          <input matInput value="{{portfolio.name}}">
-        </mat-form-field>
-      </p>
-      <p>
-        <mat-form-field >
-          <mat-label>Desctiption:</mat-label>
-          <textarea matInput rows="6">
-            {{portfolio.description}}
-          </textarea>
-        </mat-form-field>
-      </p>
-      <p>
-        <user-chooser *ngIf="portfolio && portfolio.users" [existingUsers]="portfolio.users" (currentUsers)="portfolioUsers($event)"></user-chooser>
-      </p>
-      <p>
-        <account-chooser *ngIf="portfolio && portfolio.accounts" [existingAccounts]="portfolio.accounts" (currentAccounts)="portfolioAccounts($event)"></account-chooser>
-      </p>
-      <p>
-        <brand-chooser *ngIf="portfolio && portfolio.brands" [existingBrands]="portfolio.brands" (currentBrands)="portfolioBrands($event)"></brand-chooser>
-      </p>
-    </div>
+  <mat-card-content *ngIf="portfolio">
+    <mat-form-field>
+      <mat-label>Name:</mat-label>
+      <input matInput value="{{ portfolio.name }}" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Desctiption:</mat-label>
+      <textarea matInput rows="6">
+            {{ portfolio.description }}
+          </textarea
+      >
+    </mat-form-field>
+    <user-chooser
+      *ngIf="portfolio && portfolio.users"
+      [existingUsers]="portfolio.users"
+      (currentUsers)="portfolioUsers($event)"
+    ></user-chooser>
+    <account-chooser
+      *ngIf="portfolio && portfolio.accounts"
+      [existingAccounts]="portfolio.accounts"
+      (currentAccounts)="portfolioAccounts($event)"
+    ></account-chooser>
+    <brand-chooser
+      *ngIf="portfolio && portfolio.brands"
+      [existingBrands]="portfolio.brands"
+      (currentBrands)="portfolioBrands($event)"
+    ></brand-chooser>
   </mat-card-content>
 </mat-card>

@@ -18,29 +18,28 @@ import { Apollo, QueryRef } from 'apollo-angular';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { notifyConfig } from '../snackBarDefaults';
-import { UserChooserComponent } from '../user-chooser/user-chooser.component';
 import { FetchResult } from '@apollo/client/core';
+import { DetailsComponent } from '../detail-component';
 
 @Component({
   selector: 'app-portfolio-details',
   templateUrl: './portfolio-details.component.html',
   styleUrls: ['./portfolio-details.component.css'],
 })
-export class PortfolioDetailsComponent {
+export class PortfolioDetailsComponent extends DetailsComponent {
   portfolio: Portfolio | undefined;
   loading: boolean = true;
-  error: any;
   isNew: boolean = false;
 
   private portfolioQuery: QueryRef<PortfolioQuery, Exact<{ portfolioId: string; }>> | undefined;
 
-  constructor(private apollo: Apollo,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private location: Location
-  ) {
+  // constructor(private apollo: Apollo,
+  //   private route: ActivatedRoute,
+  //   private snackBar: MatSnackBar,
+  //   private location: Location
+  // ) {
 
-  }
+  // }
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['portfolioId'];
@@ -66,17 +65,11 @@ export class PortfolioDetailsComponent {
         }
       });
       this.portfolioQuery.valueChanges.subscribe((result) => {
-        if (this.error) {
-          console.error('[PortfolioDetailsComponent] portfolio error', this.error);
-          this.snackBar.open(`[PortfolioDetailsComponent.onInit] error: ${JSON.stringify(this.error, null, 2)} `, 'OK');
-          return;
-        }
+
         console.debug('[PortfolioDetailsComponent] portfolio', result);
         if (result.data.portfolio) this.portfolio = result.data.portfolio as Portfolio;
         this.loading = result.loading;
-        this.error = result.errors;
-
-
+        this.displayError(result.error);
       });
       // brands subscription
       this.apollo.subscribe<PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables>({
@@ -249,5 +242,12 @@ export class PortfolioDetailsComponent {
     console.debug("[PortfolioDetailsComponent.saveDetails] clicked");
     alert('update portfolio not implemented yet' + JSON.stringify(form.value, null, 4));
   }
+
+  // private displayError(error?: any) {
+  //   if (error) {
+  //     console.error('[PortfolioDetailsComponent] portfolio error', error);
+  //     this.snackBar.open(`[PortfolioDetailsComponent.onInit] error: ${JSON.stringify(error, null, 2)} `, 'OK');
+  //   }
+  // }
 
 }
