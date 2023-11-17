@@ -16,14 +16,14 @@
   </mat-card-actions>
   <mat-card-content>
     <p>
-      <mat-form-field appearance="fill"  >
+      <mat-form-field   >
         <mat-label>Name:</mat-label>
         <input matInput type="text" placeholder="name" matInput [(ngModel)]="lineitem.name">
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field appearance="fill" *ngIf="!isNew" >
+      <mat-form-field  *ngIf="!isNew" >
         <mat-label>Status:</mat-label>
         <mat-select [(ngModel)]="lineitem.status">
           <mat-option *ngFor="let status of statusValues" [value]="status">
@@ -34,7 +34,7 @@
     </p>
 
     <p>
-      <mat-form-field appearance="fill"  >
+      <mat-form-field   >
         <mat-label>Start - End:</mat-label>
         <mat-date-range-input [rangePicker]="picker">
           <input matStartDate placeholder="Start date" [(ngModel)]="lineitem.startDate">

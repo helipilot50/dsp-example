@@ -1,14 +1,23 @@
-.form-container {
+/* .form-container {
   display: flex;
   flex-direction: column;
-}
+} */
 
-.form-container > * {
+/* .form-container > * {
   width: 100%;
-}
+} */
 
-.formField
+/* .formField
 {
   min-width: 150px;
   width: 100%;
+  background-color: yellow;
+} */
+
+:host {
+  background-color: yellow;
+}
+
+mat-form-field {
+  background-color: greenyellow;
 }

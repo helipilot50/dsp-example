@@ -76,43 +76,41 @@ export class PortfolioDetailsComponent {
         this.loading = result.loading;
         this.error = result.errors;
 
-        // brands subscription
-        this.apollo.subscribe<PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables>({
-          query: PORTFOLIO_BRANDS_MODIFIED,
-          variables: {
-            portfolioId: this.portfolio?.id as string
-          }
-        }).subscribe((result: FetchResult<PortfolioBrandsModifiedSubscription>) => {
-          console.debug('[PortfolioDetailsComponent] brands updated subscription result', result);
-          this.portfolioQuery?.refetch();
-          this.snackBar.open(`Portfolio brands updated`, 'OK', notifyConfig);
-        });
 
-        // accounts subscription
-        this.apollo.subscribe<PortfolioAccountsModifiedSubscription, PortfolioAccountsModifiedSubscriptionVariables>({
-          query: PORTFOLIO_ACCOUNTS_MODIFIED,
-          variables: {
-            portfolioId: this.portfolio?.id as string
-          }
-        }).subscribe((result: FetchResult<PortfolioAccountsModifiedSubscription>) => {
-          console.debug('[PortfolioDetailsComponent] accounts updated result', result);
-          this.portfolioQuery?.refetch();
-          this.snackBar.open(`Portfolio accounts updated`, 'OK', notifyConfig);
-        });
+      });
+      // brands subscription
+      this.apollo.subscribe<PortfolioBrandsModifiedSubscription, PortfolioBrandsModifiedSubscriptionVariables>({
+        query: PORTFOLIO_BRANDS_MODIFIED,
+        variables: {
+          portfolioId: id
+        }
+      }).subscribe((result: FetchResult<PortfolioBrandsModifiedSubscription>) => {
+        console.debug('[PortfolioDetailsComponent] brands updated subscription result', result);
+        // this.portfolioQuery?.refetch();
+        this.snackBar.open(`Portfolio brands updated`, 'OK', notifyConfig);
+      });
 
-        // users subscription
-        this.apollo.subscribe<PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables>({
-          query: PORTFOLIO_USERS_MODIFIED,
-          variables: {
-            portfolioId: this.portfolio?.id as string
-          }
-        }).subscribe((result: FetchResult<PortfolioUsersModifiedSubscription>) => {
-          console.debug('[PortfolioDetailsComponent] users updated result', result);
-          if (this.portfolio) {
-            this.portfolio.users = result.data?.portfolioUsersModified?.users as User[];
-          }
-          this.snackBar.open(`Portfolio users updated`, 'OK', notifyConfig);
-        });
+      // accounts subscription
+      this.apollo.subscribe<PortfolioAccountsModifiedSubscription, PortfolioAccountsModifiedSubscriptionVariables>({
+        query: PORTFOLIO_ACCOUNTS_MODIFIED,
+        variables: {
+          portfolioId: id
+        }
+      }).subscribe((result: FetchResult<PortfolioAccountsModifiedSubscription>) => {
+        console.debug('[PortfolioDetailsComponent] accounts updated result', result);
+        // this.portfolioQuery?.refetch();
+        this.snackBar.open(`Portfolio accounts updated`, 'OK', notifyConfig);
+      });
+
+      // users subscription
+      this.apollo.subscribe<PortfolioUsersModifiedSubscription, PortfolioUsersModifiedSubscriptionVariables>({
+        query: PORTFOLIO_USERS_MODIFIED,
+        variables: {
+          portfolioId: id
+        }
+      }).subscribe((result: FetchResult<PortfolioUsersModifiedSubscription>) => {
+        console.debug('[PortfolioDetailsComponent] users updated result', result);
+        this.snackBar.open(`Portfolio users updated`, 'OK', notifyConfig);
       });
     }
   }
