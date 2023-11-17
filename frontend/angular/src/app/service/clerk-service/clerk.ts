@@ -13,7 +13,7 @@ export class ClerkService {
       // Load Clerk environment & session if available
       await this.getClerk.load();
       // @ts-ignore
-      console.log(window.Clerk);
+      console.log('[ClerkService.clerk] client', window.Clerk);
       const userButtonEl = document.getElementById('user-button');
       const authLinks = document.getElementById('auth-links');
       if (this.getClerk.user) {
@@ -21,19 +21,22 @@ export class ClerkService {
         this.getClerk.mountUserButton(userButtonEl);
         // @ts-ignore
         authLinks.style.display = 'none';
+        console.log('[ClerkService.clerk] User is logged in');
+      } else {
+        console.log('[ClerkService.clerk] User is logged out');
       }
     } catch (err) {
-      console.error('Clerk: ', err);
+      console.error('[ClerkService.clerk] error', err);
     }
   }
 
   async initClerk() {
-    const frontendApi = 'clerk.g6v9y.5r22c.lcl.dev';
+    const frontendApi = process.env['NG_APP_CLERK_PUBLISHABLE_KEY'];
     const script = document.createElement('script');
     script.setAttribute('data-clerk-frontend-api', frontendApi);
     script.async = true;
     script.src = `https://${frontendApi}/npm/@clerk/clerk-js@1/dist/clerk.browser.js`;
     script.addEventListener('load', await this.clerk);
-    document.body.appendChild(script);
+    document.body.appendChild(script);  // <--- Here is the problem
   }
 }

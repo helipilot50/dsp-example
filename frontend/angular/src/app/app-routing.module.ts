@@ -85,7 +85,8 @@ const routes: Routes = [
   },
   {
     path: 'portfolios',
-    component: PortfolioListComponent
+    component: PortfolioListComponent,
+    canActivate: [ClerkAuthGuardGuard],
   },
   {
     path: 'portfolios/:portfolioId',
