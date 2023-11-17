@@ -1,4 +1,4 @@
-<h1>Brand details</h1>
+<h1>Brand details {{(brand)?brand.id:''}}</h1>
 <div *ngIf="loading">
   <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 
@@ -7,12 +7,6 @@
   <p>Error: {{ error }}</p>
 </div>
 <div *ngIf="brand" class="detailForm">
-  <p>
-    <mat-form-field class="formField">
-      <mat-label>ID:</mat-label>
-      <input matInput value="{{brand.id}}" readonly>
-    </mat-form-field>
-  </p>
 
   <p>
     <mat-form-field class="formField">

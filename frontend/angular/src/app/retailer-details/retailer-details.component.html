@@ -2,7 +2,7 @@
 
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Retailer</mat-card-title>
+      <mat-card-title>Retailer {{id}}</mat-card-title>
       <div *ngIf="loading">
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
       </div>
@@ -12,12 +12,6 @@
     </mat-card-header>
     <mat-card-content>
       <div *ngIf="retailer" >
-      <p>
-        <mat-form-field class="formField">
-          <mat-label>ID:</mat-label>
-          <input matInput value="{{retailer.id}}" readonly>
-        </mat-form-field>
-      </p>
 
       <p>
         <mat-form-field class="formField">

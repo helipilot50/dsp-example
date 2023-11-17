@@ -14,17 +14,18 @@ export class RetailerDetailsComponent {
   retailer: Retailer | undefined = undefined;
   loading: boolean = true;
   error: any;
+  id: string = '';
 
   statuses: string[] = Object.values(RetailerStatus);
 
   constructor(private apollo: Apollo, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['retailerId'];
+    this.id = this.route.snapshot.params['retailerId'];
     this.apollo.watchQuery<RetailerQuery, RetailerQueryVariables>({
       query: RETAILER_DETAILS,
       variables: {
-        retailerId: id
+        retailerId: this.id
       }
     }).valueChanges.subscribe((result) => {
       console.log(result);
