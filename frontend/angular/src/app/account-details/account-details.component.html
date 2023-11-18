@@ -23,22 +23,24 @@
         [(ngModel)]="account.name"
       />
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Type</mat-label>
-      <mat-select [(ngModel)]="account.type">
-        <mat-option *ngFor="let type of types" [value]="type">
-          {{ type }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field *ngIf="account.currency">
-      <mat-label>Currency</mat-label>
-      <mat-select [(ngModel)]="account.currency.code">
-        <mat-option *ngFor="let currency of currencies" [value]="currency">
-          {{ currency }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div fxLayout="row" fxLayoutAlign="left top" fxLayoutGap="10px">
+      <mat-form-field>
+        <mat-label>Type</mat-label>
+        <mat-select [(ngModel)]="account.type">
+          <mat-option *ngFor="let type of types" [value]="type">
+            {{ type }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="account.currency">
+        <mat-label>Currency</mat-label>
+        <mat-select [(ngModel)]="account.currency.code">
+          <mat-option *ngFor="let currency of currencies" [value]="currency">
+            {{ currency }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <!-- <country-chooser
       [existingCountries]="countries"
       (currentCountries)="countriesChanged($event)"

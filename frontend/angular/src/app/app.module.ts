@@ -73,6 +73,7 @@ import { AccountChooserComponent } from './account-chooser/account-chooser.compo
 import { BrandChooserComponent } from './brand-chooser/brand-chooser.component';
 import { UserChooserComponent } from './user-chooser/user-chooser.component';
 import { CountryChooserComponent } from './country-chooser/country-chooser.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { CountryChooserComponent } from './country-chooser/country-chooser.compo
     CdkStepperModule,
     CdkTableModule,
     CdkTreeModule,
+    FlexLayoutModule,
     MatGridListModule,
     MatCardModule,
     MatDialogModule,
